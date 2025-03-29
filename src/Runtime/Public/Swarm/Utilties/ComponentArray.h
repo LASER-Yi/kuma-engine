@@ -1,9 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Swarm/Definition.h"
 #include "Swarm/Interfaces/Component.h"
 
 #include <cassert>
+#include <type_traits>
 
 namespace Swarm
 {
