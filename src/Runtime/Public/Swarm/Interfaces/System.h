@@ -5,6 +5,12 @@
 namespace Swarm
 {
 
+/**
+ * @brief Interface for all systems in the swarm.
+ * @details This interface defines the basic structure for all systems in the
+ * swarm. Each system must implement the Initialize, Update, and Shutdown
+ * methods.
+ */
 class ISystem
 {
 public:

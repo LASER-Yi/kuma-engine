@@ -13,6 +13,11 @@
 namespace Swarm
 {
 
+/**
+ * @brief A dynamic array of components of a specific type.
+ * @details This class is used to store components of a specific type in a
+ * dynamic array. It provides methods to add, remove, and access components.
+ */
 struct FComponentArray
 {
     FComponentArray() : FComponentArray(Swarm::InvalidType, 0) {}

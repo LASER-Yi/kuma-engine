@@ -28,6 +28,13 @@ public:
 
     void Update(float DeltaTime);
 
+    /**
+     * @brief Creates a new entity of type T
+     * @tparam T Entity type that must derive from FEntity
+     * @return Newly created entity of type T
+     * @throws static_assert if T is not derived from FEntity or has different
+     * size (you cannot add new members to T)
+     */
     template <typename T>
     T MakeEntity()
     {
@@ -60,8 +67,20 @@ public:
         }
     }
 
+    /**
+     * Removes the specified entity from the swarm.
+     *
+     * @param Entity An entity to be removed.
+     */
     void RemoveEntity(FEntity& Entity);
 
+    /**
+     * @brief Add a new component to the specified entity.
+     * @tparam T The type of the component to be added.
+     * @param ToEntity The entity to which the component will be added.
+     * @param Arguments The arguments to be passed to the component constructor.
+     * @return true if the component was added successfully, false otherwise.
+     */
     template <typename T, typename... Args>
     bool AddComponent(FEntity& ToEntity, Args&&... Arguments)
     {
@@ -101,6 +120,13 @@ public:
         return true;
     }
 
+    /**
+     * @brief Get a component of type T from the specified entity.
+     * @tparam T The type of the component to be retrieved.
+     * @param FromEntity The entity from which the component will be retrieved.
+     * @return A pointer to the component of type T, or nullptr if the component
+     * does not exist.
+     */
     template <typename T>
     T* GetComponent(FEntity& FromEntity)
     {
@@ -126,6 +152,11 @@ public:
         return Components[T::GetType()].template GetItem<T>(RequestIndex);
     }
 
+    /**
+     * @brief Remove a component of type T from the specified entity.
+     * @tparam T The type of the component to be removed.
+     * @param FromEntity The entity from which the component will be removed.
+     */
     template <typename T>
     void RemoveComponent(FEntity& FromEntity)
     {
@@ -155,6 +186,11 @@ public:
         EntityComponents.erase(T::GetType());
     }
 
+    /**
+     * @brief Get the number of components of type T in the swarm.
+     * @tparam T The type of the component to be counted.
+     * @return The number of components of type T in the swarm.
+     */
     template <typename T>
     std::size_t GetComponentCount()
     {
