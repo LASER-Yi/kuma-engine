@@ -1,16 +1,11 @@
 #include "Core/CoreMinimal.h"
 
-#include <cassert>
 #include "SwarmEngine.h"
+#include <cassert>
 
-KSwarmEngine::KSwarmEngine():
-    bExitRequired(false)
-{
-}
+KSwarmEngine::KSwarmEngine() : bExitRequired(false) {}
 
-KSwarmEngine::~KSwarmEngine()
-{
-}
+KSwarmEngine::~KSwarmEngine() {}
 
 void KSwarmEngine::Initialize()
 {
@@ -18,21 +13,13 @@ void KSwarmEngine::Initialize()
     assert(SwarmManager != nullptr && "Failed to create SwarmManager");
 }
 
-void KSwarmEngine::Shutdown()
-{
-}
+void KSwarmEngine::Shutdown() {}
 
 void KSwarmEngine::EngineTick(float DeltaTime)
 {
     SwarmManager->Update(DeltaTime);
 }
 
-void KSwarmEngine::RequireEngineExit()
-{
-    bExitRequired = true;
-}
+void KSwarmEngine::RequireEngineExit() { bExitRequired = true; }
 
-bool KSwarmEngine::IsEngineExitRequired() const
-{
-    return bExitRequired;
-}
+bool KSwarmEngine::IsEngineExitRequired() const { return bExitRequired; }

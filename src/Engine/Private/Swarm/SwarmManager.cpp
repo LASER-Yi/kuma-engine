@@ -5,13 +5,9 @@
 namespace Swarm
 {
 
-Manager::Manager()
-{
-}
+Manager::Manager() {}
 
-Manager::~Manager()
-{
-}
+Manager::~Manager() {}
 
 void Manager::Update(float DeltaTime)
 {
@@ -23,4 +19,4 @@ void Manager::Update(float DeltaTime)
     }
 }
 
-}
+} // namespace Swarm

@@ -2,12 +2,11 @@
 #include "Swarm/SwarmDefine.h"
 
 #include <map>
-#include <vector>
 #include <memory>
+#include <vector>
 
-#include "Swarm/Interfaces/System.h"
 #include "Swarm/Entity.h"
-
+#include "Swarm/Interfaces/System.h"
 
 namespace Swarm
 {
@@ -34,4 +33,4 @@ private:
     std::vector<std::shared_ptr<ISystem>> Systems;
 };
 
-}
+} // namespace Swarm

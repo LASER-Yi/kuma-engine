@@ -2,6 +2,19 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 
 Language: Cpp
+SpacesInAngles: Never
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: -1
+SpacesBeforeTrailingComments: 1
+AccessModifierOffset: -4
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Always
+AlignEscapedNewlines: Left
 DerivePointerAlignment: false
 PointerAlignment: Left
-BreakBeforeBraces: Linux
+AlignAfterOpenBracket: BlockIndent
+BreakBeforeBraces: Allman
+AlwaysBreakTemplateDeclarations: true
+# BreakTemplateDeclarations: Yes
+CompactNamespaces: false

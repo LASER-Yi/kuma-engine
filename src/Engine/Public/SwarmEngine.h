@@ -5,7 +5,6 @@
 
 #include "Swarm/SwarmManager.h"
 
-
 class KSwarmEngine
 {
 public:

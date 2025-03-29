@@ -15,7 +15,7 @@ int main()
         GEngine->Initialize();
     }
 
-    while(GEngine->IsEngineExitRequired() == false)
+    while (GEngine->IsEngineExitRequired() == false)
     {
         GEngine->EngineTick(0.0f);
     }

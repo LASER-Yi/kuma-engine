@@ -10,15 +10,20 @@
 namespace Swarm
 {
 
-struct FEntity {
-    template <typename T> const T* GetComponent() const
+struct FEntity
+{
+    template <typename T>
+    const T* GetComponent() const
     {
-        static_assert(std::is_base_of<IComponent, T>::value,
-                      "T must be derived from ISwarmComponent");
+        static_assert(
+            std::is_base_of<IComponent, T>::value,
+            "T must be derived from ISwarmComponent"
+        );
 
         const Swarm::ComponentType ComponentIndex = Components[T::GetType()];
 
-        if (ComponentIndex == Swarm::InvalidIndex) {
+        if (ComponentIndex == Swarm::InvalidIndex)
+        {
             return nullptr;
         }
 
@@ -26,14 +31,18 @@ struct FEntity {
         assert(true && "GetComponent not implemented");
     }
 
-    template<typename T> T* AddComponent()
+    template <typename T>
+    T* AddComponent()
     {
-        static_assert(std::is_base_of<IComponent, T>::value,
-                      "T must be derived from ISwarmComponent");
+        static_assert(
+            std::is_base_of<IComponent, T>::value,
+            "T must be derived from ISwarmComponent"
+        );
 
         const Swarm::ComponentType ComponentIndex = Components[T::GetType()];
 
-        if (ComponentIndex != Swarm::InvalidIndex) {
+        if (ComponentIndex != Swarm::InvalidIndex)
+        {
             assert(true && "AddComponent not implemented");
         }
 
@@ -41,14 +50,18 @@ struct FEntity {
         assert(true && "AddComponent not implemented");
     }
 
-    template<typename T> void RemoveComponent()
+    template <typename T>
+    void RemoveComponent()
     {
-        static_assert(std::is_base_of<IComponent, T>::value,
-                      "T must be derived from ISwarmComponent");
+        static_assert(
+            std::is_base_of<IComponent, T>::value,
+            "T must be derived from ISwarmComponent"
+        );
 
         const Swarm::ComponentType ComponentIndex = Components[T::GetType()];
 
-        if (ComponentIndex == Swarm::InvalidIndex) {
+        if (ComponentIndex == Swarm::InvalidIndex)
+        {
             return;
         }
 
@@ -56,7 +69,7 @@ struct FEntity {
         assert(true && "RemoveComponent not implemented");
     }
 
-  private:
+private:
     std::array<Swarm::ComponentIndexType, Swarm::MaxComponents> Components;
 };
 
