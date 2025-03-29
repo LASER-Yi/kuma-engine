@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Templates/Singleton.h"
 #include "CoreMinimal.h"
 #include "Swarm/Interfaces/Component.h"
 #include "Swarm/SwarmDefine.h"
@@ -66,14 +67,14 @@ private:
     std::int32_t ComponentSize;
 };
 
-class Manager final
+class KManager final : public TSingleton<Swarm::KManager>
 {
 public:
-    Manager();
-    ~Manager();
+    KManager();
+    ~KManager();
 
-    Manager(const Manager&) = delete;
-    Manager& operator=(const Manager&) = delete;
+    KManager(const KManager&) = delete;
+    KManager& operator=(const KManager&) = delete;
 
     void Update(float DeltaTime);
 
@@ -124,6 +125,9 @@ public:
         auto& EntityComponents =
             EntityToComponents[ToEntity.GetUnderlyingIndex()];
 
+        // Prevent adding duplicate components to the same entity
+        // as each entity should have at most one instance of a specific
+        // component type.
         if (EntityComponents.contains(T::GetType()))
         {
             return;

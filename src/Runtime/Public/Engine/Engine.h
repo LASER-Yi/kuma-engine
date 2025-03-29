@@ -1,15 +1,11 @@
 #pragma once
 #include "CoreMinimal.h"
 
-#include <memory>
-
-#include "Swarm/SwarmManager.h"
-
-class KSwarmEngine
+class KEngine
 {
 public:
-    KSwarmEngine();
-    ~KSwarmEngine();
+    KEngine();
+    ~KEngine();
 
     void Initialize();
     void Shutdown();
@@ -19,9 +15,6 @@ public:
     void RequireEngineExit();
 
     bool IsEngineExitRequired() const;
-
-protected:
-    std::shared_ptr<Swarm::Manager> SwarmManager;
 
 private:
     bool bExitRequired = false;

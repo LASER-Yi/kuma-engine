@@ -13,11 +13,11 @@ FComponentArray::FComponentArray()
 
 void FComponentArray::Remove(Swarm::ComponentIndex Index) { UNUSED_VAR(Index); }
 
-Manager::Manager() {}
+KManager::KManager() {}
 
-Manager::~Manager() {}
+KManager::~KManager() {}
 
-void Manager::Update(float DeltaTime)
+void KManager::Update(float DeltaTime)
 {
     // TODO: Refactor system update via multithreading
 
@@ -27,7 +27,7 @@ void Manager::Update(float DeltaTime)
     }
 }
 
-void Manager::RemoveEntity(FEntity& Entity)
+void KManager::RemoveEntity(FEntity& Entity)
 {
     const auto& EntityComponents =
         EntityToComponents[Entity.GetUnderlyingIndex()];

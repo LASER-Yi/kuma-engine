@@ -2,13 +2,13 @@
 
 #include <cstdlib>
 
-#include "Engine/SwarmEngine.h"
+#include "Engine/Engine.h"
 
-static KSwarmEngine* GEngine = nullptr;
+static KEngine* GEngine = nullptr;
 
 int main()
 {
-    GEngine = new KSwarmEngine();
+    GEngine = new KEngine();
 
     // Initialize the engine
     {
