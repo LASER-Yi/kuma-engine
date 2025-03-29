@@ -1,6 +1,6 @@
 #include "CoreMinimal.h"
 
-#include "SwarmEngine.h"
+#include "Engine/SwarmEngine.h"
 #include <cassert>
 
 KSwarmEngine::KSwarmEngine() : bExitRequired(false) {}
