@@ -2,13 +2,13 @@
 
 #include <cstdlib>
 
-#include "Engine/Engine.h"
+#include "Kuma/KumaEngine.h"
 
 static KEngine* GEngine = nullptr;
 
 int main()
 {
-    GEngine = new KEngine();
+    GEngine = new KKumaEngine();
 
     // Initialize the engine
     {

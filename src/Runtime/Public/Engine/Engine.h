@@ -6,12 +6,12 @@ class KEngine
 {
 public:
     KEngine();
-    ~KEngine();
+    virtual ~KEngine();
 
-    void Initialize();
-    void Shutdown();
+    virtual void Initialize();
+    virtual void Shutdown();
 
-    void EngineTick(float DeltaTime);
+    virtual void EngineTick(float DeltaTime);
 
     void RequireEngineExit();
 
