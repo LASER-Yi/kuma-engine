@@ -1,4 +1,5 @@
 #include "KumaEngine.h"
+#include "Core/CoreDefine.h"
 
 KKumaEngine::KKumaEngine():
     bExitRequired(false)
@@ -19,6 +20,7 @@ void KKumaEngine::Shutdown()
 
 void KKumaEngine::EngineTick(float DeltaTime)
 {
+    UNUSED_VAR(DeltaTime);
 }
 
 void KKumaEngine::RequireEngineExit()
