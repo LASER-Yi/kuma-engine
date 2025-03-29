@@ -19,5 +19,17 @@ list(APPEND CMAKE_MODULE_PATH
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# BEGIN - Google Test
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/52204f78f94d7512df1f0f3bea1d47437a2c3a58.zip
+)
+
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+# END - Google Test
+
 # add subdirectories
 add_subdirectory(src)

@@ -97,7 +97,7 @@ public:
     }
 
     template <typename T>
-    T& GetOrCreateComponent(FEntity& FromEntity)
+    T* GetComponent(FEntity& FromEntity)
     {
         static_assert(
             std::is_base_of<IComponent, T>::value,
@@ -112,13 +112,13 @@ public:
         // Check if the entity has the component
         if (EntityComponents.contains(T::GetType()) == false)
         {
-            AddComponent<T>(FromEntity);
+            return nullptr;
         }
 
         const Swarm::ComponentIndex RequestIndex =
             EntityComponents[T::GetType()];
 
-        return Components[T::GetType()].template GetItem<T>(RequestIndex);
+        return &Components[T::GetType()].template GetItem<T>(RequestIndex);
     }
 
     template <typename T>

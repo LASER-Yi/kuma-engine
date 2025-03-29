@@ -14,8 +14,8 @@ struct FEntity
     FEntity(const FEntity&) = default;
     FEntity& operator=(const FEntity&) = default;
 
-    FEntity(FEntity&&) = delete;
-    FEntity& operator=(FEntity&&) = delete;
+    FEntity(FEntity&&) = default;
+    FEntity& operator=(FEntity&&) = default;
 
     void Reset();
 
