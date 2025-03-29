@@ -1,5 +1,5 @@
+#include "Core/CoreMinimal.h"
 #include "SwarmEngine.h"
-#include "Core/CoreDefine.h"
 
 KSwarmEngine::KSwarmEngine():
     bExitRequired(false)
