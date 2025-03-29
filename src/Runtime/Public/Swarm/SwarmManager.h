@@ -66,7 +66,7 @@ public:
     void AddComponent(FEntity& ToEntity, Args&&... Arguments)
     {
         static_assert(
-            std::is_base_of<IComponent, T>::value,
+            std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
@@ -100,7 +100,7 @@ public:
     T* GetComponent(FEntity& FromEntity)
     {
         static_assert(
-            std::is_base_of<IComponent, T>::value,
+            std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
@@ -125,7 +125,7 @@ public:
     void RemoveComponent(FEntity& FromEntity)
     {
         static_assert(
-            std::is_base_of<IComponent, T>::value,
+            std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
@@ -155,7 +155,7 @@ private:
         Swarm::EntityIndex,
         std::map<Swarm::ComponentType, Swarm::ComponentIndex>>
         EntityToComponents;
-    std::map<Swarm::ComponentType, FComponentArray> Components;
+    std::unordered_map<Swarm::ComponentType, FComponentArray> Components;
     std::vector<std::shared_ptr<ISystem>> Systems;
 
 private:

@@ -7,10 +7,8 @@ struct FTestEntity : public Swarm::FEntity
 {
 };
 
-struct FTestComponent : public Swarm::IComponent
+struct FTestComponent : public Swarm::IComponent<FTestComponent>
 {
-    static constexpr Swarm::ComponentType GetType() { return 82; }
-
     std::string Content;
 
     FTestComponent(const std::string& InContent) : Content(InContent) {}

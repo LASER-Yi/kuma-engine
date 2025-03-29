@@ -1,14 +1,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <cstddef>
 #include <cstdint>
+#include <limits>
 
 namespace Swarm
 {
-using ComponentType = std::uint8_t;
+using ComponentType = std::int64_t;
 
-using EntityIndex = std::int32_t;
-using ComponentIndex = std::int32_t;
+using EntityIndex = std::size_t;
+using ComponentIndex = std::size_t;
 
-constexpr std::int32_t Invalid = -1;
+static_assert(
+    sizeof(ComponentType) >= sizeof(std::size_t),
+    "ComponentType must be at least as large as std::size_t"
+);
+
+constexpr std::size_t Invalid = std::numeric_limits<std::size_t>::max();
 } // namespace Swarm

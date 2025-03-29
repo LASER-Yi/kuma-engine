@@ -23,7 +23,7 @@ struct FComponentArray
     Swarm::ComponentIndex Add(Args&&... Arguments)
     {
         static_assert(
-            std::is_base_of<IComponent, T>::value,
+            std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
@@ -41,7 +41,7 @@ struct FComponentArray
     T& GetItem(Swarm::ComponentIndex InIndex)
     {
         static_assert(
-            std::is_base_of<IComponent, T>::value,
+            std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
