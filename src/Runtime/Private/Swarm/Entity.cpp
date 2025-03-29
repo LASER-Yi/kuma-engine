@@ -1,5 +1,4 @@
 #include "Swarm/Entity.h"
-#include "Swarm/Definition.h"
 
 namespace Swarm
 {

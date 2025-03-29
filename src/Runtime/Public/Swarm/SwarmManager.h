@@ -2,10 +2,6 @@
 
 #include "Core/Templates/Singleton.h"
 #include "CoreMinimal.h"
-#include "Swarm/Definition.h"
-#include "Swarm/Entity.h"
-#include "Swarm/Interfaces/Component.h"
-#include "Swarm/Interfaces/System.h"
 #include "Swarm/Utilities/ComponentArray.h"
 
 #include <cassert>

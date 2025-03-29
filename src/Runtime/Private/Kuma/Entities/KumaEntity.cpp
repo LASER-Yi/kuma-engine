@@ -1,9 +1,8 @@
-#include "CoreMinimal.h"
+#include "Kuma/Entities/KumaEntity.h"
+
 #include "Kuma/Components/Transform.h"
 #include "Kuma/Components/World.h"
 #include "Swarm/SwarmManager.h"
-
-#include "Kuma/Entities/KumaEntity.h"
 
 FKumaEntity::FKumaEntity() : Swarm::FEntity()
 {

@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Math/Vector.h"
-#include "Swarm/Interfaces/Component.h"
 
 struct FTransformComponent : public Swarm::IComponent<FTransformComponent>
 {

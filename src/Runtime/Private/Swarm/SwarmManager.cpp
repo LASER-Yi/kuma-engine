@@ -1,5 +1,3 @@
-#include "CoreMinimal.h"
-
 #include "Swarm/SwarmManager.h"
 
 namespace Swarm

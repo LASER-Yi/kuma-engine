@@ -1,7 +1,5 @@
 #pragma once
 
-#include "CoreMinimal.h"
-
 template <typename T>
 class TSingleton
 {

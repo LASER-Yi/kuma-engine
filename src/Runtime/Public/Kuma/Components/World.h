@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Kuma/Entities/KumaWorld.h"
-#include "Swarm/Interfaces/Component.h"
 
 struct FWorldComponent : public Swarm::IComponent<FWorldComponent>
 {
