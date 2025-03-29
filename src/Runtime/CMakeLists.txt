@@ -1,4 +1,4 @@
-project(Engine)
+project(Runtime)
 
 include(CompileTarget)
 include(PlatformMacros)

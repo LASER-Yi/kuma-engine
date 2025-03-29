@@ -8,7 +8,7 @@ add_executable(${PROJECT_NAME} ${TARGET_SOURCES} ${TARGET_HEADERS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${TARGET_HEADERS_DIR})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    Engine
+    Runtime
 )
 
 if (MSVC)
