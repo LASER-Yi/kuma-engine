@@ -1,10 +1,10 @@
 #pragma once
 
-class KKumaEngine
+class KSwarmEngine
 {
 public:
-    KKumaEngine();
-    ~KKumaEngine();
+    KSwarmEngine();
+    ~KSwarmEngine();
 
     void Initialize();
     void Shutdown();

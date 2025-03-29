@@ -1,13 +1,13 @@
 
 #include <cstdlib>
 
-#include "KumaEngine.h"
+#include "SwarmEngine.h"
 
-static KKumaEngine* GEngine = nullptr;
+static KSwarmEngine* GEngine = nullptr;
 
 int main()
 {
-    GEngine = new KKumaEngine();
+    GEngine = new KSwarmEngine();
 
     // Initialize the engine
     {
