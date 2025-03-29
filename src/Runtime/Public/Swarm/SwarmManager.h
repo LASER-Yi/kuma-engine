@@ -6,7 +6,7 @@
 #include "Swarm/Entity.h"
 #include "Swarm/Interfaces/Component.h"
 #include "Swarm/Interfaces/System.h"
-#include "Swarm/Utilties/ComponentArray.h"
+#include "Swarm/Utilities/ComponentArray.h"
 
 #include <cassert>
 #include <map>
