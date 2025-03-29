@@ -2,7 +2,6 @@
 
 #include "Kuma/Components/Transform.h"
 #include "Kuma/Components/World.h"
-#include "Swarm/SwarmManager.h"
 
 FKumaEntity::FKumaEntity() : Swarm::FEntity()
 {

@@ -1,4 +1,4 @@
-#include "Swarm/SwarmManager.h"
+#include "Swarm/Manager.h"
 
 namespace Swarm
 {

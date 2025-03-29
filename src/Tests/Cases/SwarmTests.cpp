@@ -1,6 +1,4 @@
-#include "Swarm/Definition.h"
-#include "Swarm/Entity.h"
-#include "Swarm/SwarmManager.h"
+#include "CoreMinimal.h"
 #include <gtest/gtest.h>
 
 struct FTestEntity : public Swarm::FEntity

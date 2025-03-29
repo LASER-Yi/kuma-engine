@@ -1,7 +1,6 @@
 #include "Kuma/KumaEngine.h"
 #include "Engine/Engine.h"
 #include "Kuma/Entities/KumaWorld.h"
-#include "Swarm/SwarmManager.h"
 
 void KKumaEngine::Initialize()
 {

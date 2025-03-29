@@ -5,3 +5,4 @@
 #include "Swarm/Entity.h"
 #include "Swarm/Interfaces/Component.h"
 #include "Swarm/Interfaces/System.h"
+#include "Swarm/Manager.h"

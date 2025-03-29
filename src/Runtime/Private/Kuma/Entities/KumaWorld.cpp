@@ -1,7 +1,6 @@
 #include "Kuma/Entities/KumaWorld.h"
 #include "Kuma/Components/World.h"
 #include "Kuma/Entities/KumaEntity.h"
-#include "Swarm/SwarmManager.h"
 
 FKumaWorld::FKumaWorld() : Swarm::FEntity() {}
 

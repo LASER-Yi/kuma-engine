@@ -1,5 +1,4 @@
 #include "Engine/Engine.h"
-#include "Swarm/SwarmManager.h"
 
 KEngine::KEngine() : bExitRequired(false) {}
 
