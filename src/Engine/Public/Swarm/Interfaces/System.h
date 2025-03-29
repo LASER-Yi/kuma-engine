@@ -1,20 +1,20 @@
 #pragma once
 
-#include "Core/CoreMinimal.h"
+#include "CoreMinimal.h"
 
 namespace Swarm
 {
 
 class ISystem
 {
-  public:
+public:
     virtual void Initialize() = 0;
 
     virtual void Update(float DeltaTime) = 0;
 
     virtual void Shutdown() = 0;
 
-  protected:
+protected:
     // TODO: Figure out how to implement this
     void QueryEntity() const;
 };

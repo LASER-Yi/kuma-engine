@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Core/CoreMinimal.h"
+#include "CoreMinimal.h"
 #include "Swarm/Interfaces/Component.h"
 #include "Swarm/SwarmDefine.h"
 
-#include <array>
 #include <cassert>
 
 namespace Swarm
@@ -12,6 +11,17 @@ namespace Swarm
 
 struct FEntity
 {
+    FEntity(Swarm::EntityIndex InIndex);
+    ~FEntity() = default;
+
+    FEntity(const FEntity&) = default;
+    FEntity& operator=(const FEntity&) = default;
+
+    FEntity(FEntity&&) = delete;
+    FEntity& operator=(FEntity&&) = delete;
+
+    void Reset();
+
     template <typename T>
     const T* GetComponent() const
     {
@@ -19,13 +29,6 @@ struct FEntity
             std::is_base_of<IComponent, T>::value,
             "T must be derived from ISwarmComponent"
         );
-
-        const Swarm::ComponentType ComponentIndex = Components[T::GetType()];
-
-        if (ComponentIndex == Swarm::InvalidIndex)
-        {
-            return nullptr;
-        }
 
         // Get the component from the component manager
         assert(true && "GetComponent not implemented");
@@ -39,13 +42,6 @@ struct FEntity
             "T must be derived from ISwarmComponent"
         );
 
-        const Swarm::ComponentType ComponentIndex = Components[T::GetType()];
-
-        if (ComponentIndex != Swarm::InvalidIndex)
-        {
-            assert(true && "AddComponent not implemented");
-        }
-
         // Add the component to the component manager
         assert(true && "AddComponent not implemented");
     }
@@ -58,19 +54,14 @@ struct FEntity
             "T must be derived from ISwarmComponent"
         );
 
-        const Swarm::ComponentType ComponentIndex = Components[T::GetType()];
-
-        if (ComponentIndex == Swarm::InvalidIndex)
-        {
-            return;
-        }
-
         // Remove the component from the component manager
         assert(true && "RemoveComponent not implemented");
     }
 
-private:
-    std::array<Swarm::ComponentIndexType, Swarm::MaxComponents> Components;
+    Swarm::EntityIndex GetUnderlyingIndex() const { return EntityIndex; }
+
+public:
+    Swarm::EntityIndex EntityIndex = Swarm::Invalid;
 };
 
 } // namespace Swarm

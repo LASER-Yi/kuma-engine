@@ -1,4 +1,4 @@
-#include "Core/CoreMinimal.h"
+#include "CoreMinimal.h"
 
 #include "SwarmEngine.h"
 #include <cassert>

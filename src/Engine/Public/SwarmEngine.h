@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/CoreMinimal.h"
+#include "CoreMinimal.h"
 
 #include <memory>
 
