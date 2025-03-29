@@ -5,11 +5,11 @@
 namespace Swarm
 {
 
-KManager::KManager() {}
+Manager::Manager() {}
 
-KManager::~KManager() {}
+Manager::~Manager() {}
 
-void KManager::Update(float DeltaTime)
+void Manager::Update(float DeltaTime)
 {
     // TODO: Refactor system update via multithreading
 
@@ -19,7 +19,7 @@ void KManager::Update(float DeltaTime)
     }
 }
 
-void KManager::RemoveEntity(FEntity& Entity)
+void Manager::RemoveEntity(FEntity& Entity)
 {
     const auto& EntityComponents =
         EntityToComponents[Entity.GetUnderlyingIndex()];

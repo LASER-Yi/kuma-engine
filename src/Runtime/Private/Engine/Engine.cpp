@@ -12,7 +12,7 @@ void KEngine::Shutdown() {}
 
 void KEngine::EngineTick(float DeltaTime)
 {
-    Swarm::KManager::Get()->Update(DeltaTime);
+    Swarm::Manager::Get()->Update(DeltaTime);
 }
 
 void KEngine::RequireEngineExit() { bExitRequired = true; }

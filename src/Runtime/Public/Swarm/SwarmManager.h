@@ -17,14 +17,14 @@
 namespace Swarm
 {
 
-class KManager final : public TSingleton<Swarm::KManager>
+class Manager final : public TSingleton<Swarm::Manager>
 {
 public:
-    KManager();
-    ~KManager();
+    Manager();
+    ~Manager();
 
-    KManager(const KManager&) = delete;
-    KManager& operator=(const KManager&) = delete;
+    Manager(const Manager&) = delete;
+    Manager& operator=(const Manager&) = delete;
 
     void Update(float DeltaTime);
 

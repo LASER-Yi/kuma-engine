@@ -24,7 +24,7 @@ struct FIntTestComponent : public Swarm::IComponent<FIntTestComponent>
 TEST(SwarmTest, EntityCreation)
 {
     // Create an entity
-    Swarm::KManager* Manager = Swarm::KManager::Get();
+    Swarm::Manager* Manager = Swarm::Manager::Get();
     FTestEntity Entity = Manager->MakeEntity<FTestEntity>();
 
     // Check that the entity has a unique ID
@@ -43,7 +43,7 @@ TEST(SwarmTest, EntityCreation)
 
 TEST(SwarmTest, ComponentCreation)
 {
-    Swarm::KManager* Manager = Swarm::KManager::Get();
+    Swarm::Manager* Manager = Swarm::Manager::Get();
 
     auto Entity = Manager->MakeEntity<FTestEntity>();
 
@@ -112,7 +112,7 @@ TEST(SwarmTest, ComponentCreation)
 
 TEST(SwarmTest, EntityComponentCreation)
 {
-    Swarm::KManager* Manager = Swarm::KManager::Get();
+    Swarm::Manager* Manager = Swarm::Manager::Get();
 
     auto Entity = Manager->MakeEntity<FTestEntity>();
 
