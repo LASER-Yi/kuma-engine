@@ -5,7 +5,7 @@
 #include "Swarm/Entity.h"
 #include "Swarm/SwarmManager.h"
 
-FKumaWorld::FKumaWorld(Swarm::EntityIndex InIndex) : Swarm::FEntity(InIndex) {}
+FKumaWorld::FKumaWorld() : Swarm::FEntity() {}
 
 void FKumaWorld::AddToWorld(FKumaEntity* InEntity)
 {
