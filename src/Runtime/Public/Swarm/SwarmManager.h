@@ -1,10 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Swarm/Interfaces/Component.h"
 #include "Swarm/SwarmDefine.h"
 
+#include <cassert>
 #include <map>
 #include <memory>
+#include <queue>
 #include <vector>
 
 #include "Swarm/Entity.h"
@@ -15,9 +18,22 @@ namespace Swarm
 
 struct FComponentArray
 {
+    FComponentArray() = delete;
+
+    template <typename T>
+    FComponentArray() : ContainerType(T::GetType()), ComponentSize(sizeof(T))
+    {
+        static_assert(
+            std::is_base_of<IComponent, T>::value,
+            "T must be derived from IComponent"
+        );
+    }
+
     void Remove(Swarm::ComponentIndex);
 
 private:
+    Swarm::ComponentType ContainerType;
+    std::int32_t ComponentSize;
 };
 
 struct FEntityComponent
@@ -48,9 +64,25 @@ public:
             sizeof(T) == sizeof(FEntity), "T must be the same size as FEntity"
         );
 
-        T Entity(NextEntityIndex);
-        ++NextEntityIndex;
-        return Entity;
+        if (FreeEntityIndices.empty() == false)
+        {
+            Swarm::EntityIndex NextIndex = FreeEntityIndices.front();
+            T Entity(NextIndex);
+            FreeEntityIndices.pop();
+
+            return Entity;
+        }
+        else
+        {
+            T Entity(NextEntityIndex);
+            ++NextEntityIndex;
+
+            assert(
+                NextEntityIndex < std::numeric_limits<Swarm::EntityIndex>::max()
+            );
+
+            return Entity;
+        }
     }
 
     void RemoveEntity(FEntity& Entity);
@@ -63,6 +95,7 @@ private:
 
 private:
     Swarm::EntityIndex NextEntityIndex = 0;
+    std::queue<Swarm::EntityIndex> FreeEntityIndices;
 };
 
 } // namespace Swarm

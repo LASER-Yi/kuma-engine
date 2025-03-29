@@ -32,6 +32,8 @@ void Manager::RemoveEntity(FEntity& Entity)
         Components[Component.Type].Remove(Component.Index);
     }
 
+    FreeEntityIndices.push(Entity.GetUnderlyingIndex());
+
     Entity.Reset();
 }
 
