@@ -48,7 +48,7 @@ TEST(SwarmTest, ComponentCreation)
     auto Entity = Manager->MakeEntity<FTestEntity>();
 
     {
-        FTestEntity InvalidEntity = FTestEntity(Swarm::InvalidIndex);
+        FTestEntity InvalidEntity = FTestEntity();
 
         EXPECT_FALSE(
             Manager->AddComponent<FStringTestComponent>(InvalidEntity, "Test")

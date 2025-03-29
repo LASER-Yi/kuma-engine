@@ -4,8 +4,15 @@
 namespace Swarm
 {
 
-FEntity::FEntity(Swarm::EntityIndex InIndex) : EntityIndex(InIndex) {}
+FEntity::FEntity() : Index(Swarm::InvalidIndex) {}
 
-void FEntity::Reset() { EntityIndex = Swarm::InvalidIndex; }
+void FEntity::Reset() { Index = Swarm::InvalidIndex; }
+
+Swarm::EntityIndex FEntity::GetUnderlyingIndex() const { return Index; }
+
+void FEntity::InternalSetUnderlyingIndex(Swarm::EntityIndex NewIndex)
+{
+    Index = NewIndex;
+}
 
 } // namespace Swarm

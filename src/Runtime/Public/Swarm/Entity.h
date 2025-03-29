@@ -13,7 +13,7 @@ namespace Swarm
  */
 struct FEntity
 {
-    FEntity(Swarm::EntityIndex InIndex);
+    FEntity();
     ~FEntity() = default;
 
     FEntity(const FEntity&) = default;
@@ -34,10 +34,16 @@ struct FEntity
      * @brief Get the index of the entity.
      * @return The index of the entity.
      */
-    Swarm::EntityIndex GetUnderlyingIndex() const { return EntityIndex; }
+    Swarm::EntityIndex GetUnderlyingIndex() const;
+
+    /**
+     * @brief Set the index of the entity (internal use only)
+     * @param NewIndex The new index of this entity
+     */
+    void InternalSetUnderlyingIndex(Swarm::EntityIndex NewIndex);
 
 public:
-    Swarm::EntityIndex EntityIndex = Swarm::InvalidIndex;
+    Swarm::EntityIndex Index = Swarm::InvalidIndex;
 };
 
 } // namespace Swarm

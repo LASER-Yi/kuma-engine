@@ -12,6 +12,7 @@
 #include <map>
 #include <memory>
 #include <queue>
+#include <utility>
 #include <vector>
 
 namespace Swarm
@@ -35,8 +36,8 @@ public:
      * @throws static_assert if T is not derived from FEntity or has different
      * size (you cannot add new members to T)
      */
-    template <typename T>
-    T MakeEntity()
+    template <typename T, typename... Args>
+    T MakeEntity(Args&&... Arguments)
     {
         static_assert(
             std::is_base_of<FEntity, T>::value, "T must be derived from FEntity"
@@ -46,25 +47,25 @@ public:
             sizeof(T) == sizeof(FEntity), "T must be the same size as FEntity"
         );
 
+        T Entity(std::forward<Args>(Arguments)...);
         if (FreeEntityIndices.empty() == false)
         {
-            Swarm::EntityIndex NextIndex = FreeEntityIndices.front();
-            T Entity(NextIndex);
+            const Swarm::EntityIndex NextIndex = FreeEntityIndices.front();
             FreeEntityIndices.pop();
 
-            return Entity;
+            Entity.InternalSetUnderlyingIndex(NextIndex);
         }
         else
         {
-            T Entity(NextEntityIndex);
+            Entity.InternalSetUnderlyingIndex(NextEntityIndex);
             ++NextEntityIndex;
 
             assert(
                 NextEntityIndex < std::numeric_limits<Swarm::EntityIndex>::max()
             );
-
-            return Entity;
         }
+
+        return Entity;
     }
 
     /**

@@ -5,5 +5,5 @@
 
 struct FKumaEntity : public Swarm::FEntity
 {
-    FKumaEntity(Swarm::EntityIndex InIndex);
+    FKumaEntity();
 };

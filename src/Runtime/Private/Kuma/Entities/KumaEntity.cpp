@@ -5,7 +5,7 @@
 
 #include "Kuma/Entities/KumaEntity.h"
 
-FKumaEntity::FKumaEntity(Swarm::EntityIndex InIndex) : Swarm::FEntity(InIndex)
+FKumaEntity::FKumaEntity() : Swarm::FEntity()
 {
     Swarm::Manager* Manager = Swarm::Manager::Get();
 
