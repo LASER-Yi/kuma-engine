@@ -2,8 +2,11 @@
 
 #include "Core/Templates/Singleton.h"
 #include "CoreMinimal.h"
+#include "Swarm/Definition.h"
+#include "Swarm/Entity.h"
 #include "Swarm/Interfaces/Component.h"
-#include "Swarm/SwarmDefine.h"
+#include "Swarm/Interfaces/System.h"
+#include "Swarm/Utilties/ComponentArray.h"
 
 #include <cassert>
 #include <map>
@@ -11,61 +14,8 @@
 #include <queue>
 #include <vector>
 
-#include "Swarm/Entity.h"
-#include "Swarm/Interfaces/System.h"
-
 namespace Swarm
 {
-
-struct FComponentArray
-{
-    FComponentArray();
-
-    FComponentArray(Swarm::ComponentType Type, std::int32_t Size)
-        : ContainerType(Type), ComponentSize(Size)
-    {
-    }
-
-    template <typename T, typename... Args>
-    Swarm::ComponentIndex Add(Args&&... Arguments)
-    {
-        static_assert(
-            std::is_base_of<IComponent, T>::value,
-            "T must be derived from IComponent"
-        );
-
-        assert(ContainerType == T::GetType());
-        assert(ComponentSize == sizeof(T));
-
-        T Component = T(std::forward<Args>(Arguments)...);
-
-        // TODO: Store the component in a container
-        // Components.push_back(Component);
-        return Swarm::Invalid;
-    }
-
-    template <typename T>
-    T& GetItem(Swarm::ComponentIndex InIndex)
-    {
-        static_assert(
-            std::is_base_of<IComponent, T>::value,
-            "T must be derived from IComponent"
-        );
-
-        assert(ContainerType == T::GetType());
-
-        UNUSED_VAR(InIndex);
-
-        // Get the component from the component manager
-        assert(true && "GetItem not implemented");
-    }
-
-    void Remove(Swarm::ComponentIndex);
-
-private:
-    Swarm::ComponentType ContainerType;
-    std::int32_t ComponentSize;
-};
 
 class KManager final : public TSingleton<Swarm::KManager>
 {

@@ -1,6 +1,6 @@
 #include "CoreMinimal.h"
 
-#include "Swarm/SwarmDefine.h"
+#include "Swarm/Definition.h"
 #include "Swarm/SwarmManager.h"
 
 namespace Swarm
