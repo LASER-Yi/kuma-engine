@@ -155,6 +155,17 @@ public:
         EntityComponents.erase(T::GetType());
     }
 
+    template <typename T>
+    std::size_t GetComponentCount()
+    {
+        if (Components.contains(T::GetType()) == false)
+        {
+            return 0;
+        }
+
+        return Components[T::GetType()].GetSize();
+    }
+
 private:
     std::map<
         Swarm::EntityIndex,

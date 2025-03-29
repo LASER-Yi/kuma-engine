@@ -96,6 +96,10 @@ struct FComponentArray
         std::memcpy(RemoveTarget, LastElement, ComponentSize);
     }
 
+public:
+    std::size_t GetSize() const { return ContainerSize; }
+    std::size_t GetCapacity() const { return ContainerCapacity; }
+
 private:
     // Metadata
     Swarm::ComponentType Type;
