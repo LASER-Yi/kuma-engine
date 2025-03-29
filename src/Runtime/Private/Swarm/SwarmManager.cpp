@@ -1,10 +1,15 @@
 #include "CoreMinimal.h"
-#include "Swarm/SwarmDefine.h"
 
+#include "Swarm/SwarmDefine.h"
 #include "Swarm/SwarmManager.h"
 
 namespace Swarm
 {
+
+FComponentArray::FComponentArray()
+    : ContainerType(Swarm::Invalid), ComponentSize(0)
+{
+}
 
 void FComponentArray::Remove(Swarm::ComponentIndex Index) { UNUSED_VAR(Index); }
 
@@ -27,9 +32,9 @@ void Manager::RemoveEntity(FEntity& Entity)
     const auto& EntityComponents =
         EntityToComponents[Entity.GetUnderlyingIndex()];
 
-    for (const FEntityComponent& Component : EntityComponents)
+    for (const auto& [InComponentType, InComponentIndex] : EntityComponents)
     {
-        Components[Component.Type].Remove(Component.Index);
+        Components[InComponentType].Remove(InComponentIndex);
     }
 
     FreeEntityIndices.push(Entity.GetUnderlyingIndex());
