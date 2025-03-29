@@ -1,4 +1,4 @@
 include(CompileOptions)
 
 add_subdirectory(Engine)
-add_subdirectory(Editor)
+add_subdirectory(Launch)

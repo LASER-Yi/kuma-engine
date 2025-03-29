@@ -1,4 +1,4 @@
-project(Editor)
+project(Launch)
 
 include(CompileTarget)
 include(PlatformMacros)
