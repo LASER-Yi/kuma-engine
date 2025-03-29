@@ -17,5 +17,6 @@ static_assert(
     "ComponentType must be at least as large as std::size_t"
 );
 
-constexpr std::size_t Invalid = std::numeric_limits<std::size_t>::max();
+constexpr std::int64_t InvalidType = -1;
+constexpr std::size_t InvalidIndex = std::numeric_limits<std::size_t>::max();
 } // namespace Swarm

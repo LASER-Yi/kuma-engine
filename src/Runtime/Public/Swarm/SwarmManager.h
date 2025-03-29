@@ -63,14 +63,17 @@ public:
     void RemoveEntity(FEntity& Entity);
 
     template <typename T, typename... Args>
-    void AddComponent(FEntity& ToEntity, Args&&... Arguments)
+    bool AddComponent(FEntity& ToEntity, Args&&... Arguments)
     {
         static_assert(
             std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
-        assert(ToEntity.GetUnderlyingIndex() != Swarm::Invalid);
+        if (ToEntity.GetUnderlyingIndex() == Swarm::InvalidIndex)
+        {
+            return false;
+        }
 
         auto& EntityComponents =
             EntityToComponents[ToEntity.GetUnderlyingIndex()];
@@ -80,7 +83,7 @@ public:
         // component type.
         if (EntityComponents.contains(T::GetType()))
         {
-            return;
+            return false;
         }
 
         if (Components.contains(T::GetType()) == false)
@@ -94,6 +97,8 @@ public:
             ComponentArray.Add<T>(std::forward<Args>(Arguments)...);
 
         EntityComponents[T::GetType()] = NewIndex;
+
+        return true;
     }
 
     template <typename T>
@@ -104,7 +109,7 @@ public:
             "T must be derived from IComponent"
         );
 
-        assert(FromEntity.GetUnderlyingIndex() != Swarm::Invalid);
+        assert(FromEntity.GetUnderlyingIndex() != Swarm::InvalidIndex);
 
         auto& EntityComponents =
             EntityToComponents[FromEntity.GetUnderlyingIndex()];
@@ -118,7 +123,7 @@ public:
         const Swarm::ComponentIndex RequestIndex =
             EntityComponents[T::GetType()];
 
-        return &Components[T::GetType()].template GetItem<T>(RequestIndex);
+        return Components[T::GetType()].template GetItem<T>(RequestIndex);
     }
 
     template <typename T>
@@ -129,7 +134,7 @@ public:
             "T must be derived from IComponent"
         );
 
-        assert(FromEntity.GetUnderlyingIndex() != Swarm::Invalid);
+        assert(FromEntity.GetUnderlyingIndex() != Swarm::InvalidIndex);
 
         auto& EntityComponents =
             EntityToComponents[FromEntity.GetUnderlyingIndex()];

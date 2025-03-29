@@ -22,7 +22,7 @@ struct FEntity
     Swarm::EntityIndex GetUnderlyingIndex() const { return EntityIndex; }
 
 public:
-    Swarm::EntityIndex EntityIndex = Swarm::Invalid;
+    Swarm::EntityIndex EntityIndex = Swarm::InvalidIndex;
 };
 
 } // namespace Swarm

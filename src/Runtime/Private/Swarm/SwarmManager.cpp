@@ -1,17 +1,9 @@
 #include "CoreMinimal.h"
 
-#include "Swarm/Definition.h"
 #include "Swarm/SwarmManager.h"
 
 namespace Swarm
 {
-
-FComponentArray::FComponentArray()
-    : ContainerType(Swarm::Invalid), ComponentSize(0)
-{
-}
-
-void FComponentArray::Remove(Swarm::ComponentIndex Index) { UNUSED_VAR(Index); }
 
 KManager::KManager() {}
 

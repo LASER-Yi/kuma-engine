@@ -21,12 +21,12 @@ TEST(SwarmTest, EntityCreation)
     auto Entity = Manager->MakeEntity<FTestEntity>();
 
     // Check that the entity has a unique ID
-    EXPECT_NE(Entity.GetUnderlyingIndex(), Swarm::Invalid);
+    EXPECT_NE(Entity.GetUnderlyingIndex(), Swarm::InvalidIndex);
 
     Manager->RemoveEntity(Entity);
 
     // Check that the entity has been removed
-    EXPECT_EQ(Entity.GetUnderlyingIndex(), Swarm::Invalid);
+    EXPECT_EQ(Entity.GetUnderlyingIndex(), Swarm::InvalidIndex);
 }
 
 TEST(SwarmTest, ComponentCreation)
@@ -35,7 +35,8 @@ TEST(SwarmTest, ComponentCreation)
 
     auto Entity = Manager->MakeEntity<FTestEntity>();
 
-    Manager->AddComponent<FTestComponent>(Entity, "FTestComponent");
+    EXPECT_TRUE(Manager->AddComponent<FTestComponent>(Entity, "FTestComponent")
+    );
 
     FTestComponent* Component = Manager->GetComponent<FTestComponent>(Entity);
 
