@@ -1,5 +1,6 @@
 #include "CoreMinimal.h"
 #include <gtest/gtest.h>
+#include <memory>
 
 struct FTestEntity : public Swarm::FEntity
 {
@@ -23,27 +24,24 @@ TEST(SwarmTest, EntityCreation)
 {
     // Create an entity
     Swarm::Manager* Manager = Swarm::Manager::Get();
-    FTestEntity Entity = Manager->MakeEntity<FTestEntity>();
+    std::shared_ptr<FTestEntity> Entity = Manager->MakeEntity<FTestEntity>();
 
     // Check that the entity has a unique ID
-    EXPECT_NE(Entity.GetUnderlyingIndex(), Swarm::InvalidIndex);
+    EXPECT_NE(Entity->GetUnderlyingIndex(), Swarm::InvalidIndex);
 
-    Manager->RemoveEntity(&Entity);
-
-    // Check that the entity has been removed
-    EXPECT_EQ(Entity.GetUnderlyingIndex(), Swarm::InvalidIndex);
+    Entity.reset();
 
     Entity = Manager->MakeEntity<FTestEntity>();
 
     // Check that the entity has a unique ID
-    EXPECT_NE(Entity.GetUnderlyingIndex(), Swarm::InvalidIndex);
+    EXPECT_NE(Entity->GetUnderlyingIndex(), Swarm::InvalidIndex);
 }
 
 TEST(SwarmTest, ComponentCreation)
 {
     Swarm::Manager* Manager = Swarm::Manager::Get();
 
-    auto Entity = Manager->MakeEntity<FTestEntity>();
+    std::shared_ptr<FTestEntity> Entity = Manager->MakeEntity<FTestEntity>();
 
     {
         FTestEntity InvalidEntity = FTestEntity();
@@ -52,17 +50,18 @@ TEST(SwarmTest, ComponentCreation)
     }
 
     {
-        EXPECT_EQ(Entity.GetComponent<FStringTestComponent>(), nullptr);
+        EXPECT_EQ(Entity->GetComponent<FStringTestComponent>(), nullptr);
 
         const char* TestString = "Test Component";
         const char* AnotherTestString = "Another Test Component";
-        EXPECT_TRUE(Entity.AddComponent<FStringTestComponent>(TestString));
+        EXPECT_TRUE(Entity->AddComponent<FStringTestComponent>(TestString));
 
-        EXPECT_FALSE(Entity.AddComponent<FStringTestComponent>(AnotherTestString
-        ));
+        EXPECT_FALSE(
+            Entity->AddComponent<FStringTestComponent>(AnotherTestString)
+        );
 
         FStringTestComponent* Component =
-            Entity.GetComponent<FStringTestComponent>();
+            Entity->GetComponent<FStringTestComponent>();
 
         // Check that the component was added successfully
         EXPECT_NE(Component, nullptr);
@@ -71,12 +70,13 @@ TEST(SwarmTest, ComponentCreation)
     }
 
     {
-        EXPECT_EQ(Entity.GetComponent<FIntTestComponent>(), nullptr);
+        EXPECT_EQ(Entity->GetComponent<FIntTestComponent>(), nullptr);
 
         int TestValue = 42;
-        EXPECT_TRUE(Entity.AddComponent<FIntTestComponent>(TestValue));
+        EXPECT_TRUE(Entity->AddComponent<FIntTestComponent>(TestValue));
 
-        FIntTestComponent* Component = Entity.GetComponent<FIntTestComponent>();
+        FIntTestComponent* Component =
+            Entity->GetComponent<FIntTestComponent>();
 
         // Check that the component was added successfully
         EXPECT_NE(Component, nullptr);
@@ -85,19 +85,19 @@ TEST(SwarmTest, ComponentCreation)
     }
 
     {
-        EXPECT_NE(Entity.GetComponent<FStringTestComponent>(), nullptr);
+        EXPECT_NE(Entity->GetComponent<FStringTestComponent>(), nullptr);
 
-        Entity.RemoveComponent<FStringTestComponent>();
+        Entity->RemoveComponent<FStringTestComponent>();
 
-        EXPECT_EQ(Entity.GetComponent<FStringTestComponent>(), nullptr);
+        EXPECT_EQ(Entity->GetComponent<FStringTestComponent>(), nullptr);
     }
 
     {
-        EXPECT_NE(Entity.GetComponent<FIntTestComponent>(), nullptr);
+        EXPECT_NE(Entity->GetComponent<FIntTestComponent>(), nullptr);
 
-        Entity.RemoveComponent<FIntTestComponent>();
+        Entity->RemoveComponent<FIntTestComponent>();
 
-        EXPECT_EQ(Entity.GetComponent<FIntTestComponent>(), nullptr);
+        EXPECT_EQ(Entity->GetComponent<FIntTestComponent>(), nullptr);
     }
 }
 
@@ -105,13 +105,13 @@ TEST(SwarmTest, EntityComponentCreation)
 {
     Swarm::Manager* Manager = Swarm::Manager::Get();
 
-    auto Entity = Manager->MakeEntity<FTestEntity>();
+    std::shared_ptr<FTestEntity> Entity = Manager->MakeEntity<FTestEntity>();
 
     const char* TestString = "Test Component";
 
-    EXPECT_TRUE(Entity.AddComponent<FStringTestComponent>(TestString));
+    EXPECT_TRUE(Entity->AddComponent<FStringTestComponent>(TestString));
 
-    Manager->RemoveEntity(&Entity);
+    Entity = nullptr;
 
     // Check that the component was also removed
     EXPECT_EQ(Manager->GetComponentCount<FStringTestComponent>(), 0);

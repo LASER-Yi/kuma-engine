@@ -2,8 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Kuma/Entities/KumaWorld.h"
+#include <memory>
 
 struct FWorldComponent : public Swarm::IComponent<FWorldComponent>
 {
-    FKumaWorld World;
+    std::weak_ptr<FKumaWorld> World;
 };

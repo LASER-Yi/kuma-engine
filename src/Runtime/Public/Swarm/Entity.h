@@ -3,10 +3,16 @@
 #include "CoreMinimal.h"
 #include "Swarm/EntityBase.h"
 #include "Swarm/Manager.h"
+#include <memory>
 
 namespace Swarm
 {
 
+/**
+ * @brief Represent an entity in the swarm system.
+ * @details This class is used to represent an entity in the swarm system. It
+ * provide some helper function to manage the component
+ */
 struct FEntity : public FEntityBase
 {
     template <typename T, typename... Args>
@@ -27,6 +33,13 @@ struct FEntity : public FEntityBase
     void RemoveComponent()
     {
         Swarm::Manager::Get()->RemoveComponent<T>(this);
+    }
+
+    template <typename T>
+    std::shared_ptr<T> GetShared()
+    {
+        std::shared_ptr<FEntityBase> base = shared_from_this();
+        return std::static_pointer_cast<T>(base);
     }
 };
 

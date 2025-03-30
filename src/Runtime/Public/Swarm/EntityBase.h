@@ -1,33 +1,25 @@
 #pragma once
 
-#include "CoreMinimal.h"
-
+#include <memory>
 namespace Swarm
 {
 
 /**
- * @brief Represents an entity in the swarm system.
+ * @brief Base class of an entity in the swarm system. Mainly use for
+ * interacting with the swarm manager
  * @details This class is used to represent an entity in the swarm system. It
  * contains an index that is used to identify the entity in the system.
  */
-struct FEntityBase
+struct FEntityBase : public std::enable_shared_from_this<FEntityBase>
 {
     FEntityBase();
-    ~FEntityBase() = default;
+    virtual ~FEntityBase();
 
-    FEntityBase(const FEntityBase&) = default;
-    FEntityBase& operator=(const FEntityBase&) = default;
+    FEntityBase(const FEntityBase&) = delete;
+    FEntityBase& operator=(const FEntityBase&) = delete;
 
     FEntityBase(FEntityBase&&) = default;
     FEntityBase& operator=(FEntityBase&&) = default;
-
-    /**
-     * @brief Reset the entity to invalid state.
-     * @details This function resets the entity to its initial state.
-     * Please noted that the entity will not be removed by calling this
-     * function.
-     */
-    void Reset();
 
     /**
      * @brief Get the index of the entity.
@@ -41,7 +33,7 @@ struct FEntityBase
      */
     void InternalSetUnderlyingIndex(Swarm::EntityIndex NewIndex);
 
-public:
+private:
     Swarm::EntityIndex Index = Swarm::InvalidIndex;
 };
 

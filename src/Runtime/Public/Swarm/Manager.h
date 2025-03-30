@@ -2,6 +2,7 @@
 
 #include "Core/Templates/Singleton.h"
 #include "CoreMinimal.h"
+#include "Swarm/Definition.h"
 #include "Swarm/EntityBase.h"
 #include "Swarm/Interfaces/System.h"
 #include "Swarm/Utilities/ComponentArray.h"
@@ -35,7 +36,7 @@ public:
      * different size (you cannot add new members to T)
      */
     template <typename T, typename... Args>
-    T MakeEntity(Args&&... Arguments)
+    std::shared_ptr<T> MakeEntity(Args&&... Arguments)
     {
         static_assert(
             std::is_base_of<FEntityBase, T>::value,
@@ -47,23 +48,27 @@ public:
             "T must be the same size as FEntityBase"
         );
 
-        T Entity(std::forward<Args>(Arguments)...);
+        std::shared_ptr<T> Entity =
+            std::make_shared<T>(std::forward<Args>(Arguments)...);
+
+        Swarm::EntityIndex NewIndex = Swarm::InvalidIndex;
         if (FreeEntityIndices.empty() == false)
         {
-            const Swarm::EntityIndex NextIndex = FreeEntityIndices.front();
+            NewIndex = FreeEntityIndices.front();
             FreeEntityIndices.pop();
-
-            Entity.InternalSetUnderlyingIndex(NextIndex);
         }
         else
         {
-            Entity.InternalSetUnderlyingIndex(NextEntityIndex);
+            NewIndex = NextEntityIndex;
             ++NextEntityIndex;
 
             assert(
                 NextEntityIndex < std::numeric_limits<Swarm::EntityIndex>::max()
             );
         }
+
+        assert(NewIndex != Swarm::InvalidIndex);
+        Entity->InternalSetUnderlyingIndex(NewIndex);
 
         return Entity;
     }

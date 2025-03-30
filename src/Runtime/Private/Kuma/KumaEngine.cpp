@@ -11,5 +11,5 @@ void KKumaEngine::Initialize()
 void KKumaEngine::Shutdown()
 {
     KEngine::Shutdown();
-    Swarm::Manager::Get()->RemoveEntity(&CurrentWorld);
+    CurrentWorld.reset();
 }

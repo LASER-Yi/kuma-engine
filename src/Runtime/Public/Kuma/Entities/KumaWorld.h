@@ -8,5 +8,5 @@ struct FKumaWorld : public Swarm::FEntity
 {
     FKumaWorld();
 
-    void AddToWorld(FKumaEntity* InEntity);
+    void AddToWorld(std::shared_ptr<FKumaEntity> InEntity);
 };

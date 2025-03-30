@@ -33,8 +33,6 @@ void Manager::RemoveEntity(FEntityBase* Entity)
     }
 
     FreeEntityIndices.push(Entity->GetUnderlyingIndex());
-
-    Entity->Reset();
 }
 
 } // namespace Swarm
