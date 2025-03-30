@@ -15,8 +15,10 @@ namespace Swarm
  */
 struct FEntity : public FEntityBase
 {
+    FEntity(Swarm::SignatureType InSignature) : FEntityBase(InSignature) {}
+
     template <typename T, typename... Args>
-    bool AddComponent(Args... Arguments)
+    bool AddComponent(Args&&... Arguments)
     {
         return Swarm::Manager::Get()->AddComponent<T>(
             this, std::forward<Args>(Arguments)...

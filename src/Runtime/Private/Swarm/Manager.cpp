@@ -25,40 +25,25 @@ void Manager::RemoveEntity(FEntityBase* Entity)
         return;
     }
 
-    if (EntityToComponents.contains(Entity->GetIndex()))
-    {
-        const auto& EntityComponents = EntityToComponents[Entity->GetIndex()];
+    const Swarm::SignatureType Signature = Entity->GetSignature();
 
-        for (const auto& [InComponentType, InComponentIndex] : EntityComponents)
+    if (EntityToComponents.contains(Signature))
+    {
+        const auto& EntityComponents = EntityToComponents[Signature];
+
+        for (const auto& [InComponentType, InComponentSignature] :
+             EntityComponents)
         {
-            Components[InComponentType].Remove(InComponentIndex);
+            UNUSED_VAR(InComponentType);
+            UNUSED_VAR(InComponentSignature);
+            // TODO: How to remove the component without knowing the type?
+            // Components[InComponentType].Remove(InComponentIndex);
         }
 
-        EntityToComponents.erase(Entity->GetIndex());
+        EntityToComponents.erase(Signature);
     }
 
-    FreeEntityIndices.push(Entity->GetIndex());
-}
-
-Swarm::EntityIndex Manager::AllocateEntityIndex()
-{
-    Swarm::EntityIndex NewIndex = Swarm::InvalidIndex;
-    if (FreeEntityIndices.empty() == false)
-    {
-        NewIndex = FreeEntityIndices.front();
-        FreeEntityIndices.pop();
-    }
-    else
-    {
-        NewIndex = NextEntityIndex;
-        ++NextEntityIndex;
-
-        assert(
-            NextEntityIndex < std::numeric_limits<Swarm::EntityIndex>::max()
-        );
-    }
-
-    return NewIndex;
+    EntitySignature.Release(Signature);
 }
 
 } // namespace Swarm

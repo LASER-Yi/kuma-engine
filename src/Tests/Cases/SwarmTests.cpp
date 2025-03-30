@@ -1,17 +1,18 @@
 #include "CoreMinimal.h"
+#include "Swarm/Definition.h"
 #include "Swarm/Entity.h"
 #include <cstddef>
 #include <gtest/gtest.h>
 #include <memory>
 
-struct FContentComponent : public Swarm::IComponent<FContentComponent>
+struct FContentComponent : public Swarm::FComponent
 {
     std::string Content;
 
     FContentComponent(const std::string& InContent) : Content(InContent) {}
 };
 
-struct FExternalComponent : public Swarm::IComponent<FExternalComponent>
+struct FExternalComponent : public Swarm::FComponent
 {
     int Value;
 
@@ -20,7 +21,8 @@ struct FExternalComponent : public Swarm::IComponent<FExternalComponent>
 
 struct FTestEntity : public Swarm::FEntity
 {
-    FTestEntity(const std::string& Content) : Swarm::FEntity()
+    FTestEntity(Swarm::SignatureType InSignature, const std::string& Content)
+        : Swarm::FEntity(InSignature)
     {
         AddComponent<FContentComponent>(Content);
     }
@@ -35,7 +37,7 @@ TEST(SwarmTests, EntityCreation)
         Manager->MakeEntity<FTestEntity>(TestContent);
 
     // Check that the entity has a unique ID
-    EXPECT_NE(Entity->GetIndex(), Swarm::InvalidIndex);
+    EXPECT_NE(Entity->GetSignature(), Swarm::InvalidSignature);
 
     // Check that the entity has the required component
     EXPECT_NE(Entity->GetComponent<FContentComponent>(), nullptr);

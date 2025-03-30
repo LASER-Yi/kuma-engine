@@ -1,16 +1,17 @@
 #include "Swarm/EntityBase.h"
+#include "Swarm/Definition.h"
 #include "Swarm/Manager.h"
 
 namespace Swarm
 {
 
-FEntityBase::FEntityBase()
+FEntityBase::FEntityBase(Swarm::SignatureType InSignature)
+    : Signature(InSignature)
 {
-    Index = Swarm::Manager::Get()->AllocateEntityIndex();
 }
 
 FEntityBase::~FEntityBase() { Swarm::Manager::Get()->RemoveEntity(this); }
 
-Swarm::EntityIndex FEntityBase::GetIndex() const { return Index; }
+Swarm::SignatureType FEntityBase::GetSignature() const { return Signature; }
 
 } // namespace Swarm

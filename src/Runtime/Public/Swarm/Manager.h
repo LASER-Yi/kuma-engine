@@ -1,16 +1,18 @@
 #pragma once
 
-#include "Core/Templates/Singleton.h"
 #include "CoreMinimal.h"
+
+#include "Core/Templates/Singleton.h"
+#include "Swarm/Component.h"
+#include "Swarm/Containers/Signature.h"
+#include "Swarm/Containers/TypedArray.h"
 #include "Swarm/Definition.h"
 #include "Swarm/EntityBase.h"
 #include "Swarm/Interfaces/System.h"
-#include "Swarm/Utilities/ComponentArray.h"
 
 #include <cassert>
 #include <map>
 #include <memory>
-#include <queue>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -46,7 +48,11 @@ public:
             "T must be the same size as FEntityBase"
         );
 
-        return std::make_shared<T>(std::forward<Args>(Arguments)...);
+        const Swarm::SignatureType NewSignature = EntitySignature.Allocate();
+
+        return std::make_shared<T>(
+            NewSignature, std::forward<Args>(Arguments)...
+        );
     }
 
     /**
@@ -55,8 +61,6 @@ public:
      * @param Entity An entity to be removed.
      */
     void RemoveEntity(FEntityBase* Entity);
-
-    Swarm::EntityIndex AllocateEntityIndex();
 
     /**
      * @brief Add a new component to the specified entity.
@@ -67,7 +71,7 @@ public:
      */
     template <
         typename T, typename... Args,
-        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
+        std::enable_if_t<std::is_base_of<FComponent, T>::value, bool> = true>
     bool AddComponent(FEntityBase* ToEntity, Args&&... Arguments)
     {
         if (ToEntity == nullptr)
@@ -75,32 +79,27 @@ public:
             return false;
         }
 
-        if (ToEntity->GetIndex() == Swarm::InvalidIndex)
+        if (ToEntity->GetSignature() == Swarm::InvalidSignature)
         {
             return false;
         }
 
-        auto& EntityComponents = EntityToComponents[ToEntity->GetIndex()];
+        auto& EntityComponents = EntityToComponents[ToEntity->GetSignature()];
+
+        const size_t TypeId = typeid(T).hash_code();
 
         // Prevent adding duplicate components to the same entity
         // as each entity should have at most one instance of a specific
         // component type.
-        if (EntityComponents.contains(T::GetType()))
+        if (EntityComponents.contains(TypeId))
         {
             return false;
         }
 
-        if (Components.contains(T::GetType()) == false)
-        {
-            Components[T::GetType()] = FComponentArray(T::GetType(), sizeof(T));
-        }
+        const Swarm::SignatureType NewComponent =
+            Components.Add<T>(std::forward<Args>(Arguments)...);
 
-        FComponentArray& ComponentArray = Components[T::GetType()];
-
-        const Swarm::ComponentIndex NewIndex =
-            ComponentArray.Add<T>(std::forward<Args>(Arguments)...);
-
-        EntityComponents[T::GetType()] = NewIndex;
+        EntityComponents[TypeId] = NewComponent;
 
         return true;
     }
@@ -114,7 +113,7 @@ public:
      */
     template <
         typename T,
-        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
+        std::enable_if_t<std::is_base_of<FComponent, T>::value, bool> = true>
     T* GetComponent(const FEntityBase* FromEntity)
     {
         if (FromEntity == nullptr)
@@ -122,20 +121,22 @@ public:
             return nullptr;
         }
 
-        assert(FromEntity->GetIndex() != Swarm::InvalidIndex);
+        assert(FromEntity->GetSignature() != Swarm::InvalidSignature);
 
-        auto& EntityComponents = EntityToComponents[FromEntity->GetIndex()];
+        auto& EntityComponents =
+            EntityToComponents.at(FromEntity->GetSignature());
 
         // Check if the entity has the component
-        if (EntityComponents.contains(T::GetType()) == false)
+        const size_t TypeId = typeid(T).hash_code();
+        if (EntityComponents.contains(TypeId) == false)
         {
             return nullptr;
         }
 
-        const Swarm::ComponentIndex RequestIndex =
-            EntityComponents[T::GetType()];
+        const Swarm::SignatureType RequestSignature =
+            EntityComponents.at(TypeId);
 
-        return Components[T::GetType()].template GetItem<T>(RequestIndex);
+        return Components.Find<T>(RequestSignature);
     }
 
     /**
@@ -145,7 +146,7 @@ public:
      */
     template <
         typename T,
-        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
+        std::enable_if_t<std::is_base_of<FComponent, T>::value, bool> = true>
     void RemoveComponent(FEntityBase* FromEntity)
     {
 
@@ -154,24 +155,24 @@ public:
             return;
         }
 
-        assert(FromEntity->GetIndex() != Swarm::InvalidIndex);
+        assert(FromEntity->GetSignature() != Swarm::InvalidSignature);
 
-        auto& EntityComponents = EntityToComponents[FromEntity->GetIndex()];
+        auto& EntityComponents = EntityToComponents[FromEntity->GetSignature()];
+        const size_t TypeId = typeid(T).hash_code();
 
         // Check if the entity has the component
-        if (EntityComponents.contains(T::GetType()) == false)
+        if (EntityComponents.contains(TypeId) == false)
         {
             return;
         }
 
-        const Swarm::ComponentIndex PendingRemoveIndex =
-            EntityComponents[T::GetType()];
+        const Swarm::SignatureType RemoveSignature = EntityComponents[TypeId];
 
         // Remove component from the component array
-        Components[T::GetType()].Remove(PendingRemoveIndex);
+        Components.Remove<T>(RemoveSignature);
 
         // Update entity-to-components map
-        EntityComponents.erase(T::GetType());
+        EntityComponents.erase(TypeId);
     }
 
     /**
@@ -181,30 +182,23 @@ public:
      */
     template <
         typename T,
-        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
+        std::enable_if_t<std::is_base_of<FComponent, T>::value, bool> = true>
     std::size_t GetComponentCount()
     {
-        if (Components.contains(T::GetType()) == false)
-        {
-            return 0;
-        }
-
-        return Components[T::GetType()].GetSize();
+        return Components.Count<T>();
     }
 
 private:
-    using ComponentArrayContainer =
-        std::unordered_map<Swarm::ComponentType, FComponentArray>;
-    using ComponentRefContainer =
-        std::unordered_map<Swarm::ComponentType, Swarm::ComponentIndex>;
+    std::map<
+        Swarm::SignatureType,
+        std::unordered_map<std::size_t, Swarm::SignatureType>>
+        EntityToComponents;
 
-    std::map<Swarm::EntityIndex, ComponentRefContainer> EntityToComponents;
-    ComponentArrayContainer Components;
+    TTypedArray<Swarm::SignatureType> Components;
     std::vector<std::shared_ptr<ISystem>> Systems;
 
-private:
-    Swarm::EntityIndex NextEntityIndex = 0;
-    std::queue<Swarm::EntityIndex> FreeEntityIndices;
+public:
+    TSignature<Swarm::SignatureType> EntitySignature;
 };
 
 } // namespace Swarm

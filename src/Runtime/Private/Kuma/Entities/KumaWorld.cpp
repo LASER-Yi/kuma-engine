@@ -4,7 +4,8 @@
 #include "Kuma/Entities/KumaEntity.h"
 #include "Swarm/Entity.h"
 
-FKumaWorld::FKumaWorld() : Swarm::FEntity()
+FKumaWorld::FKumaWorld(Swarm::SignatureType InSignature)
+    : Swarm::FEntity(InSignature)
 {
     AddComponent<FWorldEntityComponent>();
 }

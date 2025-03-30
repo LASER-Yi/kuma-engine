@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Swarm/Definition.h"
 #include <memory>
 namespace Swarm
 {
@@ -12,7 +13,7 @@ namespace Swarm
  */
 struct FEntityBase : public std::enable_shared_from_this<FEntityBase>
 {
-    FEntityBase();
+    FEntityBase(Swarm::SignatureType Signature);
     virtual ~FEntityBase();
 
     FEntityBase(const FEntityBase&) = delete;
@@ -22,13 +23,13 @@ struct FEntityBase : public std::enable_shared_from_this<FEntityBase>
     FEntityBase& operator=(FEntityBase&&) = default;
 
     /**
-     * @brief Get the index of the entity.
-     * @return The index of the entity.
+     * @brief Get the signature of the entity.
+     * @return The signature of the entity.
      */
-    Swarm::EntityIndex GetIndex() const;
+    Swarm::SignatureType GetSignature() const;
 
 private:
-    Swarm::EntityIndex Index = Swarm::InvalidIndex;
+    Swarm::SignatureType Signature = Swarm::InvalidSignature;
 };
 
 } // namespace Swarm
