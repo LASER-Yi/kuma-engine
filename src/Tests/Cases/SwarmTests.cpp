@@ -40,6 +40,11 @@ TEST(SwarmTests, EntityCreation)
     // Check that the entity has the required component
     EXPECT_NE(Entity->GetComponent<FContentComponent>(), nullptr);
     EXPECT_EQ(Entity->GetComponent<FContentComponent>()->Content, TestContent);
+
+    Entity = nullptr;
+
+    // Destroy entity should destroy all of its components
+    EXPECT_EQ(Manager->GetComponentCount<FContentComponent>(), 0);
 }
 
 TEST(SwarmTests, ComponentCreation)
