@@ -1,48 +1,33 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Swarm/EntityBase.h"
+#include "Swarm/Manager.h"
 
 namespace Swarm
 {
 
-/**
- * @brief Represents an entity in the swarm system.
- * @details This class is used to represent an entity in the swarm system. It
- * contains an index that is used to identify the entity in the system.
- */
-struct FEntity
+struct FEntity : public FEntityBase
 {
-    FEntity();
-    ~FEntity() = default;
+    template <typename T, typename... Args>
+    bool AddComponent(Args... Arguments)
+    {
+        return Swarm::Manager::Get()->AddComponent<T>(
+            this, std::forward<Args>(Arguments)...
+        );
+    }
 
-    FEntity(const FEntity&) = default;
-    FEntity& operator=(const FEntity&) = default;
+    template <typename T>
+    T* GetComponent() const
+    {
+        return Swarm::Manager::Get()->GetComponent<T>(this);
+    }
 
-    FEntity(FEntity&&) = default;
-    FEntity& operator=(FEntity&&) = default;
-
-    /**
-     * @brief Reset the entity to invalid state.
-     * @details This function resets the entity to its initial state.
-     * Please noted that the entity will not be removed by calling this
-     * function.
-     */
-    void Reset();
-
-    /**
-     * @brief Get the index of the entity.
-     * @return The index of the entity.
-     */
-    Swarm::EntityIndex GetUnderlyingIndex() const;
-
-    /**
-     * @brief Set the index of the entity (internal use only)
-     * @param NewIndex The new index of this entity
-     */
-    void InternalSetUnderlyingIndex(Swarm::EntityIndex NewIndex);
-
-public:
-    Swarm::EntityIndex Index = Swarm::InvalidIndex;
+    template <typename T>
+    void RemoveComponent()
+    {
+        Swarm::Manager::Get()->RemoveComponent<T>(this);
+    }
 };
 
 } // namespace Swarm

@@ -2,6 +2,8 @@
 
 #include "Core/Templates/Singleton.h"
 #include "CoreMinimal.h"
+#include "Swarm/EntityBase.h"
+#include "Swarm/Interfaces/System.h"
 #include "Swarm/Utilities/ComponentArray.h"
 
 #include <cassert>
@@ -27,20 +29,22 @@ public:
 
     /**
      * @brief Creates a new entity of type T
-     * @tparam T Entity type that must derive from FEntity
+     * @tparam T Entity type that must derive from FEntityBase
      * @return Newly created entity of type T
-     * @throws static_assert if T is not derived from FEntity or has different
-     * size (you cannot add new members to T)
+     * @throws static_assert if T is not derived from FEntityBase or has
+     * different size (you cannot add new members to T)
      */
     template <typename T, typename... Args>
     T MakeEntity(Args&&... Arguments)
     {
         static_assert(
-            std::is_base_of<FEntity, T>::value, "T must be derived from FEntity"
+            std::is_base_of<FEntityBase, T>::value,
+            "T must be derived from FEntityBase"
         );
 
         static_assert(
-            sizeof(T) == sizeof(FEntity), "T must be the same size as FEntity"
+            sizeof(T) == sizeof(FEntityBase),
+            "T must be the same size as FEntityBase"
         );
 
         T Entity(std::forward<Args>(Arguments)...);
@@ -69,7 +73,7 @@ public:
      *
      * @param Entity An entity to be removed.
      */
-    void RemoveEntity(FEntity& Entity);
+    void RemoveEntity(FEntityBase* Entity);
 
     /**
      * @brief Add a new component to the specified entity.
@@ -79,20 +83,25 @@ public:
      * @return true if the component was added successfully, false otherwise.
      */
     template <typename T, typename... Args>
-    bool AddComponent(FEntity& ToEntity, Args&&... Arguments)
+    bool AddComponent(FEntityBase* ToEntity, Args&&... Arguments)
     {
         static_assert(
             std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
-        if (ToEntity.GetUnderlyingIndex() == Swarm::InvalidIndex)
+        if (ToEntity == nullptr)
+        {
+            return false;
+        }
+
+        if (ToEntity->GetUnderlyingIndex() == Swarm::InvalidIndex)
         {
             return false;
         }
 
         auto& EntityComponents =
-            EntityToComponents[ToEntity.GetUnderlyingIndex()];
+            EntityToComponents[ToEntity->GetUnderlyingIndex()];
 
         // Prevent adding duplicate components to the same entity
         // as each entity should have at most one instance of a specific
@@ -125,17 +134,22 @@ public:
      * does not exist.
      */
     template <typename T>
-    T* GetComponent(FEntity& FromEntity)
+    T* GetComponent(const FEntityBase* FromEntity)
     {
         static_assert(
             std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
-        assert(FromEntity.GetUnderlyingIndex() != Swarm::InvalidIndex);
+        if (FromEntity == nullptr)
+        {
+            return nullptr;
+        }
+
+        assert(FromEntity->GetUnderlyingIndex() != Swarm::InvalidIndex);
 
         auto& EntityComponents =
-            EntityToComponents[FromEntity.GetUnderlyingIndex()];
+            EntityToComponents[FromEntity->GetUnderlyingIndex()];
 
         // Check if the entity has the component
         if (EntityComponents.contains(T::GetType()) == false)
@@ -155,17 +169,22 @@ public:
      * @param FromEntity The entity from which the component will be removed.
      */
     template <typename T>
-    void RemoveComponent(FEntity& FromEntity)
+    void RemoveComponent(FEntityBase* FromEntity)
     {
         static_assert(
             std::is_base_of<IComponent<T>, T>::value,
             "T must be derived from IComponent"
         );
 
-        assert(FromEntity.GetUnderlyingIndex() != Swarm::InvalidIndex);
+        if (FromEntity == nullptr)
+        {
+            return;
+        }
+
+        assert(FromEntity->GetUnderlyingIndex() != Swarm::InvalidIndex);
 
         auto& EntityComponents =
-            EntityToComponents[FromEntity.GetUnderlyingIndex()];
+            EntityToComponents[FromEntity->GetUnderlyingIndex()];
 
         // Check if the entity has the component
         if (EntityComponents.contains(T::GetType()) == false)

@@ -5,8 +5,6 @@
 
 FKumaEntity::FKumaEntity() : Swarm::FEntity()
 {
-    Swarm::Manager* Manager = Swarm::Manager::Get();
-
-    Manager->AddComponent<FWorldComponent>(*this);
-    Manager->AddComponent<FTransformComponent>(*this);
+    AddComponent<FWorldComponent>();
+    AddComponent<FTransformComponent>();
 }

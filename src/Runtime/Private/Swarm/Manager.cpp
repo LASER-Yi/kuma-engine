@@ -17,19 +17,24 @@ void Manager::Update(float DeltaTime)
     }
 }
 
-void Manager::RemoveEntity(FEntity& Entity)
+void Manager::RemoveEntity(FEntityBase* Entity)
 {
+    if (Entity == nullptr)
+    {
+        return;
+    }
+
     const auto& EntityComponents =
-        EntityToComponents[Entity.GetUnderlyingIndex()];
+        EntityToComponents[Entity->GetUnderlyingIndex()];
 
     for (const auto& [InComponentType, InComponentIndex] : EntityComponents)
     {
         Components[InComponentType].Remove(InComponentIndex);
     }
 
-    FreeEntityIndices.push(Entity.GetUnderlyingIndex());
+    FreeEntityIndices.push(Entity->GetUnderlyingIndex());
 
-    Entity.Reset();
+    Entity->Reset();
 }
 
 } // namespace Swarm

@@ -13,7 +13,7 @@ namespace Swarm
  * This class provides a static method to get the type of the component.
  */
 template <typename T>
-class IComponent
+struct IComponent
 {
 public:
     /**
