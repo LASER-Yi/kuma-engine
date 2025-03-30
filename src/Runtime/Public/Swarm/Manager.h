@@ -36,14 +36,11 @@ public:
      * @throws static_assert if T is not derived from FEntityBase or has
      * different size (you cannot add new members to T)
      */
-    template <typename T, typename... Args>
+    template <
+        typename T, typename... Args,
+        std::enable_if_t<std::is_base_of<FEntityBase, T>::value, bool> = true>
     std::shared_ptr<T> MakeEntity(Args&&... Arguments)
     {
-        static_assert(
-            std::is_base_of<FEntityBase, T>::value,
-            "T must be derived from FEntityBase"
-        );
-
         static_assert(
             sizeof(T) == sizeof(FEntityBase),
             "T must be the same size as FEntityBase"
@@ -68,14 +65,11 @@ public:
      * @param Arguments The arguments to be passed to the component constructor.
      * @return true if the component was added successfully, false otherwise.
      */
-    template <typename T, typename... Args>
+    template <
+        typename T, typename... Args,
+        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
     bool AddComponent(FEntityBase* ToEntity, Args&&... Arguments)
     {
-        static_assert(
-            std::is_base_of<IComponent<T>, T>::value,
-            "T must be derived from IComponent"
-        );
-
         if (ToEntity == nullptr)
         {
             return false;
@@ -118,14 +112,11 @@ public:
      * @return A pointer to the component of type T, or nullptr if the component
      * does not exist.
      */
-    template <typename T>
+    template <
+        typename T,
+        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
     T* GetComponent(const FEntityBase* FromEntity)
     {
-        static_assert(
-            std::is_base_of<IComponent<T>, T>::value,
-            "T must be derived from IComponent"
-        );
-
         if (FromEntity == nullptr)
         {
             return nullptr;
@@ -152,13 +143,11 @@ public:
      * @tparam T The type of the component to be removed.
      * @param FromEntity The entity from which the component will be removed.
      */
-    template <typename T>
+    template <
+        typename T,
+        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
     void RemoveComponent(FEntityBase* FromEntity)
     {
-        static_assert(
-            std::is_base_of<IComponent<T>, T>::value,
-            "T must be derived from IComponent"
-        );
 
         if (FromEntity == nullptr)
         {
@@ -190,7 +179,9 @@ public:
      * @tparam T The type of the component to be counted.
      * @return The number of components of type T in the swarm.
      */
-    template <typename T>
+    template <
+        typename T,
+        std::enable_if_t<std::is_base_of<IComponent<T>, T>::value, bool> = true>
     std::size_t GetComponentCount()
     {
         if (Components.contains(T::GetType()) == false)
