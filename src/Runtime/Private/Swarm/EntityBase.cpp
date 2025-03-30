@@ -4,15 +4,13 @@
 namespace Swarm
 {
 
-FEntityBase::FEntityBase() : Index(Swarm::InvalidIndex) {}
+FEntityBase::FEntityBase()
+{
+    Index = Swarm::Manager::Get()->AllocateEntityIndex();
+}
 
 FEntityBase::~FEntityBase() { Swarm::Manager::Get()->RemoveEntity(this); }
 
-Swarm::EntityIndex FEntityBase::GetUnderlyingIndex() const { return Index; }
-
-void FEntityBase::InternalSetUnderlyingIndex(Swarm::EntityIndex NewIndex)
-{
-    Index = NewIndex;
-}
+Swarm::EntityIndex FEntityBase::GetIndex() const { return Index; }
 
 } // namespace Swarm

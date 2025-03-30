@@ -1,82 +1,69 @@
 #include "CoreMinimal.h"
+#include "Swarm/Entity.h"
+#include <cstddef>
 #include <gtest/gtest.h>
 #include <memory>
 
-struct FTestEntity : public Swarm::FEntity
-{
-};
-
-struct FStringTestComponent : public Swarm::IComponent<FStringTestComponent>
+struct FContentComponent : public Swarm::IComponent<FContentComponent>
 {
     std::string Content;
 
-    FStringTestComponent(const std::string& InContent) : Content(InContent) {}
+    FContentComponent(const std::string& InContent) : Content(InContent) {}
 };
 
-struct FIntTestComponent : public Swarm::IComponent<FIntTestComponent>
+struct FExternalComponent : public Swarm::IComponent<FExternalComponent>
 {
     int Value;
 
-    FIntTestComponent(int InValue) : Value(InValue) {}
+    FExternalComponent(int InValue) : Value(InValue) {}
 };
 
-TEST(SwarmTest, EntityCreation)
+struct FTestEntity : public Swarm::FEntity
+{
+    FTestEntity(const std::string& Content) : Swarm::FEntity()
+    {
+        AddComponent<FContentComponent>(Content);
+    }
+};
+
+TEST(SwarmTests, EntityCreation)
 {
     // Create an entity
+    const char* TestContent = "Test Component";
     Swarm::Manager* Manager = Swarm::Manager::Get();
-    std::shared_ptr<FTestEntity> Entity = Manager->MakeEntity<FTestEntity>();
+    std::shared_ptr<FTestEntity> Entity =
+        Manager->MakeEntity<FTestEntity>(TestContent);
 
     // Check that the entity has a unique ID
-    EXPECT_NE(Entity->GetUnderlyingIndex(), Swarm::InvalidIndex);
+    EXPECT_NE(Entity->GetIndex(), Swarm::InvalidIndex);
 
-    Entity.reset();
-
-    Entity = Manager->MakeEntity<FTestEntity>();
-
-    // Check that the entity has a unique ID
-    EXPECT_NE(Entity->GetUnderlyingIndex(), Swarm::InvalidIndex);
+    // Check that the entity has the required component
+    EXPECT_NE(Entity->GetComponent<FContentComponent>(), nullptr);
+    EXPECT_EQ(Entity->GetComponent<FContentComponent>()->Content, TestContent);
 }
 
-TEST(SwarmTest, ComponentCreation)
+TEST(SwarmTests, ComponentCreation)
 {
+    const char* TestContent = "Test Component";
     Swarm::Manager* Manager = Swarm::Manager::Get();
 
-    std::shared_ptr<FTestEntity> Entity = Manager->MakeEntity<FTestEntity>();
+    std::shared_ptr<FTestEntity> Entity =
+        Manager->MakeEntity<FTestEntity>(TestContent);
 
     {
-        FTestEntity InvalidEntity = FTestEntity();
-
-        EXPECT_FALSE(InvalidEntity.AddComponent<FStringTestComponent>("Test"));
-    }
-
-    {
-        EXPECT_EQ(Entity->GetComponent<FStringTestComponent>(), nullptr);
-
-        const char* TestString = "Test Component";
-        const char* AnotherTestString = "Another Test Component";
-        EXPECT_TRUE(Entity->AddComponent<FStringTestComponent>(TestString));
-
-        EXPECT_FALSE(
-            Entity->AddComponent<FStringTestComponent>(AnotherTestString)
+        const char* AnotherTestContent = "Another Test Component";
+        EXPECT_FALSE(Entity->AddComponent<FContentComponent>(AnotherTestContent)
         );
-
-        FStringTestComponent* Component =
-            Entity->GetComponent<FStringTestComponent>();
-
-        // Check that the component was added successfully
-        EXPECT_NE(Component, nullptr);
-
-        EXPECT_EQ(Component->Content, TestString);
     }
 
     {
-        EXPECT_EQ(Entity->GetComponent<FIntTestComponent>(), nullptr);
+        EXPECT_EQ(Entity->GetComponent<FExternalComponent>(), nullptr);
 
         int TestValue = 42;
-        EXPECT_TRUE(Entity->AddComponent<FIntTestComponent>(TestValue));
+        EXPECT_TRUE(Entity->AddComponent<FExternalComponent>(TestValue));
 
-        FIntTestComponent* Component =
-            Entity->GetComponent<FIntTestComponent>();
+        FExternalComponent* Component =
+            Entity->GetComponent<FExternalComponent>();
 
         // Check that the component was added successfully
         EXPECT_NE(Component, nullptr);
@@ -85,34 +72,32 @@ TEST(SwarmTest, ComponentCreation)
     }
 
     {
-        EXPECT_NE(Entity->GetComponent<FStringTestComponent>(), nullptr);
+        EXPECT_NE(Entity->GetComponent<FContentComponent>(), nullptr);
 
-        Entity->RemoveComponent<FStringTestComponent>();
+        Entity->RemoveComponent<FContentComponent>();
 
-        EXPECT_EQ(Entity->GetComponent<FStringTestComponent>(), nullptr);
+        EXPECT_EQ(Entity->GetComponent<FContentComponent>(), nullptr);
     }
 
     {
-        EXPECT_NE(Entity->GetComponent<FIntTestComponent>(), nullptr);
+        EXPECT_NE(Entity->GetComponent<FExternalComponent>(), nullptr);
 
-        Entity->RemoveComponent<FIntTestComponent>();
+        Entity->RemoveComponent<FExternalComponent>();
 
-        EXPECT_EQ(Entity->GetComponent<FIntTestComponent>(), nullptr);
+        EXPECT_EQ(Entity->GetComponent<FExternalComponent>(), nullptr);
     }
 }
 
-TEST(SwarmTest, EntityComponentCreation)
+TEST(SwarmTests, EntityComponentCreation)
 {
+    const char* TestContent = "Test Component";
     Swarm::Manager* Manager = Swarm::Manager::Get();
 
-    std::shared_ptr<FTestEntity> Entity = Manager->MakeEntity<FTestEntity>();
-
-    const char* TestString = "Test Component";
-
-    EXPECT_TRUE(Entity->AddComponent<FStringTestComponent>(TestString));
+    std::shared_ptr<FTestEntity> Entity =
+        Manager->MakeEntity<FTestEntity>(TestContent);
 
     Entity = nullptr;
 
     // Check that the component was also removed
-    EXPECT_EQ(Manager->GetComponentCount<FStringTestComponent>(), 0);
+    EXPECT_EQ(Manager->GetComponentCount<FContentComponent>(), 0);
 }

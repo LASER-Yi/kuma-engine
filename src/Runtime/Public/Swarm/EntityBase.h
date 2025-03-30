@@ -25,13 +25,7 @@ struct FEntityBase : public std::enable_shared_from_this<FEntityBase>
      * @brief Get the index of the entity.
      * @return The index of the entity.
      */
-    Swarm::EntityIndex GetUnderlyingIndex() const;
-
-    /**
-     * @brief Set the index of the entity (internal use only)
-     * @param NewIndex The new index of this entity
-     */
-    void InternalSetUnderlyingIndex(Swarm::EntityIndex NewIndex);
+    Swarm::EntityIndex GetIndex() const;
 
 private:
     Swarm::EntityIndex Index = Swarm::InvalidIndex;

@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <queue>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -48,29 +49,7 @@ public:
             "T must be the same size as FEntityBase"
         );
 
-        std::shared_ptr<T> Entity =
-            std::make_shared<T>(std::forward<Args>(Arguments)...);
-
-        Swarm::EntityIndex NewIndex = Swarm::InvalidIndex;
-        if (FreeEntityIndices.empty() == false)
-        {
-            NewIndex = FreeEntityIndices.front();
-            FreeEntityIndices.pop();
-        }
-        else
-        {
-            NewIndex = NextEntityIndex;
-            ++NextEntityIndex;
-
-            assert(
-                NextEntityIndex < std::numeric_limits<Swarm::EntityIndex>::max()
-            );
-        }
-
-        assert(NewIndex != Swarm::InvalidIndex);
-        Entity->InternalSetUnderlyingIndex(NewIndex);
-
-        return Entity;
+        return std::make_shared<T>(std::forward<Args>(Arguments)...);
     }
 
     /**
@@ -79,6 +58,8 @@ public:
      * @param Entity An entity to be removed.
      */
     void RemoveEntity(FEntityBase* Entity);
+
+    Swarm::EntityIndex AllocateEntityIndex();
 
     /**
      * @brief Add a new component to the specified entity.
@@ -100,13 +81,12 @@ public:
             return false;
         }
 
-        if (ToEntity->GetUnderlyingIndex() == Swarm::InvalidIndex)
+        if (ToEntity->GetIndex() == Swarm::InvalidIndex)
         {
             return false;
         }
 
-        auto& EntityComponents =
-            EntityToComponents[ToEntity->GetUnderlyingIndex()];
+        auto& EntityComponents = EntityToComponents[ToEntity->GetIndex()];
 
         // Prevent adding duplicate components to the same entity
         // as each entity should have at most one instance of a specific
@@ -151,10 +131,9 @@ public:
             return nullptr;
         }
 
-        assert(FromEntity->GetUnderlyingIndex() != Swarm::InvalidIndex);
+        assert(FromEntity->GetIndex() != Swarm::InvalidIndex);
 
-        auto& EntityComponents =
-            EntityToComponents[FromEntity->GetUnderlyingIndex()];
+        auto& EntityComponents = EntityToComponents[FromEntity->GetIndex()];
 
         // Check if the entity has the component
         if (EntityComponents.contains(T::GetType()) == false)
@@ -186,10 +165,9 @@ public:
             return;
         }
 
-        assert(FromEntity->GetUnderlyingIndex() != Swarm::InvalidIndex);
+        assert(FromEntity->GetIndex() != Swarm::InvalidIndex);
 
-        auto& EntityComponents =
-            EntityToComponents[FromEntity->GetUnderlyingIndex()];
+        auto& EntityComponents = EntityToComponents[FromEntity->GetIndex()];
 
         // Check if the entity has the component
         if (EntityComponents.contains(T::GetType()) == false)
@@ -224,11 +202,13 @@ public:
     }
 
 private:
-    std::map<
-        Swarm::EntityIndex,
-        std::map<Swarm::ComponentType, Swarm::ComponentIndex>>
-        EntityToComponents;
-    std::unordered_map<Swarm::ComponentType, FComponentArray> Components;
+    using ComponentArrayContainer =
+        std::unordered_map<Swarm::ComponentType, FComponentArray>;
+    using ComponentRefContainer =
+        std::unordered_map<Swarm::ComponentType, Swarm::ComponentIndex>;
+
+    std::map<Swarm::EntityIndex, ComponentRefContainer> EntityToComponents;
+    ComponentArrayContainer Components;
     std::vector<std::shared_ptr<ISystem>> Systems;
 
 private:

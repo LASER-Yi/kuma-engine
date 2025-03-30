@@ -1,4 +1,5 @@
 #include "Swarm/Manager.h"
+#include "Swarm/Definition.h"
 
 namespace Swarm
 {
@@ -24,15 +25,40 @@ void Manager::RemoveEntity(FEntityBase* Entity)
         return;
     }
 
-    const auto& EntityComponents =
-        EntityToComponents[Entity->GetUnderlyingIndex()];
-
-    for (const auto& [InComponentType, InComponentIndex] : EntityComponents)
+    if (EntityToComponents.contains(Entity->GetIndex()))
     {
-        Components[InComponentType].Remove(InComponentIndex);
+        const auto& EntityComponents = EntityToComponents[Entity->GetIndex()];
+
+        for (const auto& [InComponentType, InComponentIndex] : EntityComponents)
+        {
+            Components[InComponentType].Remove(InComponentIndex);
+        }
+
+        EntityToComponents.erase(Entity->GetIndex());
     }
 
-    FreeEntityIndices.push(Entity->GetUnderlyingIndex());
+    FreeEntityIndices.push(Entity->GetIndex());
+}
+
+Swarm::EntityIndex Manager::AllocateEntityIndex()
+{
+    Swarm::EntityIndex NewIndex = Swarm::InvalidIndex;
+    if (FreeEntityIndices.empty() == false)
+    {
+        NewIndex = FreeEntityIndices.front();
+        FreeEntityIndices.pop();
+    }
+    else
+    {
+        NewIndex = NextEntityIndex;
+        ++NextEntityIndex;
+
+        assert(
+            NextEntityIndex < std::numeric_limits<Swarm::EntityIndex>::max()
+        );
+    }
+
+    return NewIndex;
 }
 
 } // namespace Swarm
