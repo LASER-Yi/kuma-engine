@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <span>
 #include <unordered_map>
 #include <utility>
 
@@ -120,6 +121,19 @@ class TTypedArray
             assert(0 <= InIndex && InIndex < ContainerSize);
 
             return reinterpret_cast<Base*>(Container + (InIndex * ElementSize));
+        }
+
+        template <typename T>
+        std::span<T> GetView() const
+        {
+            static_assert(
+                std::is_base_of<Base, T>::value, "T must be derived from Base"
+            );
+
+            assert(sizeof(T) == ElementSize);
+            assert(FGenericTypeHasher::value<T>() == ElementType);
+
+            return {reinterpret_cast<T*>(Container), ContainerSize};
         }
 
         template <typename Func>
@@ -247,6 +261,21 @@ public:
         }
 
         return nullptr;
+    }
+
+    template <typename T>
+    std::span<T> GetView() const
+    {
+        static_assert(
+            std::is_base_of<Base, T>::value, "T must be derived from Base"
+        );
+
+        if (const auto Container = GetContainer<T>())
+        {
+            return Container->template GetView<T>();
+        }
+
+        return {};
     }
 
     template <typename T>

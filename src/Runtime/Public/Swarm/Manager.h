@@ -1,7 +1,5 @@
 #pragma once
 
-#include "CoreMinimal.h"
-
 #include "Core/Templates/Singleton.h"
 #include "Swarm/Component.h"
 #include "Swarm/Containers/Signature.h"
@@ -13,10 +11,10 @@
 #include <cassert>
 #include <map>
 #include <memory>
+#include <span>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
-#include <vector>
 
 namespace Swarm
 {
@@ -209,6 +207,17 @@ public:
 
         // Update entity-to-components map
         EntityComponents.erase(TypeId);
+    }
+
+    template <typename T>
+    std::span<T> GetComponents() const
+    {
+        static_assert(
+            std::is_base_of<FComponent, T>::value,
+            "T must be derived from FComponent"
+        );
+
+        return Components.GetView<T>();
     }
 
     /**

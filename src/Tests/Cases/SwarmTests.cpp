@@ -1,7 +1,6 @@
 #include "CoreMinimal.h"
 #include "Swarm/Definition.h"
 #include "Swarm/Entity.h"
-#include <cstddef>
 #include <gtest/gtest.h>
 #include <memory>
 
@@ -113,7 +112,16 @@ class KTestSystem : public Swarm::KSystem
 public:
     virtual void Initialize() override {}
 
-    virtual void Execute(float DeltaTime) override { UNUSED_VAR(DeltaTime); }
+    virtual void Execute(float DeltaTime) override
+    {
+        UNUSED_VAR(DeltaTime);
+
+        for (FExternalComponent& Component :
+             GetComponents<FExternalComponent>())
+        {
+            Component.Value += 1;
+        }
+    }
 
     virtual void Shutdown() override {}
 };
@@ -125,9 +133,14 @@ TEST(SwarmTests, SystemExecution)
     std::shared_ptr<FTestEntity> Entity =
         Manager->MakeEntity<FTestEntity>("Test Entity");
 
+    std::shared_ptr<FTestEntity> AnotherEntity =
+        Manager->MakeEntity<FTestEntity>("Another Test Entity");
+
     Entity->AddComponent<FExternalComponent>(0);
+    AnotherEntity->AddComponent<FExternalComponent>(1);
 
     EXPECT_EQ(Entity->GetComponent<FExternalComponent>()->Value, 0);
+    EXPECT_EQ(AnotherEntity->GetComponent<FExternalComponent>()->Value, 1);
 
     Manager->AddSystem<KTestSystem>();
 
@@ -136,4 +149,5 @@ TEST(SwarmTests, SystemExecution)
     Manager->RemoveSystem<KTestSystem>();
 
     EXPECT_EQ(Entity->GetComponent<FExternalComponent>()->Value, 1);
+    EXPECT_EQ(AnotherEntity->GetComponent<FExternalComponent>()->Value, 2);
 }
