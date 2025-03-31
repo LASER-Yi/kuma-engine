@@ -2,10 +2,8 @@
 
 #include <algorithm>
 #include <cassert>
-#include <memory>
 #include <unordered_map>
 #include <utility>
-#include <vector>
 
 struct FGenericTypeHasher
 {
@@ -70,7 +68,7 @@ class TTypedArray
         }
 
         template <typename T, typename... Args>
-        T& Add(Args&&... Arguments)
+        T* Add(Args&&... Arguments)
         {
             static_assert(
                 std::is_base_of<Base, T>::value, "T must be derived from Base"
@@ -92,7 +90,7 @@ class TTypedArray
             T* Element = static_cast<T*>(Get(NewIndex));
             new (Element) T(std::forward<Args>(Arguments)...);
 
-            return *Element;
+            return Element;
         }
 
         void Remove(std::size_t InIndex)
@@ -184,8 +182,9 @@ public:
 
         const S NewSign = Signature.Allocate();
 
-        T& NewElement = Container.Add<T>(std::forward<Args>(Arguments)...);
-        NewElement.Signature = NewSign;
+        T* NewElement =
+            Container.template Add<T>(std::forward<Args>(Arguments)...);
+        NewElement->Signature = NewSign;
 
         return NewSign;
     }
