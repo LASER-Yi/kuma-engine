@@ -70,7 +70,7 @@ public:
     void RemoveEntity(FEntityBase* Entity);
 
     template <typename T, typename... Args>
-    std::tuple<std::size_t, Swarm::SignatureType>
+    std::tuple<Swarm::ClassHashType, Swarm::SignatureType>
     CreateComponent(Args&&... Arguments)
     {
         static_assert(
@@ -78,7 +78,8 @@ public:
             "T must be derived from FComponent"
         );
 
-        const std::size_t ComponentType = FGenericTypeHasher::value<T>();
+        const Swarm::ClassHashType ComponentType =
+            FGenericTypeHasher::value<T>();
         const Swarm::SignatureType ComponentSignature =
             Components.Add<T>(std::forward<Args>(Arguments)...);
 
@@ -292,11 +293,12 @@ public:
 private:
     std::map<
         Swarm::SignatureType,
-        std::unordered_map<std::size_t, Swarm::SignatureType>>
+        std::unordered_map<Swarm::ClassHashType, Swarm::SignatureType>>
         EntityToComponents;
 
-    TTypedArray<FComponent, Swarm::SignatureType> Components;
-    std::unordered_map<std::size_t, std::shared_ptr<ISystem>> Systems;
+    TTypedArray<FComponent, Swarm::SignatureType, Swarm::ClassHashType>
+        Components;
+    std::unordered_map<Swarm::ClassHashType, std::shared_ptr<ISystem>> Systems;
 
 public:
     TSignature<Swarm::SignatureType> EntitySignature;

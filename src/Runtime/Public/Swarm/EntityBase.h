@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Swarm/Definition.h"
 #include "Swarm/Interfaces/Identifiable.h"
 
 #include <memory>
@@ -25,7 +26,8 @@ struct FEntityBase : public IIdentifiable,
     FEntityBase(FEntityBase&&) = default;
     FEntityBase& operator=(FEntityBase&&) = default;
 
-    std::unordered_map<std::size_t, Swarm::SignatureType> DefaultComponents;
+    std::unordered_map<Swarm::ClassHashType, Swarm::SignatureType>
+        DefaultComponents;
 };
 
 } // namespace Swarm
