@@ -210,6 +210,17 @@ public:
         EntityComponents.erase(TypeId);
     }
 
+    /**
+     * @brief Retrieves a span of components of the specified type.
+     *
+     * This method returns a view (std::span) of all components of type T
+     * that are managed by the system. The type T must be derived from the
+     * FComponent base class.
+     *
+     * @tparam T The type of components to retrieve. Must inherit from
+     * FComponent.
+     * @return std::span<T> A span containing all components of type T.
+     */
     template <typename T>
     std::span<T> GetComponents() const
     {
