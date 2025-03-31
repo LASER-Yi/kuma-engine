@@ -80,10 +80,10 @@ public:
 
         const Swarm::ClassHashType ComponentType =
             FGenericTypeHasher::value<T>();
-        const Swarm::SignatureType ComponenTHandleAllocator =
+        const Swarm::SignatureType ComponentSignature =
             Components.Add<T>(std::forward<Args>(Arguments)...);
 
-        return {ComponentType, ComponenTHandleAllocator};
+        return {ComponentType, ComponentSignature};
     }
 
     /**
@@ -166,10 +166,10 @@ public:
             return nullptr;
         }
 
-        const Swarm::SignatureType RequesTHandleAllocator =
+        const Swarm::SignatureType RequestSignature =
             EntityComponents.at(TypeId);
 
-        return Components.Find<T>(RequesTHandleAllocator);
+        return Components.Find<T>(RequestSignature);
     }
 
     /**
