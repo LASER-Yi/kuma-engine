@@ -107,3 +107,33 @@ TEST(SwarmTests, EntityComponentCreation)
     // Check that the component was also removed
     EXPECT_EQ(Manager->GetComponentCount<FContentComponent>(), 0);
 }
+
+class KTestSystem : public Swarm::KSystem
+{
+public:
+    virtual void Initialize() override {}
+
+    virtual void Execute(float DeltaTime) override { UNUSED_VAR(DeltaTime); }
+
+    virtual void Shutdown() override {}
+};
+
+TEST(SwarmTests, SystemExecution)
+{
+    Swarm::Manager* Manager = Swarm::Manager::Get();
+
+    std::shared_ptr<FTestEntity> Entity =
+        Manager->MakeEntity<FTestEntity>("Test Entity");
+
+    Entity->AddComponent<FExternalComponent>(0);
+
+    EXPECT_EQ(Entity->GetComponent<FExternalComponent>()->Value, 0);
+
+    Manager->AddSystem<KTestSystem>();
+
+    Manager->Update(0.0f);
+
+    Manager->RemoveSystem<KTestSystem>();
+
+    EXPECT_EQ(Entity->GetComponent<FExternalComponent>()->Value, 1);
+}

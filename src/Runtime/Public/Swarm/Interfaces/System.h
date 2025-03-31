@@ -21,6 +21,7 @@ public:
     virtual void Shutdown() = 0;
 
 public:
+    ISystem() = default;
     virtual ~ISystem() {}
 
     ISystem(const ISystem&) = delete;
