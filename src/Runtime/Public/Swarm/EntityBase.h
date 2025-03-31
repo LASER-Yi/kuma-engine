@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Swarm/Definition.h"
+#include "Swarm/Interfaces/Identifiable.h"
+
 #include <memory>
+#include <unordered_map>
 namespace Swarm
 {
 
@@ -11,9 +13,10 @@ namespace Swarm
  * @details This class is used to represent an entity in the swarm system. It
  * contains an index that is used to identify the entity in the system.
  */
-struct FEntityBase : public std::enable_shared_from_this<FEntityBase>
+struct FEntityBase : public IIdentifiable,
+                     public std::enable_shared_from_this<FEntityBase>
 {
-    FEntityBase(Swarm::SignatureType Signature);
+    FEntityBase();
     virtual ~FEntityBase();
 
     FEntityBase(const FEntityBase&) = delete;
@@ -22,14 +25,7 @@ struct FEntityBase : public std::enable_shared_from_this<FEntityBase>
     FEntityBase(FEntityBase&&) = default;
     FEntityBase& operator=(FEntityBase&&) = default;
 
-    /**
-     * @brief Get the signature of the entity.
-     * @return The signature of the entity.
-     */
-    Swarm::SignatureType GetSignature() const;
-
-private:
-    Swarm::SignatureType Signature = Swarm::InvalidSignature;
+    std::unordered_map<std::size_t, Swarm::SignatureType> DefaultComponents;
 };
 
 } // namespace Swarm

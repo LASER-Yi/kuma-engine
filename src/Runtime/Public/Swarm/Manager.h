@@ -52,11 +52,16 @@ public:
             "T must be the same size as FEntityBase"
         );
 
-        const Swarm::SignatureType NewSignature = EntitySignature.Allocate();
+        const Swarm::SignatureType NewSign = EntitySignature.Allocate();
 
-        return std::make_shared<T>(
-            NewSignature, std::forward<Args>(Arguments)...
-        );
+        auto NewEntity = std::make_shared<T>(std::forward<Args>(Arguments)...);
+        NewEntity->Signature = NewSign;
+
+        // Now let's add those default components
+        auto& EntityComponents = EntityToComponents[NewSign];
+        EntityComponents.merge(NewEntity->DefaultComponents);
+
+        return NewEntity;
     }
 
     /**
@@ -65,6 +70,22 @@ public:
      * @param Entity An entity to be removed.
      */
     void RemoveEntity(FEntityBase* Entity);
+
+    template <typename T, typename... Args>
+    std::tuple<std::size_t, Swarm::SignatureType>
+    CreateComponent(Args&&... Arguments)
+    {
+        static_assert(
+            std::is_base_of<FComponent, T>::value,
+            "T must be derived from FComponent"
+        );
+
+        const std::size_t ComponentType = FGenericTypeHasher::value<T>();
+        const Swarm::SignatureType ComponentSignature =
+            Components.Add<T>(std::forward<Args>(Arguments)...);
+
+        return {ComponentType, ComponentSignature};
+    }
 
     /**
      * @brief Add a new component to the specified entity.
@@ -86,12 +107,9 @@ public:
             return false;
         }
 
-        if (ToEntity->GetSignature() == Swarm::InvalidSignature)
-        {
-            return false;
-        }
+        assert(ToEntity->Signature != Swarm::InvalidSignature);
 
-        auto& EntityComponents = EntityToComponents[ToEntity->GetSignature()];
+        auto& EntityComponents = EntityToComponents[ToEntity->Signature];
 
         const size_t TypeId = FGenericTypeHasher::value<T>();
 
@@ -103,10 +121,12 @@ public:
             return false;
         }
 
-        const Swarm::SignatureType NewComponent =
-            Components.Add<T>(std::forward<Args>(Arguments)...);
+        const auto [CompType, CompSign] =
+            CreateComponent<T>(std::forward<Args>(Arguments)...);
 
-        EntityComponents[TypeId] = NewComponent;
+        assert(TypeId == CompType);
+
+        EntityComponents[CompType] = CompSign;
 
         return true;
     }
@@ -131,10 +151,14 @@ public:
             return nullptr;
         }
 
-        assert(FromEntity->GetSignature() != Swarm::InvalidSignature);
+        assert(FromEntity->Signature != Swarm::InvalidSignature);
 
-        auto& EntityComponents =
-            EntityToComponents.at(FromEntity->GetSignature());
+        if (EntityToComponents.contains(FromEntity->Signature) == false)
+        {
+            return nullptr;
+        }
+
+        auto& EntityComponents = EntityToComponents.at(FromEntity->Signature);
 
         // Check if the entity has the component
         const size_t TypeId = FGenericTypeHasher::value<T>();
@@ -167,9 +191,9 @@ public:
             return;
         }
 
-        assert(FromEntity->GetSignature() != Swarm::InvalidSignature);
+        assert(FromEntity->Signature != Swarm::InvalidSignature);
 
-        auto& EntityComponents = EntityToComponents[FromEntity->GetSignature()];
+        auto& EntityComponents = EntityToComponents[FromEntity->Signature];
         const size_t TypeId = FGenericTypeHasher::value<T>();
 
         // Check if the entity has the component

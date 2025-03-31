@@ -3,9 +3,8 @@
 #include "Kuma/Components/Transform.h"
 #include "Kuma/Components/World.h"
 
-FKumaEntity::FKumaEntity(Swarm::SignatureType InSignature)
-    : Swarm::FEntity(InSignature)
+FKumaEntity::FKumaEntity() : Swarm::FEntity()
 {
-    AddComponent<FWorldComponent>();
-    AddComponent<FTransformComponent>();
+    AddDefaultComponent<FWorldComponent>();
+    AddDefaultComponent<FTransformComponent>();
 }

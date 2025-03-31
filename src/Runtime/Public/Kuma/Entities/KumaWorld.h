@@ -6,7 +6,7 @@
 
 struct FKumaWorld : public Swarm::FEntity
 {
-    FKumaWorld(Swarm::SignatureType InSignature);
+    FKumaWorld();
 
     void AddToWorld(std::shared_ptr<FKumaEntity> InEntity);
 };

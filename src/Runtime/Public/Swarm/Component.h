@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Swarm/Definition.h"
+#include "Swarm/Interfaces/Identifiable.h"
 
 namespace Swarm
 {
@@ -8,12 +8,8 @@ namespace Swarm
 /**
  * @brief Base class for all components in the swarm.
  */
-struct FComponent
+struct FComponent : public IIdentifiable
 {
-    virtual ~FComponent(){};
-
-    Swarm::SignatureType Signature = Swarm::InvalidSignature;
-    Swarm::SignatureType GetSignature() const { return Signature; }
 };
 
 } // namespace Swarm

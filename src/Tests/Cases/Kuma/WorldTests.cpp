@@ -15,10 +15,9 @@ struct FKumaContentComponent : public Swarm::FComponent
 
 struct FKumaTestEntity : public FKumaEntity
 {
-    FKumaTestEntity(Swarm::SignatureType InSignature, int InContent)
-        : FKumaEntity(InSignature)
+    FKumaTestEntity(int InContent) : FKumaEntity()
     {
-        AddComponent<FKumaContentComponent>(InContent);
+        AddDefaultComponent<FKumaContentComponent>(InContent);
     }
 };
 

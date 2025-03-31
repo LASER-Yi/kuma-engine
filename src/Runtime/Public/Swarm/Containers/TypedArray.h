@@ -159,7 +159,8 @@ class TTypedArray
         {
             assert(ElementSize != 0);
 
-            ContainerCapacity = std::max(static_cast<std::size_t>(1), ContainerCapacity * 2);
+            ContainerCapacity =
+                std::max(static_cast<std::size_t>(1), ContainerCapacity * 2);
 
             const std::size_t NewSize = ContainerCapacity * ElementSize;
 
@@ -200,7 +201,7 @@ public:
 
         const std::size_t Index =
             Container.Find([InSignature](const Base* Element)
-                           { return Element->GetSignature() == InSignature; });
+                           { return Element->Signature == InSignature; });
 
         if (Index != Container.GetSize())
         {
@@ -214,10 +215,9 @@ public:
     {
         if (auto Container = GetContainer(ElementType))
         {
-            const std::size_t Index = Container->Find(
-                [InSignature](const Base* Element)
-                { return Element->GetSignature() == InSignature; }
-            );
+            const std::size_t Index =
+                Container->Find([InSignature](const Base* Element)
+                                { return Element->Signature == InSignature; });
 
             if (Index != Container->GetSize())
             {
@@ -237,10 +237,9 @@ public:
 
         if (const auto Container = GetContainer<T>())
         {
-            const std::size_t Index = Container->Find(
-                [InSignature](const Base* Element)
-                { return Element->GetSignature() == InSignature; }
-            );
+            const std::size_t Index =
+                Container->Find([InSignature](const Base* Element)
+                                { return Element->Signature == InSignature; });
 
             if (Index != Container->GetSize())
             {

@@ -27,7 +27,7 @@ void Manager::RemoveEntity(FEntityBase* Entity)
         return;
     }
 
-    const Swarm::SignatureType Signature = Entity->GetSignature();
+    const Swarm::SignatureType Signature = Entity->Signature;
 
     if (EntityToComponents.contains(Signature))
     {

@@ -2,12 +2,10 @@
 #include "Kuma/Components/World.h"
 #include "Kuma/Components/WorldEntity.h"
 #include "Kuma/Entities/KumaEntity.h"
-#include "Swarm/Entity.h"
 
-FKumaWorld::FKumaWorld(Swarm::SignatureType InSignature)
-    : Swarm::FEntity(InSignature)
+FKumaWorld::FKumaWorld() : Swarm::FEntity()
 {
-    AddComponent<FWorldEntityComponent>();
+    AddDefaultComponent<FWorldEntityComponent>();
 }
 
 void FKumaWorld::AddToWorld(std::shared_ptr<FKumaEntity> InEntity)

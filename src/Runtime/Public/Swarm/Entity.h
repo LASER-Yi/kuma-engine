@@ -4,6 +4,7 @@
 #include "Swarm/EntityBase.h"
 #include "Swarm/Manager.h"
 #include <memory>
+#include <utility>
 
 namespace Swarm
 {
@@ -15,7 +16,20 @@ namespace Swarm
  */
 struct FEntity : public FEntityBase
 {
-    FEntity(Swarm::SignatureType InSignature) : FEntityBase(InSignature) {}
+    FEntity();
+
+    template <typename T, typename... Args>
+    void AddDefaultComponent(Args&&... Arguments)
+    {
+        const auto [ComponentType, ComponentSign] =
+            Swarm::Manager::Get()->CreateComponent<T>(
+                std::forward<Args>(Arguments)...
+            );
+
+        assert(DefaultComponents.contains(ComponentType) == false);
+
+        DefaultComponents[ComponentType] = ComponentSign;
+    }
 
     template <typename T, typename... Args>
     bool AddComponent(Args&&... Arguments)

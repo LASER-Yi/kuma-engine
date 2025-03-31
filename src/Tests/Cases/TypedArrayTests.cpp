@@ -1,15 +1,11 @@
 #include "CoreMinimal.h"
 #include "Swarm/Containers/TypedArray.h"
-#include "Swarm/Definition.h"
+#include "Swarm/Interfaces/Identifiable.h"
 
 #include <gtest/gtest.h>
 
-struct FBase
+struct FBase : Swarm::IIdentifiable
 {
-    virtual ~FBase() { Signature = Swarm::InvalidSignature; }
-
-    Swarm::SignatureType Signature = Swarm::InvalidSignature;
-    Swarm::SignatureType GetSignature() const { return Signature; }
 };
 
 struct FDerivedOne : public FBase

@@ -21,10 +21,9 @@ struct FExternalComponent : public Swarm::FComponent
 
 struct FTestEntity : public Swarm::FEntity
 {
-    FTestEntity(Swarm::SignatureType InSignature, const std::string& Content)
-        : Swarm::FEntity(InSignature)
+    FTestEntity(const std::string& Content) : Swarm::FEntity()
     {
-        AddComponent<FContentComponent>(Content);
+        AddDefaultComponent<FContentComponent>(Content);
     }
 };
 
@@ -37,7 +36,7 @@ TEST(SwarmTests, EntityCreation)
         Manager->MakeEntity<FTestEntity>(TestContent);
 
     // Check that the entity has a unique ID
-    EXPECT_NE(Entity->GetSignature(), Swarm::InvalidSignature);
+    EXPECT_NE(Entity->Signature, Swarm::InvalidSignature);
 
     // Check that the entity has the required component
     EXPECT_NE(Entity->GetComponent<FContentComponent>(), nullptr);
