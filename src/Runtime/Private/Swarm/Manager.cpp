@@ -42,6 +42,7 @@ void Manager::RemoveEntity(FEntityBase* Entity)
         EntityToComponents.erase(Signature);
     }
 
+    Entity->Signature = Swarm::InvalidSignature;
     EntitySignature.Release(Signature);
 }
 
