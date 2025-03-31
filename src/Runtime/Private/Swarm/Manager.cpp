@@ -12,8 +12,10 @@ void Manager::Update(float DeltaTime)
 {
     // TODO: Refactor system update via multithreading
 
-    for (const auto& System : Systems)
+    for (const auto& [SystemType, System] : Systems)
     {
+        UNUSED_VAR(SystemType);
+
         System->Update(DeltaTime);
     }
 }

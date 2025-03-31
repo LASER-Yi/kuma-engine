@@ -20,9 +20,13 @@ public:
 
     virtual void Shutdown() = 0;
 
-protected:
-    // TODO: Figure out how to implement this
-    void QueryEntity() const;
+public:
+    virtual ~ISystem() {}
+
+    ISystem(const ISystem&) = delete;
+    ISystem& operator=(const ISystem&) = delete;
+    ISystem(ISystem&&) = delete;
+    ISystem& operator=(ISystem&&) = delete;
 };
 
 } // namespace Swarm

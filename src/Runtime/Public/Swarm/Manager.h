@@ -203,6 +203,59 @@ public:
         return Components.Count<T>();
     }
 
+    template <typename T, typename... Args>
+    void AddSystem(Args&&... Arguments)
+    {
+        static_assert(
+            std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
+        );
+
+        const size_t TypeId = FGenericTypeHasher::value<T>();
+        if (Systems.contains(TypeId))
+        {
+            return;
+        }
+
+        auto NewSystem = std::make_shared<T>(std::forward<Args>(Arguments)...);
+        NewSystem->Initialize();
+
+        Systems[TypeId] = NewSystem;
+    }
+
+    template <typename T>
+    void RemoveSystem()
+    {
+        static_assert(
+            std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
+        );
+
+        const size_t TypeId = FGenericTypeHasher::value<T>();
+        if (Systems.contains(TypeId) == false)
+        {
+            return;
+        }
+
+        Systems[TypeId]->Shutdown();
+
+        Systems.erase(TypeId);
+    }
+
+    template <typename T>
+    std::weak_ptr<T> GetSystem()
+    {
+        static_assert(
+            std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
+        );
+
+        const size_t TypeId = FGenericTypeHasher::value<T>();
+        if (Systems.contains(TypeId) == false)
+        {
+            return nullptr;
+        }
+
+        return Systems.at(TypeId);
+    }
+
 private:
     std::map<
         Swarm::SignatureType,
@@ -210,7 +263,7 @@ private:
         EntityToComponents;
 
     TTypedArray<FComponent, Swarm::SignatureType> Components;
-    std::vector<std::shared_ptr<ISystem>> Systems;
+    std::unordered_map<std::size_t, std::shared_ptr<ISystem>> Systems;
 
 public:
     TSignature<Swarm::SignatureType> EntitySignature;
