@@ -1,25 +1,38 @@
 #pragma once
 
 #include "Swarm/Containers/Signature.h"
+#include "Swarm/Definition.h"
+#include "Swarm/Utilities/Hasher.h"
 #include <algorithm>
 #include <memory>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 /**
  * @brief Group elements based on type, and allocate them into continuous memory
  * Similar to std::vector but support different types
  */
-template <typename S>
+template <
+    typename Base, typename S = Swarm::SignatureType,
+    typename Allocator = TSignature<S>>
 class TTypedArray
 {
 public:
     template <typename T, typename... Args>
     S Add(Args&&... Arguments)
     {
+        static_assert(
+            std::is_base_of<Base, T>::value, "T must be derived from Base"
+        );
+
         auto Container = GetOrCreateContainer<T>();
 
-        Container->emplace_back(std::forward<Args>(Arguments)...);
+        T NewElement(std::forward<Args>(Arguments)...);
+
+        NewElement.Signature = Signature.Allocate();
+
+        Container->push_back(std::move(NewElement));
     }
 
     template <typename T>
@@ -32,12 +45,19 @@ public:
             [InSignature](const T& Element)
             { return Element.GetSignature() == InSignature; }
         );
+
+        Signature.Release(InSignature);
     }
 
     template <typename T>
     T* Find(S InSignature)
     {
+        static_assert(
+            std::is_base_of<Base, T>::value, "T must be derived from Base"
+        );
+
         auto Container = GetOrCreateContainer<T>();
+
         auto Result = std::find_if(
             Container->begin(), Container->end(),
             [InSignature](const T& Element)
@@ -55,6 +75,10 @@ public:
     template <typename T>
     std::size_t Count() const
     {
+        static_assert(
+            std::is_base_of<Base, T>::value, "T must be derived from Base"
+        );
+
         if (auto Container = GetContainer<T>())
         {
             return Container->size();
@@ -82,6 +106,8 @@ private:
         return Container;
     }
 
+    std::shared_ptr<std::vector<Base>> GetContainer() const;
+
     template <typename T>
     const std::shared_ptr<const std::vector<T>> GetContainer() const
     {
@@ -95,6 +121,7 @@ private:
         return Container;
     }
 
-    TSignature<S> Signature;
-    std::unordered_map<std::size_t, std::shared_ptr<void>> Containers;
+    Allocator Signature;
+    std::unordered_map<std::size_t, std::shared_ptr<std::vector<Base>>>
+        Containers;
 };
