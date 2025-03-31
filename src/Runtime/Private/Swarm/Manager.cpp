@@ -16,7 +16,7 @@ void Manager::Update(float DeltaTime)
     {
         UNUSED_VAR(SystemType);
 
-        System->Update(DeltaTime);
+        System->Execute(DeltaTime);
     }
 }
 

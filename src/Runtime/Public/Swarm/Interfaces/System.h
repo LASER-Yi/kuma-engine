@@ -16,7 +16,7 @@ class ISystem
 public:
     virtual void Initialize() = 0;
 
-    virtual void Update(float DeltaTime) = 0;
+    virtual void Execute(float DeltaTime) = 0;
 
     virtual void Shutdown() = 0;
 
