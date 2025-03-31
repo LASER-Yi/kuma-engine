@@ -34,10 +34,7 @@ void Manager::RemoveEntity(FEntityBase* Entity)
         for (const auto& [InComponentType, InComponentSignature] :
              EntityComponents)
         {
-            UNUSED_VAR(InComponentType);
-            UNUSED_VAR(InComponentSignature);
-            // TODO: How to remove the component without knowing the type?
-            // Components[InComponentType].Remove(InComponentIndex);
+            Components.Remove(InComponentType, InComponentSignature);
         }
 
         EntityToComponents.erase(Signature);

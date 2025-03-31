@@ -40,7 +40,10 @@ TEST(TypedArrayTests, BasicFeatures)
 struct FDerivedWithDestructor : public FBase
 {
     static bool bDestructorCalled;
-    ~FDerivedWithDestructor() {}
+    ~FDerivedWithDestructor()
+    {
+        FDerivedWithDestructor::bDestructorCalled = true;
+    }
 };
 
 bool FDerivedWithDestructor::bDestructorCalled = false;

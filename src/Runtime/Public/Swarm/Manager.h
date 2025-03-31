@@ -93,7 +93,7 @@ public:
 
         auto& EntityComponents = EntityToComponents[ToEntity->GetSignature()];
 
-        const size_t TypeId = typeid(T).hash_code();
+        const size_t TypeId = FGenericTypeHasher::value<T>();
 
         // Prevent adding duplicate components to the same entity
         // as each entity should have at most one instance of a specific
@@ -137,7 +137,7 @@ public:
             EntityToComponents.at(FromEntity->GetSignature());
 
         // Check if the entity has the component
-        const size_t TypeId = typeid(T).hash_code();
+        const size_t TypeId = FGenericTypeHasher::value<T>();
         if (EntityComponents.contains(TypeId) == false)
         {
             return nullptr;
@@ -170,7 +170,7 @@ public:
         assert(FromEntity->GetSignature() != Swarm::InvalidSignature);
 
         auto& EntityComponents = EntityToComponents[FromEntity->GetSignature()];
-        const size_t TypeId = typeid(T).hash_code();
+        const size_t TypeId = FGenericTypeHasher::value<T>();
 
         // Check if the entity has the component
         if (EntityComponents.contains(TypeId) == false)
@@ -209,7 +209,7 @@ private:
         std::unordered_map<std::size_t, Swarm::SignatureType>>
         EntityToComponents;
 
-    TTypedArray<FComponent> Components;
+    TTypedArray<FComponent, Swarm::SignatureType> Components;
     std::vector<std::shared_ptr<ISystem>> Systems;
 
 public:

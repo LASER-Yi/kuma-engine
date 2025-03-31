@@ -1,23 +1,176 @@
 #pragma once
 
-#include "Swarm/Containers/Signature.h"
-#include "Swarm/Definition.h"
-#include "Swarm/Utilities/Hasher.h"
 #include <algorithm>
+#include <cassert>
 #include <memory>
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
+struct FGenericTypeHasher
+{
+    template <typename T>
+    constexpr static auto value()
+    {
+        return typeid(T).hash_code();
+    };
+};
 
 /**
  * @brief Group elements based on type, and allocate them into continuous memory
  * Similar to std::vector but support different types
  */
 template <
-    typename Base, typename S = Swarm::SignatureType,
+    typename Base, typename S = std::size_t, typename Hash = std::size_t,
     typename Allocator = TSignature<S>>
 class TTypedArray
 {
+
+    /**
+     * @brief The element definition of the TTypedArray
+     */
+    class TTypedElement
+    {
+        static_assert(
+            sizeof(Base) != 0, "The size of the Base element cannot be zero"
+        );
+
+    public:
+        TTypedElement()
+            : ElementType(0), ElementSize(0), Container(nullptr),
+              ContainerSize(0), ContainerCapacity(0)
+        {
+        }
+
+        TTypedElement(Hash InElementType, std::size_t InElementSize)
+            : ElementType(InElementType), ElementSize(InElementSize),
+              Container(nullptr), ContainerSize(0), ContainerCapacity(0)
+        {
+        }
+
+        ~TTypedElement()
+        {
+            if (Container)
+            {
+                for (std::size_t Index = 0; Index < ContainerSize; ++Index)
+                {
+                    Base* Element = Get(Index);
+                    Element->~Base();
+                }
+
+                std::free(Container);
+                Container = nullptr;
+            }
+
+            ElementType = 0;
+            ElementSize = 0;
+
+            ContainerSize = 0;
+            ContainerCapacity = 0;
+        }
+
+        template <typename T, typename... Args>
+        T& Add(Args&&... Arguments)
+        {
+            static_assert(
+                std::is_base_of<Base, T>::value, "T must be derived from Base"
+            );
+
+            assert(sizeof(T) == ElementSize);
+            assert(FGenericTypeHasher::value<T>() == ElementType);
+
+            ContainerSize = ContainerSize + 1;
+
+            if (ContainerSize > ContainerCapacity)
+            {
+                Resize();
+            }
+
+            // Allocate space from the container pointer and initialize T
+            const std::size_t NewIndex = ContainerSize - 1;
+
+            T* Element = static_cast<T*>(Get(NewIndex));
+            new (Element) T(std::forward<Args>(Arguments)...);
+
+            return *Element;
+        }
+
+        void Remove(std::size_t InIndex)
+        {
+            assert(0 <= InIndex && InIndex < ContainerSize);
+
+            const size_t LastIndex = ContainerSize - 1;
+
+            Base* Element = Get(InIndex);
+            Base* Last = Get(LastIndex);
+
+            Element->~Base();
+
+            if (Element == Last)
+            {
+                // If the last element is being removed, just reduce the size
+                ContainerSize = ContainerSize - 1;
+                return;
+            }
+
+            // Move the last element to the index of the removed element
+            std::memcpy(Element, Last, ElementSize);
+        }
+
+        Base* Get(std::size_t InIndex) const
+        {
+            assert(0 <= InIndex && InIndex < ContainerSize);
+
+            return reinterpret_cast<Base*>(Container + (InIndex * ElementSize));
+        }
+
+        template <typename Func>
+        std::size_t Find(Func Predicator) const
+        {
+            for (std::size_t Index = 0; Index < ContainerSize; ++Index)
+            {
+                Base* Element =
+                    reinterpret_cast<Base*>(Container + (Index * ElementSize));
+
+                if (Predicator(Element))
+                {
+                    return Index;
+                }
+            }
+
+            return ContainerSize;
+        }
+
+    public:
+        std::size_t GetSize() const { return ContainerSize; }
+        std::size_t GetCapacity() const { return ContainerCapacity; };
+
+        bool IsValid() const { return ElementSize != 0; }
+
+    private:
+        Hash ElementType;
+        std::size_t ElementSize;
+
+        std::byte* Container;
+        std::size_t ContainerSize;
+        std::size_t ContainerCapacity;
+
+        void Resize()
+        {
+            assert(ElementSize != 0);
+
+            ContainerCapacity = std::max(static_cast<std::size_t>(1), ContainerCapacity * 2);
+
+            const std::size_t NewSize = ContainerCapacity * ElementSize;
+
+            // Reallocate the container
+            void* NewContainer = std::realloc(Container, NewSize);
+            assert(NewContainer);
+
+            Container = static_cast<std::byte*>(NewContainer);
+        }
+    };
+
 public:
     template <typename T, typename... Args>
     S Add(Args&&... Arguments)
@@ -26,47 +179,73 @@ public:
             std::is_base_of<Base, T>::value, "T must be derived from Base"
         );
 
-        auto Container = GetOrCreateContainer<T>();
+        auto& Container = GetOrCreateContainer<T>();
 
-        T NewElement(std::forward<Args>(Arguments)...);
+        const S NewSign = Signature.Allocate();
 
-        NewElement.Signature = Signature.Allocate();
+        T& NewElement = Container.Add<T>(std::forward<Args>(Arguments)...);
+        NewElement.Signature = NewSign;
 
-        Container->push_back(std::move(NewElement));
+        return NewSign;
     }
 
     template <typename T>
     void Remove(S InSignature)
     {
-        auto Container = GetOrCreateContainer<T>();
-
-        std::remove_if(
-            Container->begin(), Container->end(),
-            [InSignature](const T& Element)
-            { return Element.GetSignature() == InSignature; }
+        static_assert(
+            std::is_base_of<Base, T>::value, "T must be derived from Base"
         );
+
+        auto& Container = GetOrCreateContainer<T>();
+
+        const std::size_t Index =
+            Container.Find([InSignature](const Base* Element)
+                           { return Element->GetSignature() == InSignature; });
+
+        if (Index != Container.GetSize())
+        {
+            Container.Remove(Index);
+        }
+
+        Signature.Release(InSignature);
+    }
+
+    void Remove(const Hash& ElementType, S InSignature)
+    {
+        if (auto Container = GetContainer(ElementType))
+        {
+            const std::size_t Index = Container->Find(
+                [InSignature](const Base* Element)
+                { return Element->GetSignature() == InSignature; }
+            );
+
+            if (Index != Container->GetSize())
+            {
+                Container->Remove(Index);
+            }
+        }
 
         Signature.Release(InSignature);
     }
 
     template <typename T>
-    T* Find(S InSignature)
+    T* Find(S InSignature) const
     {
         static_assert(
             std::is_base_of<Base, T>::value, "T must be derived from Base"
         );
 
-        auto Container = GetOrCreateContainer<T>();
-
-        auto Result = std::find_if(
-            Container->begin(), Container->end(),
-            [InSignature](const T& Element)
-            { return Element.GetSignature() == InSignature; }
-        );
-
-        if (Result != Container->end())
+        if (const auto Container = GetContainer<T>())
         {
-            return &(*Result);
+            const std::size_t Index = Container->Find(
+                [InSignature](const Base* Element)
+                { return Element->GetSignature() == InSignature; }
+            );
+
+            if (Index != Container->GetSize())
+            {
+                return static_cast<T*>(Container->Get(Index));
+            }
         }
 
         return nullptr;
@@ -81,7 +260,7 @@ public:
 
         if (auto Container = GetContainer<T>())
         {
-            return Container->size();
+            return Container->GetSize();
         }
 
         return 0;
@@ -89,39 +268,57 @@ public:
 
 private:
     template <typename T>
-    std::shared_ptr<std::vector<T>> GetOrCreateContainer()
+    TTypedElement& GetOrCreateContainer()
     {
-        const std::size_t ContainerType = typeid(T).hash_code();
+        const Hash ContainerType = FGenericTypeHasher::value<T>();
 
-        std::shared_ptr<std::vector<T>> Container =
-            std::reinterpret_pointer_cast<std::vector<T>>(
-                Containers[ContainerType]
-            );
+        TTypedElement& Container = ContainerMap[ContainerType];
 
-        if (!Container)
+        if (Container.IsValid() == false)
         {
-            Container = std::make_shared<std::vector<T>>();
+            // Re-initialize the container
+            Container = TTypedElement(ContainerType, sizeof(T));
         }
 
         return Container;
     }
 
-    std::shared_ptr<std::vector<Base>> GetContainer() const;
+    TTypedElement* GetContainer(const Hash& ContainerType)
+    {
+        if (ContainerMap.contains(ContainerType))
+        {
+            return &ContainerMap.at(ContainerType);
+        }
+
+        return nullptr;
+    }
+
+    const TTypedElement* GetContainer(const Hash& ContainerType) const
+    {
+        if (ContainerMap.contains(ContainerType))
+        {
+            return &ContainerMap.at(ContainerType);
+        }
+
+        return nullptr;
+    }
 
     template <typename T>
-    const std::shared_ptr<const std::vector<T>> GetContainer() const
+    TTypedElement* GetContainer()
     {
-        const std::size_t ContainerType = typeid(T).hash_code();
+        const Hash ContainerType = FGenericTypeHasher::value<T>();
 
-        std::shared_ptr<const std::vector<T>> Container =
-            std::reinterpret_pointer_cast<const std::vector<T>>(
-                Containers.at(ContainerType)
-            );
+        return GetContainer(ContainerType);
+    }
 
-        return Container;
+    template <typename T>
+    const TTypedElement* GetContainer() const
+    {
+        const Hash ContainerType = FGenericTypeHasher::value<T>();
+
+        return GetContainer(ContainerType);
     }
 
     Allocator Signature;
-    std::unordered_map<std::size_t, std::shared_ptr<std::vector<Base>>>
-        Containers;
+    std::unordered_map<Hash, TTypedElement> ContainerMap;
 };
