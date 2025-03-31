@@ -2,7 +2,7 @@
 
 #include "Core/Templates/Singleton.h"
 #include "Swarm/Component.h"
-#include "Swarm/Containers/Signature.h"
+#include "Swarm/Containers/HandleAllocator.h"
 #include "Swarm/Containers/TypedArray.h"
 #include "Swarm/Definition.h"
 #include "Swarm/EntityBase.h"
@@ -80,10 +80,10 @@ public:
 
         const Swarm::ClassHashType ComponentType =
             FGenericTypeHasher::value<T>();
-        const Swarm::SignatureType ComponentSignature =
+        const Swarm::SignatureType ComponenTHandleAllocator =
             Components.Add<T>(std::forward<Args>(Arguments)...);
 
-        return {ComponentType, ComponentSignature};
+        return {ComponentType, ComponenTHandleAllocator};
     }
 
     /**
@@ -166,10 +166,10 @@ public:
             return nullptr;
         }
 
-        const Swarm::SignatureType RequestSignature =
+        const Swarm::SignatureType RequesTHandleAllocator =
             EntityComponents.at(TypeId);
 
-        return Components.Find<T>(RequestSignature);
+        return Components.Find<T>(RequesTHandleAllocator);
     }
 
     /**
@@ -301,7 +301,7 @@ private:
     std::unordered_map<Swarm::ClassHashType, std::shared_ptr<ISystem>> Systems;
 
 public:
-    TSignature<Swarm::SignatureType> EntitySignature;
+    THandleAllocator<Swarm::SignatureType> EntitySignature;
 };
 
 } // namespace Swarm

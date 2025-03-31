@@ -33,10 +33,10 @@ void Manager::RemoveEntity(FEntityBase* Entity)
     {
         const auto& EntityComponents = EntityToComponents[Signature];
 
-        for (const auto& [InComponentType, InComponentSignature] :
+        for (const auto& [InComponentType, InComponenTHandleAllocator] :
              EntityComponents)
         {
-            Components.Remove(InComponentType, InComponentSignature);
+            Components.Remove(InComponentType, InComponenTHandleAllocator);
         }
 
         EntityToComponents.erase(Signature);

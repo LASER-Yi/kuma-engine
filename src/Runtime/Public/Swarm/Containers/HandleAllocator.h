@@ -2,11 +2,11 @@
 
 #include <queue>
 
-template <typename T>
-class TSignature
+template <typename T = std::size_t>
+class THandleAllocator
 {
 public:
-    TSignature() : Next(), Fragment() {}
+    THandleAllocator() : Next(), Fragment() {}
 
     T Allocate()
     {

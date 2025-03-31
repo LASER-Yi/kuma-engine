@@ -21,7 +21,7 @@ struct FGenericTypeHasher
  */
 template <
     typename Base, typename S = std::size_t, typename Hash = std::size_t,
-    typename Allocator = TSignature<S>>
+    typename Allocator = THandleAllocator<S>>
 class TTypedArray
 {
 
