@@ -7,6 +7,7 @@
 // This part is heavily referencing the LaunchMac.cpp in the Unreal Engine
 
 extern int GuardedMain(const char*);
+extern void* GWindow;
 
 static NSThread* GGameThread = nil;
 static int GGuardedMainErrorLevel = 0;
@@ -75,6 +76,7 @@ void RunGameThread(id Target, SEL Selector)
 
     [Window makeKeyAndOrderFront:nil];
 
+    GWindow = Window;
     RunGameThread(self, @selector(runGameThread:));
 }
 

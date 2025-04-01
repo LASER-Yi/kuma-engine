@@ -1,10 +1,25 @@
 project(Launch)
 
-search_files()
+search_files_simple(common Common)
 
-add_executable(${PROJECT_NAME} ${found_sources} ${found_headers})
+if (APPLE)
+    search_files_simple(platform Mac)
+elseif(WIN32)
+    search_files_simple(platform Windows)
+else()
+    message(FATAL_ERROR "Unsupported platform")
+endif()
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${found_header_dirs})
+
+add_executable(${PROJECT_NAME} 
+        ${common_found_sources} 
+        ${platform_found_sources} 
+    )
+
+target_include_directories(${PROJECT_NAME} PUBLIC 
+        ${common_found_dirs}
+        ${platform_found_dirs}
+    )
 
 set(LINK_LIBRARIES Runtime)
 

@@ -5,6 +5,7 @@
 
 #include "Kuma/KumaEngine.h"
 
+void* GWindow = nullptr;
 static KEngine* GEngine = nullptr;
 
 int GuardedMain(const char* CmdLine)
