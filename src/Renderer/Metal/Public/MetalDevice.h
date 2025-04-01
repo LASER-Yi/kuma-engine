@@ -1,18 +1,16 @@
 #pragma once
 
 #include "Metal/MTLDevice.hpp"
-namespace Renderer
-{
 
 class KMetalDevice
 {
 public:
-    void Initialize();
+    KMetalDevice();
 
-    void Shutdown();
+    ~KMetalDevice();
+
+    MTL::Device* Get() const { return MetalDevice; }
 
 private:
     MTL::Device* MetalDevice;
 };
-
-} // namespace Renderer

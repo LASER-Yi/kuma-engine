@@ -1,27 +1,33 @@
 #include "MetalViewport.h"
 
-#include "Metal/MTLDevice.hpp"
 #include "Metal/MTLPixelFormat.hpp"
+#include "QuartzCore/CAMetalDrawable.hpp"
 #include "QuartzCore/CAMetalLayer.hpp"
 #include <AppKit/NSWindow.h>
 
-namespace Renderer
-{
+#include "MetalDevice.h"
 
-KMetalViewport::KMetalViewport(void* InWindow) : Window(InWindow) {}
-
-void KMetalViewport::Initialize(MTL::Device* InDevice)
+KMetalViewport::KMetalViewport(
+    void* InWindow, std::shared_ptr<KMetalDevice> InDevice
+)
+    : Window(InWindow)
 {
     assert(InDevice != nil);
-    assert(Window != nil);
+    assert(InWindow != nil);
 
     NSWindow* CocoaWindow = (NSWindow*)Window;
 
-    auto* Layer = CA::MetalLayer::layer();
-    Layer->setDevice(InDevice);
-    Layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+    MetalLayer = CA::MetalLayer::layer();
+    MetalLayer->setDevice(InDevice->Get());
+    MetalLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
-    [[CocoaWindow contentView] setLayer:(CALayer*)Layer];
+    [[CocoaWindow contentView] setLayer:(CALayer*)MetalLayer];
     [[CocoaWindow contentView] setWantsLayer:YES];
 }
-} // namespace Renderer
+
+KMetalViewport::~KMetalViewport() {}
+
+CA::MetalDrawable* KMetalViewport::GetDrawable()
+{
+    return MetalLayer->nextDrawable();
+}

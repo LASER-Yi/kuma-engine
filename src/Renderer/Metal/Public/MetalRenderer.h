@@ -4,11 +4,9 @@
 
 #include <memory>
 
-namespace Renderer
-{
-
 class KMetalDevice;
 class KMetalViewport;
+class KMetalCmdQueue;
 
 class KMetalRenderer : public IRenderer
 {
@@ -22,6 +20,5 @@ public:
 private:
     std::shared_ptr<KMetalDevice> Device;
     std::shared_ptr<KMetalViewport> Viewport;
+    std::shared_ptr<KMetalCmdQueue> CommandQueue;
 };
-
-} // namespace Renderer

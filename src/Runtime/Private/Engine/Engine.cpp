@@ -15,7 +15,7 @@ KEngine::~KEngine() {}
 void KEngine::Initialize()
 {
 #if PLATFORM_APPLE
-    Renderer = std::make_shared<Renderer::KMetalRenderer>();
+    Renderer = std::make_shared<KMetalRenderer>();
 #endif
 
     Renderer->Initialize(GWindow);

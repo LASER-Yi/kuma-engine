@@ -1,19 +1,24 @@
 #pragma once
 
-#include "Metal/MTLDevice.hpp"
+#include <memory>
 
-namespace Renderer
+namespace CA
 {
+class MetalLayer;
+class MetalDrawable;
+} // namespace CA
+class KMetalDevice;
 
 class KMetalViewport
 {
 public:
-    KMetalViewport(void* InWindow);
+    KMetalViewport(void* InWindow, std::shared_ptr<KMetalDevice> InDevice);
 
-    void Initialize(MTL::Device* InDevice);
+    ~KMetalViewport();
+
+    CA::MetalDrawable* GetDrawable();
 
 private:
     void* Window;
+    CA::MetalLayer* MetalLayer;
 };
-
-} // namespace Renderer

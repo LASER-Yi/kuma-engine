@@ -2,15 +2,9 @@
 #include "MetalDevice.h"
 #include "Metal/MTLDevice.hpp"
 
-namespace Renderer
-{
+KMetalDevice::KMetalDevice() { MetalDevice = MTL::CreateSystemDefaultDevice(); }
 
-void KMetalDevice::Initialize()
-{
-    MetalDevice = MTL::CreateSystemDefaultDevice();
-}
-
-void KMetalDevice::Shutdown()
+KMetalDevice::~KMetalDevice()
 {
     if (MetalDevice)
     {
@@ -18,5 +12,3 @@ void KMetalDevice::Shutdown()
         MetalDevice = nullptr;
     }
 }
-
-} // namespace Renderer
