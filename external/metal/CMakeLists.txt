@@ -17,27 +17,9 @@ target_include_directories(Metal PUBLIC
         "${metal_cpp_SOURCE_DIR}"
         )
 
-find_library(METAL_LIB Metal)
-find_library(FOUNDATION_LIB Foundation)
-find_library(QUARTZ_CORE_LIB QuartzCore)
-
-if (NOT METAL_LIB)
-  message(FATAL_ERROR "Cannot found Metal library")
-else()
-  message(STATUS "Using Metal library from ${METAL_LIB}")
-endif()
-
-if (NOT FOUNDATION_LIB)
-  message(FATAL_ERROR "Cannot found Foundation library")
-else()
-  message(STATUS "Using Foundation library from ${FOUNDATION_LIB}")
-endif()
-
-if (NOT QUARTZ_CORE_LIB)
-  message(FATAL_ERROR "Cannot found QuartzCore library")
-else()
-  message(STATUS "Using QuartzCore library from ${QUARTZ_CORE_LIB}")
-endif()
+search_library(METAL_LIB Metal)
+search_library(FOUNDATION_LIB Foundation)
+search_library(QUARTZ_CORE_LIB QuartzCore)
 
 # Metal cpp library (linker)
 target_link_libraries(Metal

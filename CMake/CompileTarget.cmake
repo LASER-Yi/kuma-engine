@@ -1,6 +1,13 @@
 function(search_files)
-set(TARGET_SOURCES_DIR "Private")
-set(TARGET_HEADERS_DIR "Public")
+
+if (DEFINED ARGV0)
+    set(TARGET_PWD ${ARGV0})
+else()
+    set(TARGET_PWD ".")
+endif()
+
+set(TARGET_SOURCES_DIR "${TARGET_PWD}/Private")
+set(TARGET_HEADERS_DIR "${TARGET_PWD}/Public")
 
 file(GLOB_RECURSE TARGET_SOURCES
     "${TARGET_SOURCES_DIR}/*.cpp")

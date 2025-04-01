@@ -9,13 +9,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${found_header_dirs})
 set(LINK_LIBRARIES Runtime)
 
 if (APPLE)
-find_library(APPKIT_LIB AppKit)
-
-if (NOT APPKIT_LIB)
-  message(FATAL_ERROR "Cannot found AppKit library")
-else()
-  message(STATUS "Using AppKit library from ${APPKIT_LIB}")
-endif()
+search_library(APPKIT_LIB AppKit)
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${APPKIT_LIB}/Headers")
 
