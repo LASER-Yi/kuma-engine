@@ -1,6 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <memory>
+
+class IRenderer;
 
 class KEngine
 {
@@ -19,4 +22,6 @@ public:
 
 private:
     bool bExitRequired = false;
+
+    std::shared_ptr<IRenderer> Renderer;
 };
