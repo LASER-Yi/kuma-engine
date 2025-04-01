@@ -1,10 +1,10 @@
 project(Launch)
 
-include(CompileTarget)
+search_files()
 
-add_executable(${PROJECT_NAME} ${TARGET_SOURCES} ${TARGET_HEADERS})
+add_executable(${PROJECT_NAME} ${found_sources} ${found_headers})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${TARGET_HEADERS_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${found_header_dirs})
 
 set(LINK_LIBRARIES Runtime)
 

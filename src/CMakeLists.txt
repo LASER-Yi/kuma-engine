@@ -1,3 +1,4 @@
+include(CompileTarget)
 include(PlatformMacros)
 
 add_subdirectory(Runtime)

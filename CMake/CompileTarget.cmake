@@ -1,3 +1,4 @@
+function(search_files)
 set(TARGET_SOURCES_DIR "Private")
 set(TARGET_HEADERS_DIR "Public")
 
@@ -31,9 +32,8 @@ file(GLOB_RECURSE PLATFORM_HEADERS
 list(APPEND TARGET_SOURCES ${PLATFORM_SOURCES})
 list(APPEND TARGET_HEADERS ${PLATFORM_HEADERS})
 
-mark_as_advanced(
-    TARGET_HEADERS 
-    TARGET_SOURCES 
-    TARGET_HEADERS_DIR 
-    TARGET_SOURCES_DIR
-)
+set(found_headers ${TARGET_HEADERS} PARENT_SCOPE)
+set(found_sources ${TARGET_SOURCES} PARENT_SCOPE)
+set(found_header_dirs ${TARGET_HEADERS_DIR} PARENT_SCOPE)
+set(found_source_dirs ${TARGET_SOURCES_DIR} PARENT_SCOPE)
+endfunction()
