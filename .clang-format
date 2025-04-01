@@ -1,7 +1,6 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
 
-Language: Cpp
 SpacesInAngles: Never
 SpacesInLineCommentPrefix:
   Minimum: 1

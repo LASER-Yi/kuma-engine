@@ -1,6 +1,7 @@
 #include "CoreMinimal.h"
 
 #include <cstdlib>
+#include <iostream>
 
 #include "Kuma/KumaEngine.h"
 
@@ -8,7 +9,13 @@ static KEngine* GEngine = nullptr;
 
 int GuardedMain(const char* CmdLine)
 {
-    UNUSED_VAR(CmdLine);
+    // TODO: Better logging support
+    std::cout << "Starting KumaEngine..." << std::endl;
+
+    if (CmdLine != nullptr)
+    {
+        std::cout << "Command line: " << CmdLine << std::endl;
+    }
 
     GEngine = new KKumaEngine();
 
