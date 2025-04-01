@@ -22,6 +22,7 @@ void KMetalRenderer::Update()
 {
     NS::AutoreleasePool* Pool = NS::AutoreleasePool::alloc()->init();
 
+    CA::MetalDrawable* Drawable = Viewport->GetDrawable();
     MTL::CommandBuffer* Cmd = CommandQueue->AllocCmd();
 
     MTL::RenderPassDescriptor* RenderDescriptor =
@@ -29,15 +30,15 @@ void KMetalRenderer::Update()
 
     MTL::RenderPassColorAttachmentDescriptor* ColorAttachment =
         RenderDescriptor->colorAttachments()->object(0);
+    ColorAttachment->setTexture(Drawable->texture());
     ColorAttachment->setLoadAction(MTL::LoadActionClear);
     ColorAttachment->setClearColor(MTL::ClearColor(1.0, 0.0, 0.0, 1.0));
-    ColorAttachment->setStoreAction(MTL::StoreActionDontCare);
+    ColorAttachment->setStoreAction(MTL::StoreActionStore);
 
     MTL::RenderCommandEncoder* Encoder =
         Cmd->renderCommandEncoder(RenderDescriptor);
     Encoder->endEncoding();
 
-    CA::MetalDrawable* Drawable = Viewport->GetDrawable();
     Cmd->presentDrawable(Drawable);
     Cmd->commit();
 

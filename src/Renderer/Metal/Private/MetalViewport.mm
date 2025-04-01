@@ -4,6 +4,8 @@
 #include "QuartzCore/CAMetalDrawable.hpp"
 #include "QuartzCore/CAMetalLayer.hpp"
 #include <AppKit/NSWindow.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreGraphics/CoreGraphics.h>
 
 #include "MetalDevice.h"
 
@@ -20,6 +22,8 @@ KMetalViewport::KMetalViewport(
     MetalLayer = CA::MetalLayer::layer();
     MetalLayer->setDevice(InDevice->Get());
     MetalLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+    MetalLayer->setDrawableSize(CGSizeMake(800, 600)
+    ); // TODO: match the size of NSWindow
 
     [[CocoaWindow contentView] setLayer:(CALayer*)MetalLayer];
     [[CocoaWindow contentView] setWantsLayer:YES];
