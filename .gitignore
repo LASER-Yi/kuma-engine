@@ -35,3 +35,6 @@
 build
 bin
 .cache
+
+# macOS
+.DS_Store

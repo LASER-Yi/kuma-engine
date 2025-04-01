@@ -6,8 +6,10 @@
 
 static KEngine* GEngine = nullptr;
 
-int main()
+int GuardedMain(const char* CmdLine)
 {
+    UNUSED_VAR(CmdLine);
+
     GEngine = new KKumaEngine();
 
     // Initialize the engine
