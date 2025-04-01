@@ -1,7 +1,6 @@
 project(Runtime)
 
 include(CompileTarget)
-include(PlatformMacros)
 
 add_library(${PROJECT_NAME} ${TARGET_SOURCES} ${TARGET_HEADERS})
 

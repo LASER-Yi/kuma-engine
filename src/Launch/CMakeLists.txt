@@ -1,7 +1,6 @@
 project(Launch)
 
 include(CompileTarget)
-include(PlatformMacros)
 
 add_executable(${PROJECT_NAME} ${TARGET_SOURCES} ${TARGET_HEADERS})
 
