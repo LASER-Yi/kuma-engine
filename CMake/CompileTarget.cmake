@@ -12,6 +12,8 @@ list(FILTER TARGET_HEADERS EXCLUDE REGEX ".*Platforms.*")
 
 if(APPLE)
     set(PLATFORM_DIR_NAME "Mac")
+elseif(WIN32)
+    set(PLATFORM_DIR_NAME "Windows")
 else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
