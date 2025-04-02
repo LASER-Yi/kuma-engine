@@ -3,6 +3,7 @@
 #include "MetalDevice.h"
 
 #include <Metal/MTLCommandQueue.hpp>
+#include <Metal/MTLDevice.hpp>
 
 KMetalCmdQueue::KMetalCmdQueue(std::shared_ptr<KMetalDevice> InDevice)
 {

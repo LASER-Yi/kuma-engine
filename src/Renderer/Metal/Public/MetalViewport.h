@@ -16,6 +16,8 @@ public:
 
     ~KMetalViewport();
 
+    bool IsViewportReady() const;
+
     CA::MetalDrawable* GetDrawable();
 
 private:

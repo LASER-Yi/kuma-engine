@@ -1,12 +1,14 @@
 #include "MetalRenderer.h"
-#include "Foundation/NSAutoreleasePool.hpp"
-#include "Metal/MTLCommandBuffer.hpp"
-#include "Metal/MTLRenderCommandEncoder.hpp"
-#include "Metal/MTLRenderPass.hpp"
-#include "MetalCmdQueue.h"
-#include "MetalDevice.h"
-#include "MetalViewport.h"
-#include "QuartzCore/CAMetalDrawable.hpp"
+
+#include <Foundation/NSAutoreleasePool.hpp>
+#include <Metal/MTLCommandBuffer.hpp>
+#include <Metal/MTLRenderCommandEncoder.hpp>
+#include <Metal/MTLRenderPass.hpp>
+#include <MetalCmdQueue.h>
+#include <MetalDevice.h>
+#include <MetalViewport.h>
+#include <QuartzCore/CAMetalDrawable.hpp>
+
 #include <memory>
 
 void KMetalRenderer::Initialize(void* WindowPtr)
@@ -20,6 +22,11 @@ void KMetalRenderer::Initialize(void* WindowPtr)
 
 void KMetalRenderer::Update()
 {
+    if (Viewport->IsViewportReady() == false)
+    {
+        return;
+    }
+
     NS::AutoreleasePool* Pool = NS::AutoreleasePool::alloc()->init();
 
     CA::MetalDrawable* Drawable = Viewport->GetDrawable();

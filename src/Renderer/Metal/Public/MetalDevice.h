@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Metal/MTLDevice.hpp"
+namespace MTL
+{
+class Device;
+}
 
 class KMetalDevice
 {

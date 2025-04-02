@@ -1,11 +1,11 @@
 #include "MetalViewport.h"
 
-#include "Metal/MTLPixelFormat.hpp"
-#include "QuartzCore/CAMetalDrawable.hpp"
-#include "QuartzCore/CAMetalLayer.hpp"
 #include <AppKit/NSWindow.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreGraphics/CoreGraphics.h>
+#include <Metal/MTLPixelFormat.hpp>
+#include <QuartzCore/CAMetalDrawable.hpp>
+#include <QuartzCore/CAMetalLayer.hpp>
 
 #include "MetalDevice.h"
 
@@ -17,19 +17,26 @@ KMetalViewport::KMetalViewport(
     assert(InDevice != nil);
     assert(InWindow != nil);
 
-    NSWindow* CocoaWindow = (NSWindow*)Window;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      NSWindow* CocoaWindow = (NSWindow*)Window;
 
-    MetalLayer = CA::MetalLayer::layer();
-    MetalLayer->setDevice(InDevice->Get());
-    MetalLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
-    MetalLayer->setDrawableSize(CGSizeMake(800, 600)
-    ); // TODO: match the size of NSWindow
+      CA::MetalLayer* Layer = CA::MetalLayer::layer();
 
-    [[CocoaWindow contentView] setLayer:(CALayer*)MetalLayer];
-    [[CocoaWindow contentView] setWantsLayer:YES];
+      const NSRect contentRect = [CocoaWindow contentLayoutRect];
+      Layer->setDevice(InDevice->Get());
+      Layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+      Layer->setDrawableSize(contentRect.size);
+
+      [[CocoaWindow contentView] setLayer:(CALayer*)Layer];
+      [[CocoaWindow contentView] setWantsLayer:YES];
+
+      MetalLayer = Layer;
+    });
 }
 
 KMetalViewport::~KMetalViewport() {}
+
+bool KMetalViewport::IsViewportReady() const { return MetalLayer != nil; }
 
 CA::MetalDrawable* KMetalViewport::GetDrawable()
 {

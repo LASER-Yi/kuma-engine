@@ -1,14 +1,8 @@
 
 #include "MetalDevice.h"
-#include "Metal/MTLDevice.hpp"
+
+#include <Metal/MTLDevice.hpp>
 
 KMetalDevice::KMetalDevice() { MetalDevice = MTL::CreateSystemDefaultDevice(); }
 
-KMetalDevice::~KMetalDevice()
-{
-    if (MetalDevice)
-    {
-        MetalDevice->release();
-        MetalDevice = nullptr;
-    }
-}
+KMetalDevice::~KMetalDevice() { MetalDevice->release(); }
