@@ -5,6 +5,7 @@
 #include "Kuma/Entities/KumaWorld.h"
 #include "Kuma/Systems/PrimitiveSystem.h"
 #include "Swarm/Manager.h"
+#include "Vector.h"
 
 void KKumaEngine::Initialize()
 {
@@ -13,9 +14,14 @@ void KKumaEngine::Initialize()
     CurrentWorld = Swarm::Manager::Get()->MakeEntity<FKumaWorld>();
 
     auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-    Entity->AddComponent<FPrimitiveComponent>();
+    Entity->AddComponent<FPrimitiveComponent>(FVector(0.5, 0.5, 0.5));
 
     CurrentWorld->AddToWorld(Entity);
+
+    auto AnotherEntity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
+    AnotherEntity->AddComponent<FPrimitiveComponent>(FVector());
+
+    CurrentWorld->AddToWorld(AnotherEntity);
 }
 
 void KKumaEngine::Shutdown()

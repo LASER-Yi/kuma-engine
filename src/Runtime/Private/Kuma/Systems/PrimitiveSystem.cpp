@@ -42,13 +42,18 @@ void KPrimitiveSystem::Execute(float DeltaTime)
 
     for (FPrimitiveComponent& Primitive : GetComponents<FPrimitiveComponent>())
     {
+        constexpr std::array<FVector, 3> Vertices = {
+            {{0.0f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}, {0.5f, 0.0f, 0.0f}}
+        };
+
         const FSceneProxy Proxy = {
             .Shader = ShaderSrc,
             .VertexEntrypoint = Vertex,
             .FragmentEntrypoint = Fragment,
 
             .Vertices =
-                {{-0.8f, 0.8f, 0.0f}, {0.0f, -0.8f, 0.0f}, {+0.8f, 0.8f, 0.0f}},
+                {Vertices[0] + Primitive.Offset, Vertices[1] + Primitive.Offset,
+                 Vertices[2] + Primitive.Offset},
 
             .Colors = {{1.0, 0.3f, 0.2f}, {0.8f, 1.0, 0.0f}, {0.8f, 0.0f, 1.0}}
         };

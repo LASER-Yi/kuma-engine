@@ -49,8 +49,8 @@ void KMetalRenderer::Update()
     MTL::RenderPassColorAttachmentDescriptor* ColorAttachment =
         RenderDescriptor->colorAttachments()->object(0);
     ColorAttachment->setTexture(Drawable->texture());
-    ColorAttachment->setLoadAction(MTL::LoadActionClear);
-    ColorAttachment->setClearColor(MTL::ClearColor(0.0, 0.0, 0.0, 1.0));
+    ColorAttachment->setLoadAction(MTL::LoadActionLoad);
+    // ColorAttachment->setClearColor(MTL::ClearColor(0.0, 0.0, 0.0, 1.0));
     ColorAttachment->setStoreAction(MTL::StoreActionStore);
 
     for (const FMetalRenderData& RenderData :
@@ -106,7 +106,7 @@ void KMetalRenderer::Enqueue(const FSceneProxy& InProxy)
     // TODO: Cache and reuse PSO
     {
         NS::AutoreleasePool* Pool = NS::AutoreleasePool::alloc()->init();
-        
+
         MTL::Library* Library = MetalDevice->newLibrary(
             NS::String::string(InProxy.Shader, NS::UTF8StringEncoding), nullptr,
             &Error
@@ -135,12 +135,12 @@ void KMetalRenderer::Enqueue(const FSceneProxy& InProxy)
         assert(StateObject);
 
         RenderData->State = StateObject;
-        
+
         VertexFunc->release();
         FragmentFunc->release();
         Desc->release();
         Library->release();
-        
+
         Pool->release();
     }
 
