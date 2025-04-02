@@ -2,11 +2,34 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <mutex>
+#include <shared_mutex>
 
 #include "Kuma/KumaEngine.h"
 
 void* GWindow = nullptr;
 static KEngine* GEngine = nullptr;
+
+std::shared_mutex EngineExitLock;
+
+void RequestEngineExit()
+{
+    std::unique_lock<std::shared_mutex> Lock(EngineExitLock);
+    if (GEngine)
+    {
+        GEngine->RequireEngineExit();
+    }
+}
+
+bool IsEngineExitRequested()
+{
+    std::shared_lock<std::shared_mutex> Lock(EngineExitLock);
+    if (GEngine)
+    {
+        return GEngine->IsEngineExitRequired();
+    }
+    return true;
+}
 
 int GuardedMain(const char* CmdLine)
 {

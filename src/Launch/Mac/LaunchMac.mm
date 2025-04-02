@@ -6,6 +6,9 @@
 
 // This part is heavily referencing the LaunchMac.cpp in the Unreal Engine
 
+extern void RequestEngineExit();
+extern bool IsEngineExitRequested();
+
 extern int GuardedMain(const char*);
 extern void* GWindow;
 
@@ -44,7 +47,17 @@ void RunGameThread(id Target, SEL Selector)
 - (NSApplicationTerminateReply
 )applicationShouldTerminate:(NSApplication*)Sender;
 {
-    return NSTerminateNow;
+    if (IsEngineExitRequested() == false)
+    {
+        // TODO: We will need to call this in the game thread
+        RequestEngineExit();
+        return NSTerminateLater;
+    }
+    else
+    {
+
+        return NSTerminateNow;
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification*)Notification
@@ -108,9 +121,9 @@ int main(int argc, char* argv[])
 {
     @autoreleasepool
     {
-        [NSApplication sharedApplication];
-        [NSApp setDelegate:[KumaAppDelegate new]];
-        [NSApp run];
+        NSApplication* shared = [NSApplication sharedApplication];
+        [shared setDelegate:[KumaAppDelegate new]];
+        [shared run];
     }
 
     return GGuardedMainErrorLevel;
