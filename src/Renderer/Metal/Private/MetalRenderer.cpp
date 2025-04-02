@@ -43,32 +43,49 @@ void KMetalRenderer::Update()
     CA::MetalDrawable* Drawable = Viewport->GetDrawable();
     MTL::CommandBuffer* Cmd = CommandQueue->GetCmdBuffer();
 
-    MTL::RenderPassDescriptor* RenderDescriptor =
+    MTL::RenderPassDescriptor* ClearColorDesc =
         MTL::RenderPassDescriptor::alloc()->init();
-
-    MTL::RenderPassColorAttachmentDescriptor* ColorAttachment =
-        RenderDescriptor->colorAttachments()->object(0);
-    ColorAttachment->setTexture(Drawable->texture());
-    ColorAttachment->setLoadAction(MTL::LoadActionLoad);
-    // ColorAttachment->setClearColor(MTL::ClearColor(0.0, 0.0, 0.0, 1.0));
-    ColorAttachment->setStoreAction(MTL::StoreActionStore);
-
-    for (const FMetalRenderData& RenderData :
-         GetFrameRenderData<FMetalRenderData>())
     {
-        MTL::RenderCommandEncoder* Encoder =
-            Cmd->renderCommandEncoder(RenderDescriptor);
+        MTL::RenderPassColorAttachmentDescriptor* ColorClearAttachment =
+            ClearColorDesc->colorAttachments()->object(0);
 
-        Encoder->setRenderPipelineState(RenderData.State);
-        Encoder->setVertexBuffer(RenderData.VertexPos, 0, 0);
-        Encoder->setVertexBuffer(RenderData.VertexColor, 0, 1);
-
-        Encoder->drawPrimitives(
-            MTL::PrimitiveType::PrimitiveTypeTriangle, NS::UInteger(0),
-            NS::UInteger(RenderData.VertexCount)
+        ColorClearAttachment->setTexture(Drawable->texture());
+        ColorClearAttachment->setLoadAction(MTL::LoadActionClear);
+        ColorClearAttachment->setClearColor(MTL::ClearColor(0.0, 0.0, 0.0, 1.0)
         );
+        ColorClearAttachment->setStoreAction(MTL::StoreActionStore);
 
-        Encoder->endEncoding();
+        MTL::RenderCommandEncoder* ClearColorEncoder =
+            Cmd->renderCommandEncoder(ClearColorDesc);
+        ClearColorEncoder->endEncoding();
+    }
+
+    MTL::RenderPassDescriptor* RenderDesc =
+        MTL::RenderPassDescriptor::alloc()->init();
+    {
+        MTL::RenderPassColorAttachmentDescriptor* ColorAttachment =
+            RenderDesc->colorAttachments()->object(0);
+        ColorAttachment->setTexture(Drawable->texture());
+        ColorAttachment->setLoadAction(MTL::LoadActionLoad);
+        ColorAttachment->setStoreAction(MTL::StoreActionStore);
+
+        for (const FMetalRenderData& RenderData :
+             GetFrameRenderData<FMetalRenderData>())
+        {
+            MTL::RenderCommandEncoder* Encoder =
+                Cmd->renderCommandEncoder(RenderDesc);
+
+            Encoder->setRenderPipelineState(RenderData.State);
+            Encoder->setVertexBuffer(RenderData.VertexPos, 0, 0);
+            Encoder->setVertexBuffer(RenderData.VertexColor, 0, 1);
+
+            Encoder->drawPrimitives(
+                MTL::PrimitiveType::PrimitiveTypeTriangle, NS::UInteger(0),
+                NS::UInteger(RenderData.VertexCount)
+            );
+
+            Encoder->endEncoding();
+        }
     }
 
     Cmd->presentDrawable(Drawable);
@@ -83,7 +100,8 @@ void KMetalRenderer::Update()
     }
     FrameRenderData.resize(0);
 
-    RenderDescriptor->release();
+    RenderDesc->release();
+    ClearColorDesc->release();
 
     Pool->release();
 }
