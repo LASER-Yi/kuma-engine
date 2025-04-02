@@ -2,8 +2,8 @@
 
 #include "Kuma/Components/Primitive.h"
 #include "Kuma/KumaEngine.h"
-#include "PipelineState.h"
 #include "Renderer.h"
+#include "SceneProxy.h"
 
 const char* ShaderSrc = R"(
     #include <metal_stdlib>
@@ -42,28 +42,19 @@ void KPrimitiveSystem::Execute(float DeltaTime)
 
     for (FPrimitiveComponent& Primitive : GetComponents<FPrimitiveComponent>())
     {
-        if (Primitive.StateObject.IsValid() == false)
-        {
-            const FPipelineDefinition Definition = {
-                .shader = ShaderSrc,
-                .vertexEntrypoint = Vertex,
-                .fragmentEntrypoint = Fragment
-            };
+        const FSceneProxy Proxy = {
+            .Shader = ShaderSrc,
+            .VertexEntrypoint = Vertex,
+            .FragmentEntrypoint = Fragment,
 
-            Primitive.StateObject = Renderer->PreparePipelineState(Definition);
-        }
+            .Vertices =
+                {{-0.8f, 0.8f, 0.0f}, {0.0f, -0.8f, 0.0f}, {+0.8f, 0.8f, 0.0f}},
+
+            .Colors = {{1.0, 0.3f, 0.2f}, {0.8f, 1.0, 0.0f}, {0.8f, 0.0f, 1.0}}
+        };
+
+        Renderer->Enqueue(Proxy);
     }
 }
 
-void KPrimitiveSystem::Shutdown()
-{
-    auto Renderer = GetEngine()->GetRenderer();
-
-    for (FPrimitiveComponent& Primitive : GetComponents<FPrimitiveComponent>())
-    {
-        if (Primitive.StateObject.IsValid())
-        {
-            Renderer->ReleasePipelineState(&Primitive.StateObject);
-        }
-    }
-}
+void KPrimitiveSystem::Shutdown() {}

@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 
-#include "PipelineState.h"
+#include "Vector.h"
 
 struct FPrimitiveComponent : public Swarm::FComponent
 {
-    FPipelineStateObject StateObject;
+    FVector Color;
 };

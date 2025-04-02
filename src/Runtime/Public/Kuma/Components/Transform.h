@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Math/Vector.h"
+#include "Vector.h"
 
 struct FTransformComponent : public Swarm::FComponent
 {

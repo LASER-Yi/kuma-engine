@@ -17,7 +17,7 @@ public:
 
     ~KMetalCmdQueue();
 
-    MTL::CommandBuffer* AllocCmd();
+    MTL::CommandBuffer* GetCmdBuffer();
 
 private:
     MTL::CommandQueue* MetalCommandQueue;

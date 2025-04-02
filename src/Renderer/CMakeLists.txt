@@ -25,6 +25,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${common_found_source_dirs}
     )
 
+target_link_libraries(${PROJECT_NAME} PUBLIC Math)
+
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE Metal)
 endif()

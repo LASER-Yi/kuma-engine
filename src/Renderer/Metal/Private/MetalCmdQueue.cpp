@@ -12,7 +12,7 @@ KMetalCmdQueue::KMetalCmdQueue(std::shared_ptr<KMetalDevice> InDevice)
 
 KMetalCmdQueue::~KMetalCmdQueue() { MetalCommandQueue->release(); }
 
-MTL::CommandBuffer* KMetalCmdQueue::AllocCmd()
+MTL::CommandBuffer* KMetalCmdQueue::GetCmdBuffer()
 {
     return MetalCommandQueue->commandBuffer();
 }

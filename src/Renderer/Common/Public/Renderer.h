@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PipelineState.h"
+#include "SceneProxy.h"
 
 class IRenderer
 {
@@ -11,8 +11,5 @@ public:
 
     virtual void Shutdown() = 0;
 
-    virtual FPipelineStateObject
-    PreparePipelineState(const FPipelineDefinition& InDefinition) = 0;
-
-    virtual void ReleasePipelineState(FPipelineStateObject* StateObject) = 0;
+    virtual void Enqueue(const FSceneProxy& InProxy) = 0;
 };
