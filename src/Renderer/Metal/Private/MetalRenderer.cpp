@@ -1,7 +1,13 @@
 #include "MetalRenderer.h"
+#include "Foundation/NSString.hpp"
+#include "Metal/MTLLibrary.hpp"
+#include "Metal/MTLPixelFormat.hpp"
+#include "Metal/MTLRenderPipeline.hpp"
+#include "PipelineState.h"
 
 #include <Foundation/NSAutoreleasePool.hpp>
 #include <Metal/MTLCommandBuffer.hpp>
+#include <Metal/MTLDevice.hpp>
 #include <Metal/MTLRenderCommandEncoder.hpp>
 #include <Metal/MTLRenderPass.hpp>
 #include <MetalCmdQueue.h>
@@ -9,6 +15,7 @@
 #include <MetalViewport.h>
 #include <QuartzCore/CAMetalDrawable.hpp>
 
+#include <cassert>
 #include <memory>
 
 void KMetalRenderer::Initialize(void* WindowPtr)
@@ -58,4 +65,63 @@ void KMetalRenderer::Shutdown()
 {
     Viewport = nullptr;
     Device = nullptr;
+}
+
+FPipelineStateObject
+KMetalRenderer::PreparePipelineState(const FPipelineDefinition& InDefinition)
+{
+    NS::Error* Error = nullptr;
+
+    MTL::Device* MetalDevice = Device->Get();
+    assert(MetalDevice);
+
+    MTL::Library* Library = MetalDevice->newLibrary(
+        NS::String::string(InDefinition.shader, NS::UTF8StringEncoding),
+        nullptr, &Error
+    );
+
+    if (Library == nullptr)
+    {
+        return {.Data = nullptr};
+    }
+
+    MTL::Function* VertexFunc = Library->newFunction(NS::String::string(
+        InDefinition.vertexEntrypoint, NS::UTF8StringEncoding
+    ));
+    MTL::Function* FragmentFunc = Library->newFunction(NS::String::string(
+        InDefinition.fragmentEntrypoint, NS::UTF8StringEncoding
+    ));
+
+    MTL::RenderPipelineDescriptor* Desc =
+        MTL::RenderPipelineDescriptor::alloc()->init();
+
+    Desc->setVertexFunction(VertexFunc);
+    Desc->setFragmentFunction(FragmentFunc);
+
+    Desc->colorAttachments()->object(0)->setPixelFormat(
+        MTL::PixelFormatBGRA8Unorm_sRGB
+    );
+
+    MTL::RenderPipelineState* StateObject =
+        MetalDevice->newRenderPipelineState(Desc, &Error);
+
+    assert(StateObject);
+
+    VertexFunc->release();
+    FragmentFunc->release();
+    Desc->release();
+    Library->release();
+
+    return {.Data = StateObject};
+}
+
+void KMetalRenderer::ReleasePipelineState(FPipelineStateObject* StateObject)
+{
+    assert(StateObject);
+
+    MTL::RenderPipelineState* MetalStateObject =
+        reinterpret_cast<MTL::RenderPipelineState*>(StateObject->Data);
+
+    MetalStateObject->release();
+    StateObject->Data = nullptr;
 }

@@ -3,6 +3,8 @@
 #include "Swarm/Interfaces/System.h"
 #include "Swarm/Manager.h"
 
+class KKumaEngine;
+
 namespace Swarm
 {
 
@@ -14,6 +16,8 @@ protected:
     {
         return Swarm::Manager::Get()->GetComponents<T>();
     }
+
+    KKumaEngine* GetEngine() const;
 };
 
 } // namespace Swarm

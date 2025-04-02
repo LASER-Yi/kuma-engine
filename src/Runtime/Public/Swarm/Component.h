@@ -10,6 +10,12 @@ namespace Swarm
  */
 struct FComponent : public IIdentifiable
 {
+    FComponent() = default;
+
+    FComponent(const FComponent&) = delete;
+    FComponent& operator=(const FComponent&) = delete;
+    FComponent(FComponent&&) = delete;
+    FComponent& operator=(FComponent&&) = delete;
 };
 
 } // namespace Swarm

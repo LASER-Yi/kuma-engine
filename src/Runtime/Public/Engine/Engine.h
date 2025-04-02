@@ -20,6 +20,8 @@ public:
 
     bool IsEngineExitRequired() const;
 
+    std::shared_ptr<IRenderer> GetRenderer() const;
+
 private:
     bool bExitRequired = false;
 

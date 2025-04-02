@@ -6,8 +6,9 @@
 
 #include "Kuma/KumaEngine.h"
 
+extern KEngine* GEngine;
+
 void* GWindow = nullptr;
-static KEngine* GEngine = nullptr;
 
 std::shared_mutex EngineExitLock;
 

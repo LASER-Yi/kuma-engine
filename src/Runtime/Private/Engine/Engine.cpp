@@ -1,4 +1,5 @@
 #include "Engine/Engine.h"
+#include "Renderer.h"
 
 #include <memory>
 
@@ -7,6 +8,7 @@
 #endif
 
 extern void* GWindow;
+KEngine* GEngine = nullptr;
 
 KEngine::KEngine() : bExitRequired(false) {}
 
@@ -19,9 +21,14 @@ void KEngine::Initialize()
 #endif
 
     Renderer->Initialize(GWindow);
+    // TODO: initialize the swarm system
 }
 
-void KEngine::Shutdown() { Renderer->Shutdown(); }
+void KEngine::Shutdown()
+{
+    // TODO: Shutdown the swarm system
+    Renderer->Shutdown();
+}
 
 void KEngine::EngineTick(float DeltaTime)
 {
@@ -33,3 +40,5 @@ void KEngine::EngineTick(float DeltaTime)
 void KEngine::RequireEngineExit() { bExitRequired = true; }
 
 bool KEngine::IsEngineExitRequired() const { return bExitRequired; }
+
+std::shared_ptr<IRenderer> KEngine::GetRenderer() const { return Renderer; }

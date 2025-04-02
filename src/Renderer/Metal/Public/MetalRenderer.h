@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PipelineState.h"
 #include "Renderer.h"
 
 #include <memory>
@@ -16,6 +17,12 @@ public:
     virtual void Update() override;
 
     virtual void Shutdown() override;
+
+    virtual FPipelineStateObject
+    PreparePipelineState(const FPipelineDefinition& InDefinition) override;
+
+    virtual void ReleasePipelineState(FPipelineStateObject* StateObject
+    ) override;
 
 private:
     std::shared_ptr<KMetalDevice> Device;
