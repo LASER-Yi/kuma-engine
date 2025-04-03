@@ -29,4 +29,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC Math)
 
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE Metal)
+elseif(WIN32)
+    search_library(D3D12_LIB D3D12)
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${D3D12_LIB})
 endif()
