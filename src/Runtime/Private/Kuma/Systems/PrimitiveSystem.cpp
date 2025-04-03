@@ -1,5 +1,7 @@
 #include "Kuma/Systems/PrimitiveSystem.h"
 
+#include <array>
+
 #include "Kuma/Components/Primitive.h"
 #include "Kuma/KumaEngine.h"
 #include "Renderer.h"
@@ -43,8 +45,7 @@ void KPrimitiveSystem::Execute(float DeltaTime)
     for (FPrimitiveComponent& Primitive : GetComponents<FPrimitiveComponent>())
     {
         constexpr std::array<FVector, 3> Vertices = {
-            {{0.0f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}, {0.5f, 0.0f, 0.0f}}
-        };
+            {{0.0f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}, {0.5f, 0.0f, 0.0f}}};
 
         const FSceneProxy Proxy = {
             .Shader = ShaderSrc,
@@ -55,8 +56,8 @@ void KPrimitiveSystem::Execute(float DeltaTime)
                 {Vertices[0] + Primitive.Offset, Vertices[1] + Primitive.Offset,
                  Vertices[2] + Primitive.Offset},
 
-            .Colors = {{1.0, 0.3f, 0.2f}, {0.8f, 1.0, 0.0f}, {0.8f, 0.0f, 1.0}}
-        };
+            .Colors = {
+                {1.0, 0.3f, 0.2f}, {0.8f, 1.0, 0.0f}, {0.8f, 0.0f, 1.0}}};
 
         Renderer->Enqueue(Proxy);
     }
