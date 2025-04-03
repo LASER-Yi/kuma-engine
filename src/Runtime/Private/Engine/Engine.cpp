@@ -5,6 +5,8 @@
 
 #if PLATFORM_APPLE
 #include "MetalRenderer.h"
+#elif PLATFORM_WINDOWS
+#include "D3D12Renderer.h"
 #endif
 
 extern void* GWindow;
@@ -18,6 +20,8 @@ void KEngine::Initialize()
 {
 #if PLATFORM_APPLE
     Renderer = std::make_shared<KMetalRenderer>();
+#elif PLATFORM_WINDOWS
+    Renderer = std::make_shared<KD3D12Renderer>();
 #endif
 
     Renderer->Initialize(GWindow);

@@ -10,8 +10,11 @@ else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
 
+if (WIN32)
+    set(CMAKE_WIN32_EXECUTABLE ON)
+endif()
 
-add_executable(${PROJECT_NAME} 
+add_executable(${PROJECT_NAME}
         ${common_found_sources} 
         ${platform_found_sources} 
     )
@@ -23,16 +26,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 set(LINK_LIBRARIES Runtime)
 
+# Platform options
 if (APPLE)
-search_library(APPKIT_LIB AppKit)
+    search_library(APPKIT_LIB AppKit)
+    target_include_directories(${PROJECT_NAME} PRIVATE "${APPKIT_LIB}/Headers")
 
-target_include_directories(${PROJECT_NAME} PRIVATE "${APPKIT_LIB}/Headers")
-
-list(APPEND LINK_LIBRARIES ${APPKIT_LIB})
-endif()
-
-if (MSVC)
-    set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    list(APPEND LINK_LIBRARIES ${APPKIT_LIB})
 endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LINK_LIBRARIES})
+
+# Visual Studio
+if (MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+endif()
