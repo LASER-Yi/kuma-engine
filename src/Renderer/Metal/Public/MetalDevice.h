@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 namespace MTL
 {
 class Device;
@@ -17,3 +18,5 @@ public:
 private:
     MTL::Device* MetalDevice;
 };
+
+using KMetalDeviceRef = std::shared_ptr<KMetalDevice>;

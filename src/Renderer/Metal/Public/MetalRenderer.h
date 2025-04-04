@@ -1,7 +1,9 @@
 #pragma once
 
+#include "MetalShader.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
+#include "Shader.h"
 
 #include <memory>
 
@@ -18,15 +20,19 @@ public:
 
     virtual void Shutdown() override;
 
-    virtual FStateObjectRef CreateStateObject(
-        const char* Shader, const char* Vertex, const char* Fragment
+public:
+    virtual const FShaderManager* GetShaderManager() const override;
+
+    virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
     ) override;
 
     virtual FVertexBufferRef
     CreateVertexBuffer(const std::vector<FVector>& InVertex) override;
 
 private:
-    std::shared_ptr<KMetalDevice> Device;
+    KMetalDeviceRef Device;
     std::shared_ptr<KMetalViewport> Viewport;
     std::shared_ptr<KMetalCmdQueue> CommandQueue;
+
+    std::shared_ptr<FMetalShaderManager> Shader;
 };

@@ -1,6 +1,8 @@
 #pragma once
 
+#include "MetalShader.h"
 #include "StateObject.h"
+#include <memory>
 
 namespace MTL
 {
@@ -11,8 +13,8 @@ class RenderPipelineState;
 struct FMetalStateObject : public FStateObject
 {
     FMetalStateObject(
-        MTL::Device* Device, const char* Shader, const char* Vertex,
-        const char* Fragment
+        MTL::Device* Device,
+        const std::shared_ptr<FMetalShaderResource> InShader
     );
     ~FMetalStateObject();
 

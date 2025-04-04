@@ -1,11 +1,6 @@
 #include "MetalRenderer.h"
-#include "Foundation/NSString.hpp"
-#include "Foundation/NSTypes.hpp"
-#include "Metal/MTLLibrary.hpp"
-#include "Metal/MTLPixelFormat.hpp"
-#include "Metal/MTLRenderPipeline.hpp"
-#include "Metal/MTLResource.hpp"
-#include "MetalRenderData.h"
+
+#include "MetalShader.h"
 #include "MetalStateObject.h"
 #include "MetalVertexBuffer.h"
 #include "Renderer.h"
@@ -13,6 +8,7 @@
 #include "VertexBuffer.h"
 
 #include <Foundation/NSAutoreleasePool.hpp>
+#include <Foundation/NSTypes.hpp>
 #include <Metal/MTLCommandBuffer.hpp>
 #include <Metal/MTLDevice.hpp>
 #include <Metal/MTLRenderCommandEncoder.hpp>
@@ -32,6 +28,7 @@ void KMetalRenderer::Initialize(void* WindowPtr)
     Device = std::make_shared<KMetalDevice>();
     Viewport = std::make_shared<KMetalViewport>(WindowPtr, Device);
     CommandQueue = std::make_shared<KMetalCmdQueue>(Device);
+    Shader = std::make_shared<FMetalShaderManager>(Device);
 }
 
 void KMetalRenderer::Update()
@@ -127,13 +124,19 @@ void KMetalRenderer::Shutdown()
     Device = nullptr;
 }
 
-FStateObjectRef KMetalRenderer::CreateStateObject(
-    const char* Shader, const char* Vertex, const char* Fragment
-)
+const FShaderManager* KMetalRenderer::GetShaderManager() const
 {
-    return std::make_shared<FMetalStateObject>(
-        Device->Get(), Shader, Vertex, Fragment
-    );
+    assert(Shader);
+    return Shader.get();
+}
+
+FStateObjectRef
+KMetalRenderer::CreateStateObject(const FShaderResourceRef Shader)
+{
+    std::shared_ptr<FMetalShaderResource> MetalShader =
+        std::static_pointer_cast<FMetalShaderResource>(Shader);
+
+    return std::make_shared<FMetalStateObject>(Device->Get(), MetalShader);
 }
 
 FVertexBufferRef

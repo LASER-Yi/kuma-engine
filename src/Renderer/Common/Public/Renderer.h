@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Shader.h"
 #include "StateObject.h"
 #include "Vector.h"
 #include "VertexBuffer.h"
@@ -21,8 +22,9 @@ public:
     virtual void Enqueue(std::shared_ptr<FSceneProxy> InProxy);
 
 public:
-    virtual FStateObjectRef CreateStateObject(
-        const char* Shader, const char* Vertex, const char* Fragment
+    virtual const FShaderManager* GetShaderManager() const = 0;
+
+    virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
     ) = 0;
 
     virtual FVertexBufferRef
