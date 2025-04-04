@@ -10,7 +10,9 @@ else()
     message(FATAL_ERROR "Unsupported platform")
 endif()
 
-if (WIN32)
+if (APPLE)
+    set(CMAKE_MACOSX_BUNDLE ON)
+elseif (WIN32)
     set(CMAKE_WIN32_EXECUTABLE ON)
 endif()
 

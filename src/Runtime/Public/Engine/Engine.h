@@ -11,10 +11,11 @@ public:
     KEngine();
     virtual ~KEngine();
 
-    virtual void Initialize();
-    virtual void Shutdown();
+    virtual void SetWindow(void* Handle);
 
-    virtual void EngineTick(float DeltaTime);
+    virtual void Initialize();
+    virtual void Update();
+    virtual void Shutdown();
 
     void RequireEngineExit();
 
@@ -25,5 +26,6 @@ public:
 private:
     bool bExitRequired = false;
 
+    void* WindowHandle;
     std::shared_ptr<KRenderer> Renderer;
 };

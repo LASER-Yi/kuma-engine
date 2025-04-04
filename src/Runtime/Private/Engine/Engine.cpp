@@ -10,12 +10,13 @@
 #include "D3D12Renderer.h"
 #endif
 
-extern void* GWindow;
 KEngine* GEngine = nullptr;
 
 KEngine::KEngine() : bExitRequired(false) {}
 
 KEngine::~KEngine() {}
+
+void KEngine::SetWindow(void* Handle) { WindowHandle = Handle; }
 
 void KEngine::Initialize()
 {
@@ -25,20 +26,20 @@ void KEngine::Initialize()
     Renderer = std::make_shared<KD3D12Renderer>();
 #endif
 
-    Renderer->Initialize(GWindow);
+    Renderer->Initialize(WindowHandle);
+}
+
+void KEngine::Update()
+{
+    Swarm::Manager::Get()->Update(0.0f);
+
+    Renderer->Update();
 }
 
 void KEngine::Shutdown()
 {
     Swarm::Manager::Get()->Shutdown();
     Renderer->Shutdown();
-}
-
-void KEngine::EngineTick(float DeltaTime)
-{
-    Swarm::Manager::Get()->Update(DeltaTime);
-
-    Renderer->Update();
 }
 
 void KEngine::RequireEngineExit() { bExitRequired = true; }

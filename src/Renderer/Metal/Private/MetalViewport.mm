@@ -17,21 +17,19 @@ KMetalViewport::KMetalViewport(
     assert(InDevice != nil);
     assert(InWindow != nil);
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-      NSWindow* CocoaWindow = (NSWindow*)Window;
+    NSWindow* CocoaWindow = (NSWindow*)Window;
 
-      CA::MetalLayer* Layer = CA::MetalLayer::layer();
+    CA::MetalLayer* Layer = CA::MetalLayer::layer();
 
-      const NSRect contentRect = [CocoaWindow contentLayoutRect];
-      Layer->setDevice(InDevice->Get());
-      Layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
-      Layer->setDrawableSize(contentRect.size);
+    const NSRect contentRect = [CocoaWindow contentLayoutRect];
+    Layer->setDevice(InDevice->Get());
+    Layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+    Layer->setDrawableSize(contentRect.size);
 
-      [[CocoaWindow contentView] setLayer:(CALayer*)Layer];
-      [[CocoaWindow contentView] setWantsLayer:YES];
+    [[CocoaWindow contentView] setLayer:(CALayer*)Layer];
+    [[CocoaWindow contentView] setWantsLayer:YES];
 
-      MetalLayer = Layer;
-    });
+    MetalLayer = Layer;
 }
 
 KMetalViewport::~KMetalViewport() {}

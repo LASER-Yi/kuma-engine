@@ -2,19 +2,15 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <shared_mutex>
 
 #include "Kuma/KumaEngine.h"
 
 extern KEngine* GEngine;
 
-void* GWindow = nullptr;
-
-std::shared_mutex EngineExitLock;
+void* WindowHandle = nullptr;
 
 void RequestEngineExit()
 {
-    std::unique_lock<std::shared_mutex> Lock(EngineExitLock);
     if (GEngine)
     {
         GEngine->RequireEngineExit();
@@ -23,7 +19,6 @@ void RequestEngineExit()
 
 bool IsEngineExitRequested()
 {
-    std::shared_lock<std::shared_mutex> Lock(EngineExitLock);
     if (GEngine)
     {
         return GEngine->IsEngineExitRequired();
@@ -31,7 +26,9 @@ bool IsEngineExitRequested()
     return true;
 }
 
-int GuardedMain(const char* CmdLine)
+void EngineSetWindow(void* Handle) { WindowHandle = Handle; }
+
+void EngineInitialize(const char* CmdLine)
 {
     // TODO: Better logging support
     std::cout << "Starting KumaEngine..." << std::endl;
@@ -43,22 +40,34 @@ int GuardedMain(const char* CmdLine)
 
     GEngine = new KKumaEngine();
 
+    if (WindowHandle)
+    {
+        GEngine->SetWindow(WindowHandle);
+    }
+
     // Initialize the engine
     {
         GEngine->Initialize();
     }
+}
 
-    while (GEngine->IsEngineExitRequired() == false)
+bool EngineLoop()
+{
+    if (GEngine->IsEngineExitRequired())
     {
-        GEngine->EngineTick(0.0f);
+        return false;
     }
 
+    GEngine->Update();
+    return true;
+}
+
+int EngineShutdown()
+{
     // Shutdown the engine
-    {
-        GEngine->Shutdown();
-        delete GEngine;
-        GEngine = nullptr;
-    }
+    GEngine->Shutdown();
+    delete GEngine;
+    GEngine = nullptr;
 
     return EXIT_SUCCESS;
 }

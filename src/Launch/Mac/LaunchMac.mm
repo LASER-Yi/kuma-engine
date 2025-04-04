@@ -2,38 +2,30 @@
 #include <AppKit/AppKit.h>
 #include <Foundation/Foundation.h>
 #include <cstdlib>
+#include <objc/objc.h>
 
 // This part is heavily referencing the LaunchMac.cpp in the Unreal Engine
 
 extern void RequestEngineExit();
 extern bool IsEngineExitRequested();
+extern void EngineSetWindow(void* Handle);
+extern void EngineInitialize(const char* CmdLine);
+extern bool EngineLoop();
+extern int EngineShutdown();
 
-extern int GuardedMain(const char*);
-extern void* GWindow;
-
-static NSThread* GGameThread = nil;
-static int GGuardedMainErrorLevel = 0;
-
-const NSUInteger GameThreadStackSize = 128 * 1024 * 1024;
-
-void RunGameThread(id Target, SEL Selector)
+@interface KumaWindowDelegate : NSObject <NSWindowDelegate>
 {
-    @autoreleasepool
-    {
-        [[NSProcessInfo processInfo] disableSuddenTermination];
-
-        // Create a separate game thread and set its stack size to be the same
-        // as the main thread.
-        NSThread* GameThread = [[NSThread alloc] initWithTarget:Target
-                                                       selector:Selector
-                                                         object:nil];
-
-        [GameThread setStackSize:GameThreadStackSize];
-        [GameThread start];
-
-        GGameThread = GameThread;
-    }
 }
+@end
+
+@implementation KumaWindowDelegate
+
+- (void)windowWillClose:(NSNotification*)notification
+{
+    RequestEngineExit();
+}
+
+@end
 
 @interface KumaAppDelegate : NSObject <NSApplicationDelegate>
 {
@@ -61,11 +53,19 @@ void RunGameThread(id Target, SEL Selector)
 
 - (void)applicationWillTerminate:(NSNotification*)Notification
 {
+    RequestEngineExit();
+}
+
+- (void)applicationWillFinishLaunching:(NSNotification*)notification
+{
+    NSMenu* MainMenu = [[NSMenu alloc] init];
+
+    [NSApp setMainMenu:MainMenu];
+    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)Notification
 {
-
     int WindowWidth = 800;
     int WindowHeight = 600;
     int WindowPositionX = 0;
@@ -74,10 +74,12 @@ void RunGameThread(id Target, SEL Selector)
     NSRect WindowRect =
         NSMakeRect(WindowPositionX, WindowPositionY, WindowWidth, WindowHeight);
 
+    NSUInteger styleMask = NSWindowStyleMaskMiniaturizable |
+                           NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |
+                           NSWindowStyleMaskResizable;
+
     Window = [[NSWindow alloc] initWithContentRect:WindowRect
-                                         styleMask:NSWindowStyleMaskTitled |
-                                                   NSWindowStyleMaskResizable |
-                                                   NSWindowStyleMaskClosable
+                                         styleMask:styleMask
                                            backing:NSBackingStoreBuffered
                                              defer:NO];
 
@@ -85,45 +87,71 @@ void RunGameThread(id Target, SEL Selector)
     [Window setMinSize:NSMakeSize(400, 100)];
     [Window setRestorable:NO];
     [Window disableSnapshotRestoration];
+    [Window setDelegate:[KumaWindowDelegate new]];
+
+    const NSWindowCollectionBehavior Behavior =
+        NSWindowCollectionBehaviorFullScreenPrimary |
+        NSWindowCollectionBehaviorManaged;
+
+    [Window setCollectionBehavior:Behavior];
 
     [Window makeKeyAndOrderFront:nil];
 
-    GWindow = Window;
-    RunGameThread(self, @selector(runGameThread:));
+    EngineSetWindow(Window);
+    [NSApp stop:nil];
 }
 
 - (bool
 )applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)Application
 {
-    return true;
-}
-
-- (void)runGameThread:(id)Arg
-{
-    GGuardedMainErrorLevel = GuardedMain(nil);
-
-    if (GGuardedMainErrorLevel == 0)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          [NSApp terminate:nil];
-        });
-    }
-    else
-    {
-        _Exit(GGuardedMainErrorLevel);
-    }
+    return YES;
 }
 
 @end
+
+void PollEvents()
+{
+    @autoreleasepool
+    {
+        while (true)
+        {
+            NSEvent* Event = [NSApp nextEventMatchingMask:NSEventMaskAny
+                                                untilDate:[NSDate distantPast]
+                                                   inMode:NSDefaultRunLoopMode
+                                                  dequeue:YES];
+
+            if (Event == nil)
+            {
+                break;
+            }
+
+            [NSApp sendEvent:Event];
+        }
+    }
+}
 
 int main(int argc, char* argv[])
 {
     @autoreleasepool
     {
         NSApplication* shared = [NSApplication sharedApplication];
-        [shared setDelegate:[KumaAppDelegate new]];
-        [shared run];
+        [NSApp setDelegate:[KumaAppDelegate new]];
+        [NSApp run];
     }
 
-    return GGuardedMainErrorLevel;
+    int EngineRunResult = 0;
+    {
+        EngineInitialize(nil);
+
+        while (EngineLoop())
+        {
+            PollEvents();
+        }
+
+        EngineRunResult = EngineShutdown();
+    }
+
+    [NSApp terminate:nil];
+
+    return EngineRunResult;
 }
