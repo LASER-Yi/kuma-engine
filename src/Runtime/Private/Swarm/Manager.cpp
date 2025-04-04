@@ -4,10 +4,6 @@
 namespace Swarm
 {
 
-Manager::Manager() {}
-
-Manager::~Manager() {}
-
 void Manager::Update(float DeltaTime)
 {
     // TODO: Refactor system update via multithreading
@@ -17,6 +13,31 @@ void Manager::Update(float DeltaTime)
         UNUSED_VAR(SystemType);
 
         System->Execute(DeltaTime);
+    }
+}
+
+void Manager::Shutdown()
+{
+    // TODO[Multithread]: Wait for all systems to stop
+
+    // Shutdown all systems
+    {
+        for (auto [SystemType, System] : Systems)
+        {
+            System->Shutdown();
+        }
+        Systems.clear();
+    }
+
+    // Remove all components
+    {
+        Components.Clear();
+    }
+
+    // Remove all entities
+    {
+        EntityToComponents.clear();
+        EntitySignature.Reset();
     }
 }
 

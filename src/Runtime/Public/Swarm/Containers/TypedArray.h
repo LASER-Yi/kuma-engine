@@ -263,6 +263,12 @@ public:
         return nullptr;
     }
 
+    void Clear()
+    {
+        ContainerMap.clear();
+        Signature.Reset();
+    }
+
     template <typename T>
     std::span<T> GetView() const
     {

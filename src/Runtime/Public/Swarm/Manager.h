@@ -22,11 +22,12 @@ namespace Swarm
 class Manager final : public TSingleton<Swarm::Manager>
 {
 public:
-    Manager();
-    ~Manager();
+    Manager() = default;
 
     Manager(const Manager&) = delete;
     Manager& operator=(const Manager&) = delete;
+
+    void Shutdown();
 
     void Update(float DeltaTime);
 

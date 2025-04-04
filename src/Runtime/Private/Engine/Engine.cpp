@@ -1,5 +1,6 @@
 #include "Engine/Engine.h"
 #include "Renderer.h"
+#include "Swarm/Manager.h"
 
 #include <memory>
 
@@ -25,12 +26,11 @@ void KEngine::Initialize()
 #endif
 
     Renderer->Initialize(GWindow);
-    // TODO: initialize the swarm system
 }
 
 void KEngine::Shutdown()
 {
-    // TODO: Shutdown the swarm system
+    Swarm::Manager::Get()->Shutdown();
     Renderer->Shutdown();
 }
 

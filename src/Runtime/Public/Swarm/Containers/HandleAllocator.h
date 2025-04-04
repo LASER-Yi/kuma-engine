@@ -27,6 +27,15 @@ public:
 
     void Release(T InValue) { Fragment.push(InValue); }
 
+    void Reset()
+    {
+        Next = T();
+        while (Fragment.empty() == false)
+        {
+            Fragment.pop();
+        }
+    }
+
 private:
     T Next;
     std::queue<T> Fragment;
