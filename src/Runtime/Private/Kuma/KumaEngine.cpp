@@ -36,6 +36,7 @@ void KKumaEngine::Initialize()
 
 void KKumaEngine::Shutdown()
 {
+    CurrentWorld = nullptr;
+    
     KEngine::Shutdown();
-    CurrentWorld.reset();
 }
