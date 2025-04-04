@@ -4,14 +4,12 @@
 #include "SceneProxy.h"
 
 #include <memory>
-#include <span>
-#include <vector>
 
 class KMetalDevice;
 class KMetalViewport;
 class KMetalCmdQueue;
 
-class KMetalRenderer : public IRenderer
+class KMetalRenderer : public KRenderer
 {
 public:
     virtual void Initialize(void* WindowPtr) override;
@@ -20,35 +18,15 @@ public:
 
     virtual void Shutdown() override;
 
-    virtual void Enqueue(const FSceneProxy& InProxy) override;
+    virtual FStateObjectRef CreateStateObject(
+        const char* Shader, const char* Vertex, const char* Fragment
+    ) override;
 
-protected:
-    // This needs to be refactor if we have more then 1 render data type
-    template <typename T>
-    T* AllocateFrameRenderData()
-    {
-        const size_t DataSize = sizeof(T);
-
-        const size_t CurrentSize = FrameRenderData.size();
-
-        FrameRenderData.resize(CurrentSize + DataSize);
-
-        return reinterpret_cast<T*>(&FrameRenderData[CurrentSize]);
-    }
-
-    template <typename T>
-    std::span<T> GetFrameRenderData()
-    {
-        T* Data = reinterpret_cast<T*>(FrameRenderData.data());
-        const size_t ElementCount = FrameRenderData.size() / sizeof(T);
-
-        return {Data, ElementCount};
-    }
+    virtual FVertexBufferRef
+    CreateVertexBuffer(const std::vector<FVector>& InVertex) override;
 
 private:
     std::shared_ptr<KMetalDevice> Device;
     std::shared_ptr<KMetalViewport> Viewport;
     std::shared_ptr<KMetalCmdQueue> CommandQueue;
-
-    std::vector<std::byte> FrameRenderData;
 };

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Vector.h"
-
-#include <vector>
+#include "StateObject.h"
+#include "VertexBuffer.h"
+#include <array>
 
 struct FSceneProxy
 {
-    const char* Shader;
-    const char* VertexEntrypoint;
-    const char* FragmentEntrypoint;
+    FStateObjectRef PipelineStateObject;
 
-    std::vector<FVector> Vertices;
-    std::vector<FVector> Colors;
+    std::array<FVertexBufferRef, 8> VertexBuffers;
+    size_t VertexBufferCount;
+
+    size_t VertexCount;
 };

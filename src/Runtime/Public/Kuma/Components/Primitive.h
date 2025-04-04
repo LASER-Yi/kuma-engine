@@ -4,13 +4,18 @@
 
 #include "Swarm/Component.h"
 #include "Vector.h"
+#include <memory>
+
+class FSceneProxy;
 
 struct FPrimitiveComponent : public Swarm::FComponent
 {
-    FPrimitiveComponent(const FVector& InOffset)
-        : Swarm::FComponent(), Offset(InOffset)
+    FPrimitiveComponent(const std::vector<FVector>& InVertex)
+        : Swarm::FComponent(), Vertex(InVertex)
     {
     }
 
-    FVector Offset;
+    std::vector<FVector> Vertex;
+
+    std::shared_ptr<FSceneProxy> SceneProxy;
 };

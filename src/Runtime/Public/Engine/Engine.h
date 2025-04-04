@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include <memory>
 
-class IRenderer;
+class KRenderer;
 
 class KEngine
 {
@@ -20,10 +20,10 @@ public:
 
     bool IsEngineExitRequired() const;
 
-    std::shared_ptr<IRenderer> GetRenderer() const;
+    std::shared_ptr<KRenderer> GetRenderer() const;
 
 private:
     bool bExitRequired = false;
 
-    std::shared_ptr<IRenderer> Renderer;
+    std::shared_ptr<KRenderer> Renderer;
 };

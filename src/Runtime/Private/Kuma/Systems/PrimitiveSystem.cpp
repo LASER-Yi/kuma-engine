@@ -1,11 +1,14 @@
 #include "Kuma/Systems/PrimitiveSystem.h"
 
 #include <array>
+#include <memory>
+#include <vector>
 
 #include "Kuma/Components/Primitive.h"
 #include "Kuma/KumaEngine.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
+#include "Vector.h"
 
 const char* ShaderSrc = R"(
     #include <metal_stdlib>
@@ -36,7 +39,19 @@ const char* ShaderSrc = R"(
 const char* Vertex = "vertexMain";
 const char* Fragment = "fragmentMain";
 
-void KPrimitiveSystem::Initialize() {}
+void KPrimitiveSystem::Initialize()
+{
+    const auto Renderer = GetEngine()->GetRenderer();
+    GlobalStateObject =
+        Renderer->CreateStateObject(ShaderSrc, Vertex, Fragment);
+
+    std::vector<FVector> Colors;
+    Colors.push_back({1.0, 0.3, 0.2});
+    Colors.push_back({0.8, 1.0, 0.0});
+    Colors.push_back({0.8, 0.0, 1.0});
+
+    ColorVertexBuffer = Renderer->CreateVertexBuffer(Colors);
+}
 
 void KPrimitiveSystem::Execute(float DeltaTime)
 {
@@ -44,23 +59,38 @@ void KPrimitiveSystem::Execute(float DeltaTime)
 
     for (FPrimitiveComponent& Primitive : GetComponents<FPrimitiveComponent>())
     {
-        constexpr std::array<FVector, 3> Vertices = {
-            {{0.0f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}, {0.5f, 0.0f, 0.0f}}};
-
-        const FSceneProxy Proxy = {
-            .Shader = ShaderSrc,
-            .VertexEntrypoint = Vertex,
-            .FragmentEntrypoint = Fragment,
-
-            .Vertices =
-                {Vertices[0] + Primitive.Offset, Vertices[1] + Primitive.Offset,
-                 Vertices[2] + Primitive.Offset},
-
-            .Colors = {
-                {1.0, 0.3f, 0.2f}, {0.8f, 1.0, 0.0f}, {0.8f, 0.0f, 1.0}}};
-
-        Renderer->Enqueue(Proxy);
+        if (Primitive.SceneProxy == nullptr)
+        {
+            const auto SceneProxy = CreateSceneProxy(&Primitive);
+            Primitive.SceneProxy = SceneProxy;
+            Renderer->Enqueue(SceneProxy);
+        }
     }
 }
 
-void KPrimitiveSystem::Shutdown() {}
+void KPrimitiveSystem::Shutdown()
+{
+    GlobalStateObject = nullptr;
+    ColorVertexBuffer = nullptr;
+}
+
+std::shared_ptr<FSceneProxy>
+KPrimitiveSystem::CreateSceneProxy(const FPrimitiveComponent* Comp) const
+{
+    if (Comp == nullptr)
+    {
+        return nullptr;
+    }
+
+    auto Renderer = GetEngine()->GetRenderer();
+
+    auto SceneProxy = std::make_shared<FSceneProxy>();
+
+    SceneProxy->VertexCount = Comp->Vertex.size();
+    SceneProxy->PipelineStateObject = GlobalStateObject;
+    SceneProxy->VertexBuffers[0] = Renderer->CreateVertexBuffer(Comp->Vertex);
+    SceneProxy->VertexBuffers[1] = ColorVertexBuffer;
+    SceneProxy->VertexBufferCount = 2;
+
+    return SceneProxy;
+}

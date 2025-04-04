@@ -3,7 +3,7 @@
 #include "Renderer.h"
 #include "SceneProxy.h"
 
-class KD3D12Renderer : public IRenderer
+class KD3D12Renderer : public KRenderer
 {
 public:
     virtual void Initialize(void* WindowPtr) override;

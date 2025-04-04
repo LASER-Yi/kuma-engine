@@ -45,4 +45,4 @@ void KEngine::RequireEngineExit() { bExitRequired = true; }
 
 bool KEngine::IsEngineExitRequired() const { return bExitRequired; }
 
-std::shared_ptr<IRenderer> KEngine::GetRenderer() const { return Renderer; }
+std::shared_ptr<KRenderer> KEngine::GetRenderer() const { return Renderer; }

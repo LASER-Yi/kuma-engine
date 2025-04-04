@@ -13,13 +13,23 @@ void KKumaEngine::Initialize()
     Swarm::Manager::Get()->AddSystem<KPrimitiveSystem>();
     CurrentWorld = Swarm::Manager::Get()->MakeEntity<FKumaWorld>();
 
+    std::vector<FVector> Vertex;
+    Vertex.push_back({0.0, 0.0, 0.0});
+    Vertex.push_back({0.0, 0.5, 0.0});
+    Vertex.push_back({0.5, 0.0, 0.0});
+
     auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-    Entity->AddComponent<FPrimitiveComponent>(FVector(0.5, 0.5, 0.5));
+    Entity->AddComponent<FPrimitiveComponent>(Vertex);
 
     CurrentWorld->AddToWorld(Entity);
 
+    for (auto& AnotherVertex : Vertex)
+    {
+        AnotherVertex.X -= 0.6;
+    }
+
     auto AnotherEntity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-    AnotherEntity->AddComponent<FPrimitiveComponent>(FVector());
+    AnotherEntity->AddComponent<FPrimitiveComponent>(Vertex);
 
     CurrentWorld->AddToWorld(AnotherEntity);
 }
