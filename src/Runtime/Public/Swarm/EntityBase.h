@@ -26,6 +26,7 @@ struct FEntityBase : public IIdentifiable,
     FEntityBase(FEntityBase&&) = default;
     FEntityBase& operator=(FEntityBase&&) = default;
 
+    // TODO: Refactor and make sizeof(FEntityBase) == sizeof(int64)
     std::unordered_map<Swarm::ClassHashType, Swarm::SignatureType>
         DefaultComponents;
 };
