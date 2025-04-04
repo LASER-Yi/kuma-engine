@@ -2,7 +2,6 @@
 #include <AppKit/AppKit.h>
 #include <Foundation/Foundation.h>
 #include <cstdlib>
-#include <objc/objc.h>
 
 // This part is heavily referencing the LaunchMac.cpp in the Unreal Engine
 
