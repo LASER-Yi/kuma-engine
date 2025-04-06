@@ -3,6 +3,10 @@
 namespace Math
 {
 
+/**
+ * The engine uses left-hand coordinate system with Z-axis up and X-axis forward
+ * The definition is same as the Unreal Engin
+ */
 template <typename T>
 struct alignas(16) TVector
 {
