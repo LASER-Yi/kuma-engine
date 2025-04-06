@@ -21,25 +21,10 @@ struct alignas(16) TMatrix
         const TVector<T>& Column_2, const TVector<T>& Column_3
     );
 
-    TMatrix<T>(
-        const TVector<T>& Position, const TVector<T>& Rotation,
-        const TVector<T>& Scale
-    );
-
 public:
     static TMatrix<T> Identity();
     static TMatrix<T> MakePosition(const TVector<T>& InPosition);
     static TMatrix<T> MakeScale(const TVector<T>& InScale);
-
-public:
-    TVector<T> GetPosition() const;
-    void SetPosition(const TVector<T>& NewPosition);
-
-    TVector<T> GetRotation() const;
-    void SetRotation(const TVector<T>& NewRotation);
-
-    TVector<T> GetScale() const;
-    void SetScale(const TVector<T>& NewScale);
 };
 
 using FMatrix = TMatrix<float>;

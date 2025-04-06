@@ -9,4 +9,5 @@
 #include "Swarm/System.h"
 
 #include "Matrix.h"
+#include "Transform.h"
 #include "Vector.h"
