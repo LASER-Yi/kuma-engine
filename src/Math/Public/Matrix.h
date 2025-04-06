@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Vector.h"
+#include <array>
 
 namespace Math
 {
@@ -8,7 +9,7 @@ namespace Math
 template <typename T>
 struct alignas(16) TMatrix
 {
-    TVector<T> Columns[4];
+    std::array<TVector<T>, 4> Columns;
 
     TMatrix<T>() = default;
     TMatrix<T>(const TMatrix<T>&) = default;
@@ -22,7 +23,7 @@ struct alignas(16) TMatrix
     );
 
 public:
-    static TMatrix<T> Identity();
+    static TMatrix<T> Identity;
     static TMatrix<T> MakePosition(const TVector<T>& InPosition);
     static TMatrix<T> MakeScale(const TVector<T>& InScale);
 };

@@ -5,23 +5,20 @@ namespace Math
 {
 
 template <typename T>
+TMatrix<T> TMatrix<T>::Identity = {
+    {1.0, 0.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0, 0.0},
+    {0.0, 0.0, 1.0, 0.0},
+    {0.0, 0.0, 0.0, 1.0},
+};
+
+template <typename T>
 TMatrix<T>::TMatrix(
     const TVector<T>& Column_0, const TVector<T>& Column_1,
     const TVector<T>& Column_2, const TVector<T>& Column_3
 )
-    : Columns(Column_0, Column_1, Column_2, Column_3)
+    : Columns({Column_0, Column_1, Column_2, Column_3})
 {
-}
-
-template <typename T>
-TMatrix<T> TMatrix<T>::Identity()
-{
-    return {
-        {1.0, 0.0, 0.0, 0.0},
-        {0.0, 1.0, 0.0, 0.0},
-        {0.0, 0.0, 1.0, 0.0},
-        {0.0, 0.0, 0.0, 1.0},
-    };
 }
 
 template <typename T>
