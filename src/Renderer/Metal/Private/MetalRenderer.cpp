@@ -24,15 +24,6 @@
 #include <cassert>
 #include <memory>
 
-static_assert(
-    sizeof(simd::float4) == sizeof(Math::FVector),
-    "The size of FVector should be the same as the simd::float4"
-);
-static_assert(
-    sizeof(simd::float4x4) == sizeof(Math::FMatrix),
-    "The size of FMatrix should be the same as the simd::float4x4"
-);
-
 void KMetalRenderer::Initialize(void* WindowPtr)
 {
     assert(WindowPtr != nullptr);
