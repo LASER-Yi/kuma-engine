@@ -6,30 +6,30 @@ namespace Math
 {
 
 template <typename T>
-struct alignas(16) TTransform
+struct alignas(16) TMatrix
 {
     TVector<T> Columns[4];
 
-    TTransform<T>() = default;
-    TTransform<T>(const TTransform<T>&) = default;
-    TTransform<T>& operator=(const TTransform<T>&) = default;
-    TTransform<T>(TTransform<T>&&) = default;
-    TTransform<T>& operator=(TTransform<T>&&) = default;
+    TMatrix<T>() = default;
+    TMatrix<T>(const TMatrix<T>&) = default;
+    TMatrix<T>& operator=(const TMatrix<T>&) = default;
+    TMatrix<T>(TMatrix<T>&&) = default;
+    TMatrix<T>& operator=(TMatrix<T>&&) = default;
 
-    TTransform<T>(
+    TMatrix<T>(
         const TVector<T>& Column_0, const TVector<T>& Column_1,
         const TVector<T>& Column_2, const TVector<T>& Column_3
     );
 
-    TTransform<T>(
+    TMatrix<T>(
         const TVector<T>& Position, const TVector<T>& Rotation,
         const TVector<T>& Scale
     );
 
 public:
-    static TTransform<T> Identity();
-    static TTransform<T> MakePosition(const TVector<T>& InPosition);
-    static TTransform<T> MakeScale(const TVector<T>& InScale);
+    static TMatrix<T> Identity();
+    static TMatrix<T> MakePosition(const TVector<T>& InPosition);
+    static TMatrix<T> MakeScale(const TVector<T>& InScale);
 
 public:
     TVector<T> GetPosition() const;
@@ -42,6 +42,6 @@ public:
     void SetScale(const TVector<T>& NewScale);
 };
 
-using FTransform = TTransform<float>;
+using FMatrix = TMatrix<float>;
 
 } // namespace Math

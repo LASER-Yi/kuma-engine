@@ -1,11 +1,11 @@
-#include "Transform.h"
+#include "Matrix.h"
 #include "Vector.h"
 
 namespace Math
 {
 
 template <typename T>
-TTransform<T>::TTransform(
+TMatrix<T>::TMatrix(
     const TVector<T>& Column_0, const TVector<T>& Column_1,
     const TVector<T>& Column_2, const TVector<T>& Column_3
 )
@@ -14,7 +14,7 @@ TTransform<T>::TTransform(
 }
 
 template <typename T>
-TTransform<T>::TTransform(
+TMatrix<T>::TMatrix(
     const TVector<T>& Position, const TVector<T>& Rotation,
     const TVector<T>& Scale
 )
@@ -25,7 +25,7 @@ TTransform<T>::TTransform(
 }
 
 template <typename T>
-TTransform<T> TTransform<T>::Identity()
+TMatrix<T> TMatrix<T>::Identity()
 {
     return {
         {1.0, 0.0, 0.0, 0.0},
@@ -36,7 +36,7 @@ TTransform<T> TTransform<T>::Identity()
 }
 
 template <typename T>
-TTransform<T> TTransform<T>::MakePosition(const TVector<T>& InPosition)
+TMatrix<T> TMatrix<T>::MakePosition(const TVector<T>& InPosition)
 {
     return {
         {1.0, 0.0, 0.0, 0.0},
@@ -47,7 +47,7 @@ TTransform<T> TTransform<T>::MakePosition(const TVector<T>& InPosition)
 }
 
 template <typename T>
-TTransform<T> TTransform<T>::MakeScale(const TVector<T>& InScale)
+TMatrix<T> TMatrix<T>::MakeScale(const TVector<T>& InScale)
 {
     return {
         {InScale.X, 0.0, 0.0, 0.0},
@@ -58,13 +58,13 @@ TTransform<T> TTransform<T>::MakeScale(const TVector<T>& InScale)
 }
 
 template <typename T>
-TVector<T> TTransform<T>::GetPosition() const
+TVector<T> TMatrix<T>::GetPosition() const
 {
     return {Columns[3].X, Columns[3].Y, Columns[3].Z, 1.0};
 }
 
 template <typename T>
-void TTransform<T>::SetPosition(const TVector<T>& NewPosition)
+void TMatrix<T>::SetPosition(const TVector<T>& NewPosition)
 {
     Columns[3].X = NewPosition.X;
     Columns[3].Y = NewPosition.Y;
@@ -73,30 +73,30 @@ void TTransform<T>::SetPosition(const TVector<T>& NewPosition)
 }
 
 template <typename T>
-TVector<T> TTransform<T>::GetRotation() const
+TVector<T> TMatrix<T>::GetRotation() const
 {
     // TODO
     return TVector<T>();
 }
 
 template <typename T>
-void TTransform<T>::SetRotation(const TVector<T>& NewRotation)
+void TMatrix<T>::SetRotation(const TVector<T>& NewRotation)
 {
 }
 
 template <typename T>
-TVector<T> TTransform<T>::GetScale() const
+TVector<T> TMatrix<T>::GetScale() const
 {
     // TODO
     return TVector<T>();
 }
 
 template <typename T>
-void TTransform<T>::SetScale(const TVector<T>& NewScale)
+void TMatrix<T>::SetScale(const TVector<T>& NewScale)
 {
     // TODO
 }
 
 } // namespace Math
 
-template struct Math::TTransform<float>;
+template struct Math::TMatrix<float>;

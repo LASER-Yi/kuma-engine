@@ -6,5 +6,5 @@
 FKumaEntity::FKumaEntity() : Swarm::FEntity()
 {
     AddDefaultComponent<FWorldComponent>();
-    AddDefaultComponent<FTransformComponent>();
+    AddDefaultComponent<FMatrixComponent>();
 }

@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Transform.h"
 
-struct FTransformComponent : public Swarm::FComponent
+struct FMatrixComponent : public Swarm::FComponent
 {
-    Math::FTransform LocalTransform;
+    Math::FMatrix LocalTransform;
 };

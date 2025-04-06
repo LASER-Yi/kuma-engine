@@ -1,10 +1,10 @@
 #include "MetalRenderer.h"
 
+#include "Matrix.h"
 #include "MetalShader.h"
 #include "MetalStateObject.h"
 #include "MetalVertexBuffer.h"
 #include "Renderer.h"
-#include "Transform.h"
 #include "Vector.h"
 #include "VertexBuffer.h"
 
@@ -29,8 +29,8 @@ static_assert(
     "The size of FVector should be the same as the simd::float4"
 );
 static_assert(
-    sizeof(simd::float4x4) == sizeof(Math::FTransform),
-    "The size of FTransform should be the same as the simd::float4x4"
+    sizeof(simd::float4x4) == sizeof(Math::FMatrix),
+    "The size of FMatrix should be the same as the simd::float4x4"
 );
 
 void KMetalRenderer::Initialize(void* WindowPtr)
