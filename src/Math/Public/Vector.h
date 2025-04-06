@@ -19,7 +19,13 @@ struct alignas(16) TVector
     static TVector<T> Right();
     static TVector<T> Up();
 
-    TVector<T> operator+(const TVector<T>& rhs);
+    TVector<T> operator+(const TVector<T>& rhs) const;
+    TVector<T> operator-(const TVector<T>& rhs) const;
+
+    T GetLengthSqrt() const;
+    T GetLength() const;
+
+    TVector<T> Normalize() const;
 };
 
 using FVector = TVector<float>;

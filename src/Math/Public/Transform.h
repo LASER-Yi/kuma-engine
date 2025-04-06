@@ -8,15 +8,30 @@ namespace Math
 template <typename T>
 struct alignas(16) TTransform
 {
-    T Matrix[4][4];
+    TVector<T> Columns[4];
 
     TTransform<T>() = default;
+    TTransform<T>(const TTransform<T>&) = default;
+    TTransform<T>& operator=(const TTransform<T>&) = default;
+    TTransform<T>(TTransform<T>&&) = default;
+    TTransform<T>& operator=(TTransform<T>&&) = default;
+
+    TTransform<T>(
+        const TVector<T>& Column_0, const TVector<T>& Column_1,
+        const TVector<T>& Column_2, const TVector<T>& Column_3
+    );
 
     TTransform<T>(
         const TVector<T>& Position, const TVector<T>& Rotation,
         const TVector<T>& Scale
     );
 
+public:
+    static TTransform<T> Identity();
+    static TTransform<T> MakePosition(const TVector<T>& InPosition);
+    static TTransform<T> MakeScale(const TVector<T>& InScale);
+
+public:
     TVector<T> GetPosition() const;
     void SetPosition(const TVector<T>& NewPosition);
 

@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME} ${TARGET_SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     Runtime
+    Math
     GTest::gtest_main
 )
 

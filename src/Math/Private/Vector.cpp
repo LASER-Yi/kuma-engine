@@ -1,4 +1,5 @@
 #include "Vector.h"
+#include <cmath>
 
 namespace Math
 {
@@ -22,7 +23,7 @@ TVector<T> TVector<T>::Up()
 }
 
 template <typename T>
-TVector<T> TVector<T>::operator+(const TVector<T>& rhs)
+TVector<T> TVector<T>::operator+(const TVector<T>& rhs) const
 {
     return {
         .X = X + rhs.X,
@@ -30,6 +31,37 @@ TVector<T> TVector<T>::operator+(const TVector<T>& rhs)
         .Z = Z + rhs.Z,
         .W = W + rhs.W,
     };
+}
+
+template <typename T>
+TVector<T> TVector<T>::operator-(const TVector<T>& rhs) const
+{
+    return {
+        .X = X - rhs.X,
+        .Y = Y - rhs.Y,
+        .Z = Z - rhs.Z,
+        .W = W - rhs.W,
+    };
+}
+
+template <typename T>
+T TVector<T>::GetLengthSqrt() const
+{
+    return X * X + Y * Y + Z * Z + W * W;
+}
+
+template <typename T>
+T TVector<T>::GetLength() const
+{
+    return std::sqrt(GetLengthSqrt());
+}
+
+template <typename T>
+TVector<T> TVector<T>::Normalize() const
+{
+    const T Length = GetLength();
+
+    return {X / Length, Y / Length, Z / Length, W / Length};
 }
 
 template struct Math::TVector<float>;
