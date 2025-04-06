@@ -5,11 +5,11 @@
 #include <Metal/MTLDevice.hpp>
 
 FMetalVertexBuffer::FMetalVertexBuffer(
-    MTL::Device* Device, const std::vector<FVector>& InVertex
+    MTL::Device* Device, const std::vector<Math::FVector>& InVertex
 )
 {
     assert(Device);
-    const size_t VertexDataSize = InVertex.size() * sizeof(FVector);
+    const size_t VertexDataSize = InVertex.size() * sizeof(Math::FVector);
     Data = Device->newBuffer(VertexDataSize, MTL::ResourceStorageModeManaged);
 
     std::memcpy(Data->contents(), InVertex.data(), VertexDataSize);

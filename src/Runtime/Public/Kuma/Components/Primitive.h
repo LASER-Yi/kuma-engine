@@ -10,12 +10,12 @@ class FSceneProxy;
 
 struct FPrimitiveComponent : public Swarm::FComponent
 {
-    FPrimitiveComponent(const std::vector<FVector>& InVertex)
+    FPrimitiveComponent(const std::vector<Math::FVector>& InVertex)
         : Swarm::FComponent(), Vertex(InVertex)
     {
     }
 
-    std::vector<FVector> Vertex;
+    std::vector<Math::FVector> Vertex;
 
     std::shared_ptr<FSceneProxy> SceneProxy;
 };

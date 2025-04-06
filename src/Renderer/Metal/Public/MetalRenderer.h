@@ -27,7 +27,7 @@ public:
     ) override;
 
     virtual FVertexBufferRef
-    CreateVertexBuffer(const std::vector<FVector>& InVertex) override;
+    CreateVertexBuffer(const std::vector<Math::FVector>& InVertex) override;
 
 private:
     KMetalDeviceRef Device;

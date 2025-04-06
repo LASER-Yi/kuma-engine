@@ -13,7 +13,7 @@ void KKumaEngine::Initialize()
     Swarm::Manager::Get()->AddSystem<KPrimitiveSystem>();
     CurrentWorld = Swarm::Manager::Get()->MakeEntity<FKumaWorld>();
 
-    std::vector<FVector> Vertex;
+    std::vector<Math::FVector> Vertex;
     Vertex.push_back({0.0, 0.0, 0.0});
     Vertex.push_back({0.0, 0.5, 0.0});
     Vertex.push_back({0.5, 0.0, 0.0});
@@ -37,6 +37,6 @@ void KKumaEngine::Initialize()
 void KKumaEngine::Shutdown()
 {
     CurrentWorld = nullptr;
-    
+
     KEngine::Shutdown();
 }

@@ -12,7 +12,7 @@ class Buffer;
 struct FMetalVertexBuffer : public FVertexBuffer
 {
     FMetalVertexBuffer(
-        MTL::Device* Device, const std::vector<FVector>& InVertex
+        MTL::Device* Device, const std::vector<Math::FVector>& InVertex
     );
 
     MTL::Buffer* Data;

@@ -140,7 +140,7 @@ KMetalRenderer::CreateStateObject(const FShaderResourceRef Shader)
 }
 
 FVertexBufferRef
-KMetalRenderer::CreateVertexBuffer(const std::vector<FVector>& InVertex)
+KMetalRenderer::CreateVertexBuffer(const std::vector<Math::FVector>& InVertex)
 {
     return std::make_shared<FMetalVertexBuffer>(Device->Get(), InVertex);
 }

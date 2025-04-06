@@ -28,7 +28,7 @@ public:
     ) = 0;
 
     virtual FVertexBufferRef
-    CreateVertexBuffer(const std::vector<FVector>& InVertex) = 0;
+    CreateVertexBuffer(const std::vector<Math::FVector>& InVertex) = 0;
 
 protected:
     std::vector<std::weak_ptr<FSceneProxy>> Proxies;

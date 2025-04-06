@@ -17,7 +17,7 @@ void KPrimitiveSystem::Initialize()
     const auto* Shader = Renderer->GetShaderManager();
     GlobalStateObject = Renderer->CreateStateObject(Shader->GetPrimitive());
 
-    std::vector<FVector> Colors;
+    std::vector<Math::FVector> Colors;
     Colors.push_back({1.0, 0.3, 0.2});
     Colors.push_back({0.8, 1.0, 0.0});
     Colors.push_back({0.8, 0.0, 1.0});

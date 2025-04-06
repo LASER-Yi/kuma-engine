@@ -1,5 +1,8 @@
 #pragma once
 
+namespace Math
+{
+
 template <typename T>
 struct alignas(16) TVector
 {
@@ -7,17 +10,14 @@ struct alignas(16) TVector
     T Y;
     T Z;
     T W;
+
+    static TVector<T> Forward();
+    static TVector<T> Right();
+    static TVector<T> Up();
+
+    TVector<T> operator+(const TVector<T>& rhs);
 };
 
 using FVector = TVector<float>;
 
-template <typename T>
-static TVector<T> operator+(const TVector<T>& lhs, const TVector<T>& rhs)
-{
-    return {
-        .X = lhs.X + rhs.X,
-        .Y = lhs.Y + rhs.Y,
-        .Z = lhs.Z + rhs.Z,
-        .W = lhs.W + rhs.W,
-    };
-}
+} // namespace Math
