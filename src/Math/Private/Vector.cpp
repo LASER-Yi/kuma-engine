@@ -23,25 +23,38 @@ TVector<T> TVector<T>::Up()
 }
 
 template <typename T>
-TVector<T> TVector<T>::operator+(const TVector<T>& rhs) const
+TVector<T> TVector<T>::operator+(const TVector<T>& Rhs) const
 {
     return {
-        .X = X + rhs.X,
-        .Y = Y + rhs.Y,
-        .Z = Z + rhs.Z,
-        .W = W + rhs.W,
+        .X = X + Rhs.X,
+        .Y = Y + Rhs.Y,
+        .Z = Z + Rhs.Z,
+        .W = W + Rhs.W,
     };
 }
 
 template <typename T>
-TVector<T> TVector<T>::operator-(const TVector<T>& rhs) const
+TVector<T> TVector<T>::operator-(const TVector<T>& Rhs) const
 {
     return {
-        .X = X - rhs.X,
-        .Y = Y - rhs.Y,
-        .Z = Z - rhs.Z,
-        .W = W - rhs.W,
+        .X = X - Rhs.X,
+        .Y = Y - Rhs.Y,
+        .Z = Z - Rhs.Z,
+        .W = W - Rhs.W,
     };
+}
+
+template <typename T>
+bool TVector<T>::operator==(const TVector<T>& Rhs) const
+{
+    return X == Rhs.X && Y == Rhs.Y && Z == Rhs.Z && W == Rhs.W;
+}
+
+template <typename T>
+bool TVector<T>::Equal(const TVector<T>& Rhs, T Tolerance) const
+{
+    // TODO: Implement Tolerance
+    return *this == Rhs;
 }
 
 template <typename T>

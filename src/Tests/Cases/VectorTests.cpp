@@ -26,3 +26,13 @@ TEST(VectorTests, VectorSubtract)
     ASSERT_EQ(Result.Z, 1.0);
     ASSERT_EQ(Result.W, 1.0);
 }
+
+TEST(VectorTests, VectorEqual)
+{
+    const Math::FVector Left = {1.0, 1.0, 1.0};
+    const Math::FVector Right = {1.0, 1.0, 1.0};
+    const Math::FVector Another = {1.0, 1.0, 0.0};
+
+    ASSERT_TRUE(Left == Right);
+    ASSERT_FALSE(Left == Another);
+}

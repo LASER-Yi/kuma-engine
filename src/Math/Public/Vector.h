@@ -19,8 +19,11 @@ struct alignas(16) TVector
     static TVector<T> Right();
     static TVector<T> Up();
 
-    TVector<T> operator+(const TVector<T>& rhs) const;
-    TVector<T> operator-(const TVector<T>& rhs) const;
+    TVector<T> operator+(const TVector<T>& Rhs) const;
+    TVector<T> operator-(const TVector<T>& Rhs) const;
+    bool operator==(const TVector<T>& Rhs) const;
+
+    bool Equal(const TVector<T>& Rhs, T Tolerance) const;
 
     T GetLengthSqrt() const;
     T GetLength() const;
