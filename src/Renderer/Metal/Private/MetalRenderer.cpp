@@ -1,10 +1,14 @@
 #include "MetalRenderer.h"
 
 #include "Matrix.h"
+#include "MetalCmdQueue.h"
+#include "MetalDevice.h"
 #include "MetalShader.h"
 #include "MetalStateObject.h"
 #include "MetalVertexBuffer.h"
+#include "MetalViewport.h"
 #include "Renderer.h"
+#include "SceneProxy.h"
 #include "Vector.h"
 #include "VertexBuffer.h"
 
@@ -14,9 +18,6 @@
 #include <Metal/MTLDevice.hpp>
 #include <Metal/MTLRenderCommandEncoder.hpp>
 #include <Metal/MTLRenderPass.hpp>
-#include <MetalCmdQueue.h>
-#include <MetalDevice.h>
-#include <MetalViewport.h>
 #include <QuartzCore/CAMetalDrawable.hpp>
 #include <simd/matrix_types.h>
 #include <simd/simd.h>

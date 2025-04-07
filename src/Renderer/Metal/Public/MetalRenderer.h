@@ -1,8 +1,6 @@
 #pragma once
 
-#include "MetalShader.h"
 #include "Renderer.h"
-#include "SceneProxy.h"
 #include "Shader.h"
 
 #include <memory>
@@ -10,6 +8,7 @@
 class KMetalDevice;
 class KMetalViewport;
 class KMetalCmdQueue;
+struct FMetalShaderManager;
 
 class KMetalRenderer : public KRenderer
 {
@@ -31,7 +30,7 @@ public:
     ) override;
 
 private:
-    KMetalDeviceRef Device;
+    std::shared_ptr<KMetalDevice> Device;
     std::shared_ptr<KMetalViewport> Viewport;
     std::shared_ptr<KMetalCmdQueue> CommandQueue;
 
