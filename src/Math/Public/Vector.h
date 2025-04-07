@@ -31,7 +31,7 @@ struct alignas(16) TVector
 
     bool Equal(const TVector& Rhs, T Tolerance) const;
 
-    T GetLengthSqrt() const;
+    constexpr T GetLengthSqrt() const;
     T GetLength() const;
 
     TVector Normalize() const;

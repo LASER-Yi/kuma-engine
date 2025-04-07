@@ -53,7 +53,7 @@ bool TVector<T>::Equal(const TVector<T>& Rhs, T Tolerance) const
 }
 
 template <typename T>
-T TVector<T>::GetLengthSqrt() const
+constexpr T TVector<T>::GetLengthSqrt() const
 {
     return X * X + Y * Y + Z * Z;
 }
