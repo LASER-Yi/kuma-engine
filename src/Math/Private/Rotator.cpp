@@ -1,5 +1,7 @@
 #include "Rotator.h"
 
+#include <numbers>
+
 namespace Math
 {
 

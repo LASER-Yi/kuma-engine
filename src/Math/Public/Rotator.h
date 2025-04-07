@@ -3,7 +3,6 @@
 #include "Vector.h"
 
 #include <cstdint>
-#include <numbers>
 
 namespace Math
 {

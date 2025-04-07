@@ -2,7 +2,6 @@
 
 #include "Rotator.h"
 #include "Vector.h"
-#include <array>
 
 namespace Math
 {
