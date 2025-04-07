@@ -9,23 +9,24 @@ namespace Math
 template <typename T>
 struct alignas(16) TMatrix
 {
-    std::array<TVector<T>, 4> Columns;
+    T M[4][4];
 
-    TMatrix<T>() = default;
-    TMatrix<T>(const TMatrix<T>&) = default;
-    TMatrix<T>& operator=(const TMatrix<T>&) = default;
-    TMatrix<T>(TMatrix<T>&&) = default;
-    TMatrix<T>& operator=(TMatrix<T>&&) = default;
+    TMatrix() = default;
+    TMatrix(const TMatrix&) = default;
+    TMatrix& operator=(const TMatrix&) = default;
+    TMatrix(TMatrix&&) = default;
+    TMatrix& operator=(TMatrix&&) = default;
 
-    TMatrix<T>(
-        const TVector<T>& Column_0, const TVector<T>& Column_1,
-        const TVector<T>& Column_2, const TVector<T>& Column_3
+    TMatrix(
+        const TVector<T>& InX, const TVector<T>& InY,
+        const TVector<T>& InZ, const TVector<T>& InW
     );
 
 public:
-    static TMatrix<T> Identity;
-    static TMatrix<T> MakePosition(const TVector<T>& InPosition);
-    static TMatrix<T> MakeScale(const TVector<T>& InScale);
+    const static TMatrix Identity;
+
+    static TMatrix MakePosition(const TVector<T>& InPosition);
+    static TMatrix MakeScale(const TVector<T>& InScale);
 };
 
 using FMatrix = TMatrix<float>;

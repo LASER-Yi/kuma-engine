@@ -5,22 +5,19 @@ namespace Math
 {
 
 template <typename T>
-TVector<T> TVector<T>::Forward()
-{
-    return {1.0, 0.0, 0.0, 0.0};
-}
+const TVector<T> TVector<T>::Zero = {0.0, 0.0, 0.0};
 
 template <typename T>
-TVector<T> TVector<T>::Right()
-{
-    return {0.0, 1.0, 0.0, 0.0};
-}
+const TVector<T> TVector<T>::One = {1.0, 1.0, 1.0};
 
 template <typename T>
-TVector<T> TVector<T>::Up()
-{
-    return {0.0, 0.0, 1.0, 0.0};
-}
+const TVector<T> TVector<T>::Forward = {1.0, 0.0, 0.0};
+
+template <typename T>
+const TVector<T> TVector<T>::Right = {0.0, 1.0, 0.0};
+
+template <typename T>
+const TVector<T> TVector<T>::Up = {0.0, 0.0, 1.0};
 
 template <typename T>
 TVector<T> TVector<T>::operator+(const TVector<T>& Rhs) const
@@ -29,7 +26,6 @@ TVector<T> TVector<T>::operator+(const TVector<T>& Rhs) const
         .X = X + Rhs.X,
         .Y = Y + Rhs.Y,
         .Z = Z + Rhs.Z,
-        .W = W + Rhs.W,
     };
 }
 
@@ -40,14 +36,13 @@ TVector<T> TVector<T>::operator-(const TVector<T>& Rhs) const
         .X = X - Rhs.X,
         .Y = Y - Rhs.Y,
         .Z = Z - Rhs.Z,
-        .W = W - Rhs.W,
     };
 }
 
 template <typename T>
 bool TVector<T>::operator==(const TVector<T>& Rhs) const
 {
-    return X == Rhs.X && Y == Rhs.Y && Z == Rhs.Z && W == Rhs.W;
+    return X == Rhs.X && Y == Rhs.Y && Z == Rhs.Z;
 }
 
 template <typename T>
@@ -60,7 +55,7 @@ bool TVector<T>::Equal(const TVector<T>& Rhs, T Tolerance) const
 template <typename T>
 T TVector<T>::GetLengthSqrt() const
 {
-    return X * X + Y * Y + Z * Z + W * W;
+    return X * X + Y * Y + Z * Z;
 }
 
 template <typename T>
@@ -74,7 +69,7 @@ TVector<T> TVector<T>::Normalize() const
 {
     const T Length = GetLength();
 
-    return {X / Length, Y / Length, Z / Length, W / Length};
+    return {X / Length, Y / Length, Z / Length};
 }
 
 template struct Math::TVector<float>;

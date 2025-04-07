@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+
 namespace Math
 {
 
@@ -10,25 +12,29 @@ namespace Math
 template <typename T>
 struct alignas(16) TVector
 {
+    static_assert(std::is_floating_point_v<T>, "T must be floating point");
+
     T X;
     T Y;
     T Z;
-    T W;
 
-    static TVector<T> Forward();
-    static TVector<T> Right();
-    static TVector<T> Up();
+    const static TVector Zero;
+    const static TVector One;
 
-    TVector<T> operator+(const TVector<T>& Rhs) const;
-    TVector<T> operator-(const TVector<T>& Rhs) const;
-    bool operator==(const TVector<T>& Rhs) const;
+    const static TVector Forward;
+    const static TVector Right;
+    const static TVector<T> Up;
 
-    bool Equal(const TVector<T>& Rhs, T Tolerance) const;
+    TVector operator+(const TVector& Rhs) const;
+    TVector operator-(const TVector& Rhs) const;
+    bool operator==(const TVector& Rhs) const;
+
+    bool Equal(const TVector& Rhs, T Tolerance) const;
 
     T GetLengthSqrt() const;
     T GetLength() const;
 
-    TVector<T> Normalize() const;
+    TVector Normalize() const;
 };
 
 using FVector = TVector<float>;
