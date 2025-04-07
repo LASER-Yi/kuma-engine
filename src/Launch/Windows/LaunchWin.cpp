@@ -13,7 +13,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
     {
-        // TODO: SetWindow
         EngineInitialize(nullptr);
         return 0;
     }
@@ -55,14 +54,16 @@ int WINAPI WinMain(
     RECT WindowRect = {0, 0, 800, 600};
     AdjustWindowRect(&WindowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
-    HWND Hwnd = CreateWindow(
+    HWND hWnd = CreateWindow(
         WindowClass.lpszClassName, "Kuma Engine", WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, WindowRect.right - WindowRect.left,
         WindowRect.bottom - WindowRect.top, nullptr, nullptr, hInInstance,
         nullptr
     );
 
-    ShowWindow(Hwnd, nCmdShow);
+    ShowWindow(hWnd, nCmdShow);
+
+    EngineSetWindow(hWnd);
 
     MSG Msg = {};
     while (Msg.message != WM_QUIT && IsEngineExitRequested() == false)

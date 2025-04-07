@@ -4,6 +4,7 @@
 #include "SceneProxy.h"
 
 struct FD3D12ShaderManager;
+struct FD3D12Device;
 
 class KD3D12Renderer : public KRenderer
 {
@@ -15,10 +16,13 @@ public:
 
     virtual const FShaderManager* GetShaderManager() const override;
 
-    virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader) override;
-    virtual FVertexBufferRef CreateVertexBuffer(const std::vector<Math::FVector>& InVertex) override;
+    virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
+    ) override;
+    virtual FVertexBufferRef
+    CreateVertexBuffer(const std::vector<Math::FVector>& InVertex) override;
 
 private:
-
     std::shared_ptr<FD3D12ShaderManager> ShaderManager;
+
+    std::shared_ptr<FD3D12Device> Device;
 };
