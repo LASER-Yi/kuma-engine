@@ -1,11 +1,11 @@
 #include "Kuma/Systems/PrimitiveSystem.h"
 
-#include <array>
 #include <memory>
 #include <vector>
 
 #include "Kuma/Components/Primitive.h"
 #include "Kuma/KumaEngine.h"
+#include "Matrix.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
 #include "Shader.h"
@@ -46,8 +46,9 @@ void KPrimitiveSystem::Shutdown()
     ColorVertexBuffer = nullptr;
 }
 
-std::shared_ptr<FSceneProxy>
-KPrimitiveSystem::CreateSceneProxy(const FPrimitiveComponent* Comp) const
+std::shared_ptr<FSceneProxy> KPrimitiveSystem::CreateSceneProxy(
+    const FPrimitiveComponent* Comp
+) const
 {
     if (Comp == nullptr)
     {
@@ -58,11 +59,12 @@ KPrimitiveSystem::CreateSceneProxy(const FPrimitiveComponent* Comp) const
 
     auto SceneProxy = std::make_shared<FSceneProxy>();
 
+    SceneProxy->ComponentToWorld = Math::FMatrix::Identity;
+
     SceneProxy->VertexCount = Comp->Vertex.size();
     SceneProxy->PipelineStateObject = GlobalStateObject;
-    SceneProxy->VertexBuffers[0] = Renderer->CreateVertexBuffer(Comp->Vertex);
-    SceneProxy->VertexBuffers[1] = ColorVertexBuffer;
-    SceneProxy->VertexBufferCount = 2;
+    SceneProxy->VertexBuffer = Renderer->CreateVertexBuffer(Comp->Vertex);
+    SceneProxy->ColorBuffer = ColorVertexBuffer;
 
     return SceneProxy;
 }

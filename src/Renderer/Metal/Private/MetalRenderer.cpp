@@ -90,16 +90,17 @@ void KMetalRenderer::Update()
                 );
             Encoder->setRenderPipelineState(StateObject->Data);
 
-            for (int i = 0; i < SharedProxy->VertexBufferCount; ++i)
-            {
-                const auto VertexBuffer =
-                    std::static_pointer_cast<FMetalVertexBuffer>(
-                        SharedProxy->VertexBuffers[i]
-                    );
+            const auto VertexBuffer =
+                std::static_pointer_cast<FMetalVertexBuffer>(
+                    SharedProxy->VertexBuffer
+                );
+            Encoder->setVertexBuffer(VertexBuffer->Data, 0, 0);
 
-                // We use separate buffer to store the vertex for now
-                Encoder->setVertexBuffer(VertexBuffer->Data, 0, i);
-            }
+            const auto ColorBuffer =
+                std::static_pointer_cast<FMetalVertexBuffer>(
+                    SharedProxy->ColorBuffer
+                );
+            Encoder->setVertexBuffer(VertexBuffer->Data, 0, 1);
 
             Encoder->drawPrimitives(
                 MTL::PrimitiveTypeTriangle, NS::UInteger(0),
@@ -133,8 +134,9 @@ const FShaderManager* KMetalRenderer::GetShaderManager() const
     return Shader.get();
 }
 
-FStateObjectRef
-KMetalRenderer::CreateStateObject(const FShaderResourceRef Shader)
+FStateObjectRef KMetalRenderer::CreateStateObject(
+    const FShaderResourceRef Shader
+)
 {
     std::shared_ptr<FMetalShaderResource> MetalShader =
         std::static_pointer_cast<FMetalShaderResource>(Shader);
@@ -142,8 +144,9 @@ KMetalRenderer::CreateStateObject(const FShaderResourceRef Shader)
     return std::make_shared<FMetalStateObject>(Device->Get(), MetalShader);
 }
 
-FVertexBufferRef
-KMetalRenderer::CreateVertexBuffer(const std::vector<Math::FVector>& InVertex)
+FVertexBufferRef KMetalRenderer::CreateVertexBuffer(
+    const std::vector<Math::FVector>& InVertex
+)
 {
     return std::make_shared<FMetalVertexBuffer>(Device->Get(), InVertex);
 }

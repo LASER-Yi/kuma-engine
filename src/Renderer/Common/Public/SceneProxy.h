@@ -1,15 +1,17 @@
 #pragma once
 
+#include "Matrix.h"
 #include "StateObject.h"
 #include "VertexBuffer.h"
-#include <array>
 
 struct FSceneProxy
 {
     FStateObjectRef PipelineStateObject;
 
-    std::array<FVertexBufferRef, 8> VertexBuffers;
-    size_t VertexBufferCount;
+    Math::FMatrix ComponentToWorld;
+
+    FVertexBufferRef VertexBuffer;
+    FVertexBufferRef ColorBuffer;
 
     size_t VertexCount;
 };
