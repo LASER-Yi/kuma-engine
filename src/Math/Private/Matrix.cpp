@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "Rotator.h"
 #include "Vector.h"
 
 namespace Math
@@ -9,10 +10,10 @@ namespace Math
 
 template <typename T>
 const TMatrix<T> TMatrix<T>::Identity = {
-    {1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, 1.0},
-    {0.0, 0.0, 0.0},
+    {1.0, 0.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0, 0.0},
+    {0.0, 0.0, 1.0, 0.0},
+    {0.0, 0.0, 0.0, 1.0},
 };
 
 template <typename T>
@@ -40,6 +41,33 @@ TMatrix<T>::TMatrix(
     M[3][1] = InW.Y;
     M[3][2] = InW.Z;
     M[3][3] = 1.0;
+}
+
+template <typename T>
+TMatrix<T>::TMatrix(
+    const TPlane<T>& InX, const TPlane<T>& InY, const TPlane<T>& InZ,
+    const TPlane<T>& InW
+)
+{
+    M[0][0] = InX.X;
+    M[0][1] = InX.Y;
+    M[0][2] = InX.Z;
+    M[0][3] = InX.W;
+
+    M[1][0] = InY.X;
+    M[1][1] = InY.Y;
+    M[1][2] = InY.Z;
+    M[1][3] = InY.W;
+
+    M[2][0] = InZ.X;
+    M[2][1] = InZ.Y;
+    M[2][2] = InZ.Z;
+    M[2][3] = InZ.W;
+
+    M[3][0] = InW.X;
+    M[3][1] = InW.Y;
+    M[3][2] = InW.Z;
+    M[3][3] = InW.W;
 }
 
 template <typename T>
@@ -105,13 +133,28 @@ bool TMatrix<T>::operator==(const TMatrix& Other) const
 }
 
 template <typename T>
+TMatrix<T> TMatrix<T>::MakePerspective(TRadians<T> FoV, T Aspect, T Near, T Far)
+{
+    const T ValueY = 1.0 / std::tan(FoV.Value / 2.0);
+    const T ValueX = ValueY / Aspect;
+    const T ValueZ = Far / (Near - Far);
+
+    return {
+        {ValueX, 0.0, 0.0, 0.0},
+        {0.0, ValueY, 0.0, 0.0},
+        {0.0, 0.0, ValueZ, Near * ValueZ},
+        {0.0, 0.0, -1.0, 0.0}
+    };
+}
+
+template <typename T>
 TMatrix<T> TMatrix<T>::MakePosition(const TVector<T>& InPosition)
 {
     return {
-        {1.0, 0.0, 0.0},
-        {0.0, 1.0, 0.0},
-        {0.0, 0.0, 1.0},
-        {InPosition.X, InPosition.Y, InPosition.Z},
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {InPosition.X, InPosition.Y, InPosition.Z, 1.0},
     };
 }
 
@@ -119,10 +162,10 @@ template <typename T>
 TMatrix<T> TMatrix<T>::MakeScale(const TVector<T>& InScale)
 {
     return {
-        {InScale.X, 0.0, 0.0},
-        {0.0, InScale.Y, 0.0},
-        {0.0, 0.0, InScale.Z},
-        {0.0, 0.0, 0.0},
+        {InScale.X, 0.0, 0.0, 0.0},
+        {0.0, InScale.Y, 0.0, 0.0},
+        {0.0, 0.0, InScale.Z, 0.0},
+        {0.0, 0.0, 0.0, 1.0},
     };
 }
 
@@ -136,28 +179,28 @@ TMatrix<T> TMatrix<T>::MakeRotation(
     if (InAxis == EAxis::X)
     {
         return {
-            {1.0, 0.0, 0.0},
-            {0.0, CosValue, -SinValue},
-            {0.0, SinValue, CosValue},
-            {0.0, 0.0, 0.0},
+            {1.0, 0.0, 0.0, 0.0},
+            {0.0, CosValue, -SinValue, 0.0},
+            {0.0, SinValue, CosValue, 0.0},
+            {0.0, 0.0, 0.0, 1.0},
         };
     }
     else if (InAxis == EAxis::Y)
     {
         return {
-            {CosValue, 0.0, SinValue},
-            {0.0, 1.0, 0.0},
-            {-SinValue, 0.0, CosValue},
-            {0.0, 0.0, 0.0},
+            {CosValue, 0.0, SinValue, 0.0},
+            {0.0, 1.0, 0.0, 0.0},
+            {-SinValue, 0.0, CosValue, 0.0},
+            {0.0, 0.0, 0.0, 1.0},
         };
     }
     else if (InAxis == EAxis::Z)
     {
         return {
-            {CosValue, -SinValue, 0.0},
-            {SinValue, CosValue, 0.0},
-            {0.0, 0.0, 1.0},
-            {0.0, 0.0, 0.0},
+            {CosValue, -SinValue, 0.0, 0.0},
+            {SinValue, CosValue, 0.0, 0.0},
+            {0.0, 0.0, 1.0, 0.0},
+            {0.0, 0.0, 0.0, 1.0},
         };
     }
     else

@@ -14,6 +14,9 @@ struct alignas(16) TVector
 {
     static_assert(std::is_floating_point_v<T>, "T must be floating point");
 
+    TVector() = default;
+    TVector(T InX, T InY, T InZ) : X(InX), Y(InY), Z(InZ) {}
+
     T X;
     T Y;
     T Z;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Plane.h"
 #include "Rotator.h"
 #include "Vector.h"
 
@@ -23,12 +24,19 @@ struct alignas(16) TMatrix
         const TVector<T>& InW
     );
 
+    TMatrix(
+        const TPlane<T>& InX, const TPlane<T>& InY, const TPlane<T>& InZ,
+        const TPlane<T>& InW
+    );
+
 public:
     TMatrix operator*(const TMatrix& Other) const;
     bool operator==(const TMatrix& Other) const;
 
 public:
     const static TMatrix Identity;
+
+    static TMatrix MakePerspective(TRadians<T> FoV, T Aspect, T Near, T Far);
 
     static TMatrix MakePosition(const TVector<T>& InPosition);
     static TMatrix MakeScale(const TVector<T>& InScale);

@@ -24,9 +24,9 @@ template <typename T>
 TVector<T> TVector<T>::operator+(const TVector<T>& Rhs) const
 {
     return {
-        .X = X + Rhs.X,
-        .Y = Y + Rhs.Y,
-        .Z = Z + Rhs.Z,
+        X + Rhs.X,
+        Y + Rhs.Y,
+        Z + Rhs.Z,
     };
 }
 
@@ -34,9 +34,9 @@ template <typename T>
 TVector<T> TVector<T>::operator-(const TVector<T>& Rhs) const
 {
     return {
-        .X = X - Rhs.X,
-        .Y = Y - Rhs.Y,
-        .Z = Z - Rhs.Z,
+        X - Rhs.X,
+        Y - Rhs.Y,
+        Z - Rhs.Z,
     };
 }
 
