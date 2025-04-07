@@ -20,16 +20,21 @@ struct alignas(16) TMatrix
     TMatrix& operator=(TMatrix&&) = default;
 
     TMatrix(
-        const TVector<T>& InX, const TVector<T>& InY,
-        const TVector<T>& InZ, const TVector<T>& InW
+        const TVector<T>& InX, const TVector<T>& InY, const TVector<T>& InZ,
+        const TVector<T>& InW
     );
+
+public:
+    TMatrix operator*(const TMatrix& Other) const;
+    bool operator==(const TMatrix& Other) const;
 
 public:
     const static TMatrix Identity;
 
     static TMatrix MakePosition(const TVector<T>& InPosition);
     static TMatrix MakeScale(const TVector<T>& InScale);
-    static TMatrix MakeRotation(const EAxis InAxis, const TDegrees<T> InDegrees);
+    static TMatrix
+    MakeRotation(const EAxis InAxis, const TRadians<T> InRadians);
 };
 
 using FMatrix = TMatrix<float>;

@@ -3,11 +3,12 @@
 #include "Vector.h"
 
 #include <cstdint>
+#include <numbers>
 
 namespace Math
 {
 
-enum class EAxis: uint8_t
+enum class EAxis : uint8_t
 {
     X,
     Y,
@@ -15,11 +16,16 @@ enum class EAxis: uint8_t
 };
 
 template <typename T>
+struct TDegrees;
+
+template <typename T>
 struct TRadians
 {
     static_assert(std::is_floating_point_v<T>, "T must be floating point");
 
-    explicit TRadians(T InValue): Value(InValue) {}
+    static TRadians From(TDegrees<T> InDegrees);
+
+    explicit TRadians(T InValue) : Value(InValue) {}
 
     T Value;
 };
@@ -32,7 +38,9 @@ struct TDegrees
 {
     static_assert(std::is_floating_point_v<T>, "T must be floating point");
 
-    explicit TDegrees(T InValue): Value(InValue) {}
+    static TDegrees From(TRadians<T> InRadians);
+
+    explicit TDegrees(T InValue) : Value(InValue) {}
 
     T Value;
 };
