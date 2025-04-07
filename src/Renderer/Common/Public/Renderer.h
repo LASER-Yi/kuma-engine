@@ -13,6 +13,8 @@ struct FSceneProxy;
 class KRenderer
 {
 public:
+    virtual ~KRenderer() = default;
+
     virtual void Initialize(void* WindowPtr) = 0;
 
     virtual void Update() = 0;

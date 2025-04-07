@@ -15,5 +15,7 @@ using FShaderResourceRef = std::shared_ptr<FShaderResource>;
 
 struct FShaderManager
 {
+    virtual ~FShaderManager() = default;
+
     virtual FShaderResourceRef GetPrimitive() const = 0;
 };
