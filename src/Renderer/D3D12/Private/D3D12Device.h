@@ -16,8 +16,9 @@ struct FD3D12Device
     ID3D12Device* GetDevice() const;
 
 private:
-    bool
-    TryCreateDevice(IDXGIFactory* Factory, D3D_FEATURE_LEVEL InFeatureLevel);
+    bool TryCreateDevice(
+        IDXGIFactory* Factory, D3D_FEATURE_LEVEL InFeatureLevel
+    );
 
     D3D_FEATURE_LEVEL FeatureLevel;
     Microsoft::WRL::ComPtr<ID3D12Device> Device;

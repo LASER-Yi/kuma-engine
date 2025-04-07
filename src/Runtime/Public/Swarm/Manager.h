@@ -71,8 +71,9 @@ public:
     void RemoveEntity(FEntityBase* Entity);
 
     template <typename T, typename... Args>
-    std::tuple<Swarm::ClassHashType, Swarm::SignatureType>
-    CreateComponent(Args&&... Arguments)
+    std::tuple<Swarm::ClassHashType, Swarm::SignatureType> CreateComponent(
+        Args&&... Arguments
+    )
     {
         static_assert(
             std::is_base_of<FComponent, T>::value,

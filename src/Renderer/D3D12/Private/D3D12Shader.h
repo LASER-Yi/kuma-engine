@@ -2,7 +2,7 @@
 
 #include "Shader.h"
 
-struct FD3D12ShaderManager: public FShaderManager
+struct FD3D12ShaderManager : public FShaderManager
 {
     virtual FShaderResourceRef GetPrimitive() const override;
 };

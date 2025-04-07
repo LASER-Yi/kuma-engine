@@ -19,8 +19,9 @@ public:
     virtual void Shutdown() override;
 
 protected:
-    std::shared_ptr<FSceneProxy>
-    CreateSceneProxy(const FPrimitiveComponent* Comp) const;
+    std::shared_ptr<FSceneProxy> CreateSceneProxy(
+        const FPrimitiveComponent* Comp
+    ) const;
 
     FStateObjectRef GlobalStateObject;
     FVertexBufferRef ColorVertexBuffer;

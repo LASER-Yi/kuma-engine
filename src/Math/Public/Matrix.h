@@ -32,8 +32,9 @@ public:
 
     static TMatrix MakePosition(const TVector<T>& InPosition);
     static TMatrix MakeScale(const TVector<T>& InScale);
-    static TMatrix
-    MakeRotation(const EAxis InAxis, const TRadians<T> InRadians);
+    static TMatrix MakeRotation(
+        const EAxis InAxis, const TRadians<T> InRadians
+    );
 };
 
 using FMatrix = TMatrix<float>;

@@ -14,6 +14,9 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 AlignAfterOpenBracket: BlockIndent
 BreakBeforeBraces: Allman
+AlwaysBreakAfterReturnType: None
+# BreakAfterReturnType: Automatic
+PenaltyReturnTypeOnItsOwnLine: 200
 AlwaysBreakTemplateDeclarations: true
 # BreakTemplateDeclarations: Yes
 CompactNamespaces: false

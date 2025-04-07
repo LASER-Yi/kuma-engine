@@ -26,8 +26,9 @@ public:
     virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
     ) override;
 
-    virtual FVertexBufferRef
-    CreateVertexBuffer(const std::vector<Math::FVector>& InVertex) override;
+    virtual FVertexBufferRef CreateVertexBuffer(
+        const std::vector<Math::FVector>& InVertex
+    ) override;
 
 private:
     KMetalDeviceRef Device;

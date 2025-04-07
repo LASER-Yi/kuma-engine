@@ -127,8 +127,9 @@ TMatrix<T> TMatrix<T>::MakeScale(const TVector<T>& InScale)
 }
 
 template <typename T>
-TMatrix<T>
-TMatrix<T>::MakeRotation(const EAxis InAxis, const TRadians<T> InRadians)
+TMatrix<T> TMatrix<T>::MakeRotation(
+    const EAxis InAxis, const TRadians<T> InRadians
+)
 {
     const T CosValue = std::cos(InRadians.Value);
     const T SinValue = std::sin(InRadians.Value);

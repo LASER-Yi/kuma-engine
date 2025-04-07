@@ -18,8 +18,9 @@ public:
 
     virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
     ) override;
-    virtual FVertexBufferRef
-    CreateVertexBuffer(const std::vector<Math::FVector>& InVertex) override;
+    virtual FVertexBufferRef CreateVertexBuffer(
+        const std::vector<Math::FVector>& InVertex
+    ) override;
 
 private:
     std::shared_ptr<FD3D12ShaderManager> ShaderManager;
