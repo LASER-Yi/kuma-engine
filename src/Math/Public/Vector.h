@@ -7,7 +7,7 @@ namespace Math
 
 /**
  * The engine uses left-hand coordinate system with Z-axis up and X-axis forward
- * The definition is same as the Unreal Engin
+ * The definition is same as the Unreal Engine
  */
 template <typename T>
 struct alignas(16) TVector

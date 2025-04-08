@@ -5,6 +5,7 @@
 #include "MetalDevice.h"
 #include "MetalShader.h"
 #include "MetalStateObject.h"
+#include "MetalTransBuffer.h"
 #include "MetalVertexBuffer.h"
 #include "MetalViewport.h"
 #include "Renderer.h"
@@ -84,6 +85,8 @@ void KMetalRenderer::Update()
 
             MTL::RenderCommandEncoder* Encoder =
                 Cmd->renderCommandEncoder(RenderDesc);
+            Encoder->setCullMode(MTL::CullModeBack);
+            Encoder->setFrontFacingWinding(MTL::WindingCounterClockwise);
 
             const auto StateObject =
                 std::static_pointer_cast<FMetalStateObject>(
@@ -101,7 +104,24 @@ void KMetalRenderer::Update()
                 std::static_pointer_cast<FMetalVertexBuffer>(
                     SharedProxy->ColorBuffer
                 );
-            Encoder->setVertexBuffer(VertexBuffer->Data, 0, 1);
+            Encoder->setVertexBuffer(ColorBuffer->Data, 0, 1);
+
+            if (SharedProxy->Transform == nullptr)
+            {
+                const float AspectRatio =
+                    static_cast<float>(Drawable->texture()->width()) /
+                    static_cast<float>(Drawable->texture()->height());
+
+                SharedProxy->Transform = std::make_shared<FMetalTransBuffer>(
+                    Device, AspectRatio, SharedProxy->ComponentToWorld
+                );
+            }
+
+            const auto TransformBuffer =
+                std::static_pointer_cast<FMetalTransBuffer>(
+                    SharedProxy->Transform
+                );
+            Encoder->setVertexBuffer(TransformBuffer->Data, 0, 2);
 
             Encoder->drawPrimitives(
                 MTL::PrimitiveTypeTriangle, NS::UInteger(0),

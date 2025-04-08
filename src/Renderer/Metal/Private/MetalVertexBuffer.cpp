@@ -21,3 +21,5 @@ FMetalVertexBuffer::FMetalVertexBuffer(
     std::memcpy(Data->contents(), InVertex.data(), VertexDataSize);
     Data->didModifyRange(NS::Range::Make(0, Data->length()));
 }
+
+FMetalVertexBuffer::~FMetalVertexBuffer() { Data->release(); }

@@ -24,5 +24,4 @@ protected:
     ) const;
 
     FStateObjectRef GlobalStateObject;
-    FVertexBufferRef ColorVertexBuffer;
 };

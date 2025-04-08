@@ -7,22 +7,16 @@
 #include "Kuma/KumaEngine.h"
 #include "Matrix.h"
 #include "Renderer.h"
+#include "Rotator.h"
 #include "SceneProxy.h"
 #include "Shader.h"
-#include "Vector.h"
+#include "Transform.h"
 
 void KPrimitiveSystem::Initialize()
 {
     const auto Renderer = GetEngine()->GetRenderer();
     const auto* Shader = Renderer->GetShaderManager();
     GlobalStateObject = Renderer->CreateStateObject(Shader->GetPrimitive());
-
-    std::vector<Math::FVector> Colors;
-    Colors.push_back({1.0, 0.3, 0.2});
-    Colors.push_back({0.8, 1.0, 0.0});
-    Colors.push_back({0.8, 0.0, 1.0});
-
-    ColorVertexBuffer = Renderer->CreateVertexBuffer(Colors);
 }
 
 void KPrimitiveSystem::Execute(float DeltaTime)
@@ -40,11 +34,7 @@ void KPrimitiveSystem::Execute(float DeltaTime)
     }
 }
 
-void KPrimitiveSystem::Shutdown()
-{
-    GlobalStateObject = nullptr;
-    ColorVertexBuffer = nullptr;
-}
+void KPrimitiveSystem::Shutdown() { GlobalStateObject = nullptr; }
 
 std::shared_ptr<FSceneProxy> KPrimitiveSystem::CreateSceneProxy(
     const FPrimitiveComponent* Comp
@@ -59,12 +49,20 @@ std::shared_ptr<FSceneProxy> KPrimitiveSystem::CreateSceneProxy(
 
     auto SceneProxy = std::make_shared<FSceneProxy>();
 
-    SceneProxy->ComponentToWorld = Math::FMatrix::Identity;
+    const Math::FMatrix YRot = Math::FMatrix::MakeRotation(
+        Math::EAxis::Y, Math::FRadians::From(Math::FDegrees(30.0))
+    );
+
+    const Math::FMatrix XRot = Math::FMatrix::MakeRotation(
+        Math::EAxis::X, Math::FRadians::From(Math::FDegrees(30.0))
+    );
+
+    SceneProxy->ComponentToWorld = XRot * YRot * Math::FMatrix::Identity;
 
     SceneProxy->VertexCount = Comp->Vertex.size();
     SceneProxy->PipelineStateObject = GlobalStateObject;
     SceneProxy->VertexBuffer = Renderer->CreateVertexBuffer(Comp->Vertex);
-    SceneProxy->ColorBuffer = ColorVertexBuffer;
+    SceneProxy->ColorBuffer = Renderer->CreateVertexBuffer(Comp->Color);
 
     return SceneProxy;
 }

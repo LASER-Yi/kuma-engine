@@ -142,8 +142,8 @@ TMatrix<T> TMatrix<T>::MakePerspective(TRadians<T> FoV, T Aspect, T Near, T Far)
     return {
         {ValueX, 0.0, 0.0, 0.0},
         {0.0, ValueY, 0.0, 0.0},
-        {0.0, 0.0, ValueZ, Near * ValueZ},
-        {0.0, 0.0, -1.0, 0.0}
+        {0.0, 0.0, ValueZ, -1.0},
+        {0.0, 0.0, Near * ValueZ, 0.0}
     };
 }
 
@@ -188,9 +188,9 @@ TMatrix<T> TMatrix<T>::MakeRotation(
     else if (InAxis == EAxis::Y)
     {
         return {
-            {CosValue, 0.0, SinValue, 0.0},
+            {CosValue, 0.0, -SinValue, 0.0},
             {0.0, 1.0, 0.0, 0.0},
-            {-SinValue, 0.0, CosValue, 0.0},
+            {SinValue, 0.0, CosValue, 0.0},
             {0.0, 0.0, 0.0, 1.0},
         };
     }

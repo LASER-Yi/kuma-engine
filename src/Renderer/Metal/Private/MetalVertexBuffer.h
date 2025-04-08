@@ -15,5 +15,7 @@ struct FMetalVertexBuffer : public FVertexBuffer
         MTL::Device* Device, const std::vector<Math::FVector>& InVertex
     );
 
+    ~FMetalVertexBuffer();
+
     MTL::Buffer* Data;
 };

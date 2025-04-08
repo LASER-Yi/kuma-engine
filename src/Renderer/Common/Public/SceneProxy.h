@@ -2,6 +2,7 @@
 
 #include "Matrix.h"
 #include "StateObject.h"
+#include "TransformBuffer.h"
 #include "VertexBuffer.h"
 
 struct FSceneProxy
@@ -12,6 +13,7 @@ struct FSceneProxy
 
     FVertexBufferRef VertexBuffer;
     FVertexBufferRef ColorBuffer;
+    FTransformBufferRef Transform;
 
     size_t VertexCount;
 };
