@@ -3,24 +3,20 @@
 #include "CoreMinimal.h"
 
 #include "Swarm/Component.h"
-#include "Vector.h"
 
 #include <memory>
 
 class FSceneProxy;
+class FStaticMesh;
 
 struct FPrimitiveComponent : public Swarm::FComponent
 {
-    FPrimitiveComponent(
-        const std::vector<Math::FVector>& InVertex,
-        const std::vector<Math::FVector>& InColor
-    )
-        : Swarm::FComponent(), Vertex(InVertex), Color(InColor)
+    FPrimitiveComponent(const std::shared_ptr<FStaticMesh> InMesh)
+        : Swarm::FComponent(), Mesh(InMesh)
     {
     }
 
-    std::vector<Math::FVector> Vertex;
-    std::vector<Math::FVector> Color;
+    const std::shared_ptr<FStaticMesh> Mesh;
 
     float YRotation = 0.0;
     float XRotation = 0.0;

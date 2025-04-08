@@ -65,15 +65,15 @@ const char* PrimitiveShaderSrc = R"(
 
     v2f vertex vertexMain(uint vertexId [[vertex_id]],
                            device const float3* positions [[buffer(0)]],
-                           device const float3* colors [[buffer(1)]],
-                           device const SceneData& scene [[buffer(2)]]
+                           device const SceneData& scene [[buffer(1)]]
     )
     {
         float4 vertexPos = float4(positions[vertexId], 1.0);
+        float4 worldPos = scene.ModelToWorld * vertexPos;
 
         v2f o;
-        o.position = scene.Perspective * scene.WorldToCamera * scene.ModelToWorld * vertexPos;
-        o.color = half3(colors[vertexId]);
+        o.position = scene.Perspective * scene.WorldToCamera * worldPos;
+        o.color = half3(worldPos.x, worldPos.y, worldPos.z);
         return o;
     }
 

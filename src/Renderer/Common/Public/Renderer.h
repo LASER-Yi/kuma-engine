@@ -6,10 +6,13 @@
 #include <memory>
 #include <vector>
 
+struct FStaticMesh;
 struct FSceneProxy;
 struct FStateObject;
 struct FRenderResource;
 struct FSceneRenderResource;
+struct FMeshRenderResource;
+struct FMeshResourceDescriptor;
 
 class KRenderer
 {
@@ -33,8 +36,8 @@ public:
         const FShaderResourceRef Shader
     ) = 0;
 
-    virtual std::shared_ptr<FRenderResource> CreateVertexBuffer(
-        const std::vector<Math::FVector>& InVertex
+    virtual std::shared_ptr<FMeshRenderResource> CreateMesh(
+        const FMeshResourceDescriptor& InDescriptor
     ) = 0;
 
 protected:

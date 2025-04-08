@@ -1,8 +1,8 @@
 #include "Kuma/Systems/PrimitiveSystem.h"
 
 #include <memory>
-#include <vector>
 
+#include "Engine/StaticMesh.h"
 #include "Kuma/Components/Primitive.h"
 #include "Kuma/KumaEngine.h"
 #include "Matrix.h"
@@ -62,17 +62,20 @@ std::shared_ptr<FSceneProxy> KPrimitiveSystem::CreateSceneProxy(
         return nullptr;
     }
 
+    if (Comp->Mesh == nullptr)
+    {
+        return nullptr;
+    }
+
     auto Renderer = GetEngine()->GetRenderer();
 
     auto SceneProxy = std::make_shared<FSceneProxy>();
 
     SceneProxy->ComponentToWorld = Math::FMatrix::Identity;
 
-    SceneProxy->VertexCount = Comp->Vertex.size();
     SceneProxy->PipelineStateObject = GlobalStateObject;
     SceneProxy->SceneBuffer = Renderer->CreateSceneResource();
-    SceneProxy->VertexBuffer = Renderer->CreateVertexBuffer(Comp->Vertex);
-    SceneProxy->ColorBuffer = Renderer->CreateVertexBuffer(Comp->Color);
+    SceneProxy->MeshResource = Renderer->CreateMesh(Comp->Mesh->Describe());
 
     return SceneProxy;
 }

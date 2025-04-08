@@ -1,13 +1,15 @@
 #include "MetalRenderer.h"
 
 #include "Matrix.h"
+#include "MeshResource.h"
+#include "Metal/MTLStageInputOutputDescriptor.hpp"
 #include "Metal/MTLTexture.hpp"
 #include "MetalCmdQueue.h"
 #include "MetalDevice.h"
+#include "MetalMesh.h"
 #include "MetalScene.h"
 #include "MetalShader.h"
 #include "MetalStateObject.h"
-#include "MetalVertexBuffer.h"
 #include "MetalViewport.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
@@ -134,11 +136,11 @@ std::shared_ptr<FStateObject> KMetalRenderer::CreateStateObject(
     return std::make_shared<FMetalStateObject>(Device->Get(), MetalShader);
 }
 
-std::shared_ptr<FRenderResource> KMetalRenderer::CreateVertexBuffer(
-    const std::vector<Math::FVector>& InVertex
+std::shared_ptr<FMeshRenderResource> KMetalRenderer::CreateMesh(
+    const FMeshResourceDescriptor& InDescriptor
 )
 {
-    return std::make_shared<FMetalVertexBuffer>(Device->Get(), InVertex);
+    return std::make_shared<FMetalMeshResource>(Device, InDescriptor);
 }
 
 void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
@@ -147,7 +149,7 @@ void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
         .FieldOfView = Math::FRadians::From(Math::FDegrees(45.0)),
         .AspectRatio = static_cast<float>(Backbuffer->width()) /
                        static_cast<float>(Backbuffer->height()),
-        .WorldToCamera = Math::FMatrix::Identity
+        .WorldToCamera = Math::FMatrix::MakePosition({})
     };
 
     for (const auto& Proxy : Proxies)
@@ -181,20 +183,16 @@ void KMetalRenderer::EncodePrimitive(
         std::static_pointer_cast<FMetalStateObject>(Proxy->PipelineStateObject);
     Encoder->setRenderPipelineState(StateObject->Data);
 
-    const auto VertexBuffer =
-        std::static_pointer_cast<FMetalVertexBuffer>(Proxy->VertexBuffer);
-    Encoder->setVertexBuffer(VertexBuffer->Data, 0, 0);
-
-    const auto ColorBuffer =
-        std::static_pointer_cast<FMetalVertexBuffer>(Proxy->ColorBuffer);
-    Encoder->setVertexBuffer(ColorBuffer->Data, 0, 1);
+    const auto MeshResource =
+        std::static_pointer_cast<FMetalMeshResource>(Proxy->MeshResource);
+    Encoder->setVertexBuffer(MeshResource->VertexBuffer, 0, 0);
 
     const auto SceneBuffer =
         std::static_pointer_cast<FMetalSceneResource>(Proxy->SceneBuffer);
-    Encoder->setVertexBuffer(SceneBuffer->Data, 0, 2);
+    Encoder->setVertexBuffer(SceneBuffer->Data, 0, 1);
 
-    Encoder->drawPrimitives(
-        MTL::PrimitiveTypeTriangle, NS::UInteger(0),
-        NS::UInteger(Proxy->VertexCount)
+    Encoder->drawIndexedPrimitives(
+        MTL::PrimitiveTypeTriangle, NS::UInteger(MeshResource->VertexCount),
+        MTL::IndexTypeUInt16, MeshResource->IndexBuffer, 0, 1
     );
 }

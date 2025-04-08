@@ -7,6 +7,7 @@
 class FStateObject;
 class FRenderResource;
 class FSceneRenderResource;
+class FMeshRenderResource;
 
 struct FSceneProxy
 {
@@ -17,7 +18,5 @@ struct FSceneProxy
 
     // The following members belongs to the primitive, we will need to
     // move them to elsewhere in the future
-    std::shared_ptr<FRenderResource> VertexBuffer;
-    std::shared_ptr<FRenderResource> ColorBuffer;
-    size_t VertexCount;
+    std::shared_ptr<FMeshRenderResource> MeshResource;
 };

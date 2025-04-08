@@ -37,8 +37,8 @@ public:
         const FShaderResourceRef Shader
     ) override;
 
-    virtual std::shared_ptr<FRenderResource> CreateVertexBuffer(
-        const std::vector<Math::FVector>& InVertex
+    virtual std::shared_ptr<FMeshRenderResource> CreateMesh(
+        const FMeshResourceDescriptor& InDescriptor
     ) override;
 
 private:
