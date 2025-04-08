@@ -10,6 +10,14 @@ extern KEngine* GEngine;
 
 void* WindowHandle = nullptr;
 
+void RequestWindowResize(size_t Width, size_t Height)
+{
+    if (GEngine && GEngine->IsEngineExitRequired() == false)
+    {
+        GEngine->RequestResize(Width, Height);
+    }
+}
+
 void RequestEngineExit()
 {
     if (GEngine)

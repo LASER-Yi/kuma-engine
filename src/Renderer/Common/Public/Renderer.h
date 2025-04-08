@@ -28,6 +28,9 @@ public:
     virtual void Enqueue(std::shared_ptr<FSceneProxy> InProxy);
 
 public:
+    virtual void Resize(size_t Width, size_t Height) = 0;
+
+public:
     virtual const FShaderManager* GetShaderManager() const = 0;
 
     virtual std::shared_ptr<FSceneRenderResource> CreateSceneResource() = 0;

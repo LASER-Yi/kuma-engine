@@ -27,6 +27,8 @@ public:
 
     virtual void Shutdown() override;
 
+    virtual void Resize(size_t Width, size_t Height) override;
+
 public:
     virtual const FShaderManager* GetShaderManager() const override;
 

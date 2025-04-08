@@ -115,6 +115,14 @@ void KMetalRenderer::Shutdown()
     Device = nullptr;
 }
 
+void KMetalRenderer::Resize(size_t Width, size_t Height)
+{
+    if (Viewport)
+    {
+        Viewport->RequestResize(Width, Height);
+    }
+}
+
 const FShaderManager* KMetalRenderer::GetShaderManager() const
 {
     assert(Shader);

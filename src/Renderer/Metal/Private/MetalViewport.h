@@ -24,6 +24,8 @@ public:
 
     ~KMetalViewport();
 
+    void RequestResize(size_t Width, size_t Height);
+
     bool IsViewportReady() const;
 
     CA::MetalDrawable* GetDrawable();
@@ -31,4 +33,8 @@ public:
 private:
     void* Window;
     CA::MetalLayer* MetalLayer;
+
+    void ResizeViewport();
+
+    bool bPendingResizeRequest;
 };

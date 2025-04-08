@@ -21,6 +21,7 @@ public:
     virtual void Update();
     virtual void Shutdown();
 
+    void RequestResize(size_t Width, size_t Height);
     void RequireEngineExit();
 
     bool IsEngineExitRequired() const;

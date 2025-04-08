@@ -52,6 +52,14 @@ void KEngine::Shutdown()
     bShutdown = true;
 }
 
+void KEngine::RequestResize(size_t Width, size_t Height)
+{
+    if (Renderer)
+    {
+        Renderer->Resize(Width, Height);
+    }
+}
+
 void KEngine::RequireEngineExit() { bExitRequired = true; }
 
 bool KEngine::IsEngineExitRequired() const { return bExitRequired; }

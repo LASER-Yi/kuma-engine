@@ -12,7 +12,7 @@
 KMetalViewport::KMetalViewport(
     std::shared_ptr<KMetalDevice> InDevice, void* InWindow
 )
-    : Window(InWindow)
+    : Window(InWindow), bPendingResizeRequest(false)
 {
     assert(InDevice != nil);
     assert(InWindow != nil);
@@ -34,9 +34,29 @@ KMetalViewport::KMetalViewport(
 
 KMetalViewport::~KMetalViewport() {}
 
+void KMetalViewport::RequestResize(size_t Width, size_t Height)
+{
+    bPendingResizeRequest = true;
+}
+
+void KMetalViewport::ResizeViewport()
+{
+    if (MetalLayer)
+    {
+        NSWindow* CocoaWindow = (NSWindow*)Window;
+        const NSRect contentRect = [CocoaWindow contentLayoutRect];
+        MetalLayer->setDrawableSize(contentRect.size);
+    }
+}
+
 bool KMetalViewport::IsViewportReady() const { return MetalLayer != nil; }
 
 CA::MetalDrawable* KMetalViewport::GetDrawable()
 {
+    if (bPendingResizeRequest)
+    {
+        bPendingResizeRequest = false;
+        ResizeViewport();
+    }
     return MetalLayer->nextDrawable();
 }

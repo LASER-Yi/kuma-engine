@@ -5,6 +5,7 @@
 
 // This part is heavily referencing the LaunchMac.cpp in the Unreal Engine
 
+extern void RequestWindowResize(size_t Width, size_t Height);
 extern void RequestEngineExit();
 extern bool IsEngineExitRequested();
 extern void EngineSetWindow(void* Handle);
@@ -22,6 +23,13 @@ extern int EngineShutdown();
 - (void)windowWillClose:(NSNotification*)notification
 {
     RequestEngineExit();
+}
+
+- (void)windowDidResize:(NSNotification*)notification
+{
+    NSWindow* Window = (NSWindow*)[notification object];
+    NSRect WindowRect = [Window contentLayoutRect];
+    RequestWindowResize(WindowRect.size.width, WindowRect.size.height);
 }
 
 @end
