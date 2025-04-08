@@ -22,5 +22,8 @@ struct FPrimitiveComponent : public Swarm::FComponent
     std::vector<Math::FVector> Vertex;
     std::vector<Math::FVector> Color;
 
+    float YRotation = 0.0;
+    float XRotation = 0.0;
+
     std::shared_ptr<FSceneProxy> SceneProxy;
 };

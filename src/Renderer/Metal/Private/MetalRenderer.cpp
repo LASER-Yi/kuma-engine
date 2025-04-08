@@ -1,13 +1,17 @@
 #include "MetalRenderer.h"
 
+#include "Matrix.h"
+#include "Metal/MTLTexture.hpp"
 #include "MetalCmdQueue.h"
 #include "MetalDevice.h"
+#include "MetalScene.h"
 #include "MetalShader.h"
 #include "MetalStateObject.h"
 #include "MetalVertexBuffer.h"
 #include "MetalViewport.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
+#include "SceneResource.h"
 #include "StateObject.h"
 
 #include <Foundation/NSAutoreleasePool.hpp>
@@ -43,6 +47,9 @@ void KMetalRenderer::Update()
     NS::AutoreleasePool* Pool = NS::AutoreleasePool::alloc()->init();
 
     CA::MetalDrawable* Drawable = Viewport->GetDrawable();
+
+    UpdateSceneBuffers(Drawable->texture());
+
     MTL::CommandBuffer* Cmd = CommandQueue->GetCmdBuffer();
 
     MTL::RenderPassDescriptor* ClearColorDesc =
@@ -78,52 +85,12 @@ void KMetalRenderer::Update()
                 continue;
             }
 
-            const auto SharedProxy = Proxy.lock();
+            const auto SceneProxy = Proxy.lock();
 
             MTL::RenderCommandEncoder* Encoder =
                 Cmd->renderCommandEncoder(RenderDesc);
-            Encoder->setCullMode(MTL::CullModeBack);
-            Encoder->setFrontFacingWinding(MTL::WindingCounterClockwise);
 
-            const auto StateObject =
-                std::static_pointer_cast<FMetalStateObject>(
-                    SharedProxy->PipelineStateObject
-                );
-            Encoder->setRenderPipelineState(StateObject->Data);
-
-            const auto VertexBuffer =
-                std::static_pointer_cast<FMetalVertexBuffer>(
-                    SharedProxy->VertexBuffer
-                );
-            Encoder->setVertexBuffer(VertexBuffer->Data, 0, 0);
-
-            const auto ColorBuffer =
-                std::static_pointer_cast<FMetalVertexBuffer>(
-                    SharedProxy->ColorBuffer
-                );
-            Encoder->setVertexBuffer(ColorBuffer->Data, 0, 1);
-
-            // if (SharedProxy->Transform == nullptr)
-            // {
-            //     const float AspectRatio =
-            //         static_cast<float>(Drawable->texture()->width()) /
-            //         static_cast<float>(Drawable->texture()->height());
-
-            //     SharedProxy->Transform = std::make_shared<FMetalTransBuffer>(
-            //         Device, AspectRatio, SharedProxy->ComponentToWorld
-            //     );
-            // }
-
-            // const auto TransformBuffer =
-            //     std::static_pointer_cast<FMetalTransBuffer>(
-            //         SharedProxy->Transform
-            //     );
-            // Encoder->setVertexBuffer(TransformBuffer->Data, 0, 2);
-
-            Encoder->drawPrimitives(
-                MTL::PrimitiveTypeTriangle, NS::UInteger(0),
-                NS::UInteger(SharedProxy->VertexCount)
-            );
+            EncodePrimitive(Encoder, SceneProxy.get());
 
             Encoder->endEncoding();
         }
@@ -152,6 +119,11 @@ const FShaderManager* KMetalRenderer::GetShaderManager() const
     return Shader.get();
 }
 
+std::shared_ptr<FSceneRenderResource> KMetalRenderer::CreateSceneResource()
+{
+    return std::make_shared<FMetalSceneResource>(Device);
+}
+
 std::shared_ptr<FStateObject> KMetalRenderer::CreateStateObject(
     const FShaderResourceRef Shader
 )
@@ -167,4 +139,62 @@ std::shared_ptr<FRenderResource> KMetalRenderer::CreateVertexBuffer(
 )
 {
     return std::make_shared<FMetalVertexBuffer>(Device->Get(), InVertex);
+}
+
+void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
+{
+    const FRendererCameraDescriptor CameraDesc = {
+        .FieldOfView = Math::FRadians::From(Math::FDegrees(45.0)),
+        .AspectRatio = static_cast<float>(Backbuffer->width()) /
+                       static_cast<float>(Backbuffer->height()),
+        .WorldToCamera = Math::FMatrix::Identity
+    };
+
+    for (const auto& Proxy : Proxies)
+    {
+        if (Proxy.expired())
+        {
+            continue;
+        }
+
+        auto SceneProxy = Proxy.lock();
+
+        const FRendererPrimitiveDescriptor PrimitiveDesc = {
+            .ModelToWorld = SceneProxy->ComponentToWorld
+        };
+
+        SceneProxy->SceneBuffer->Update(CameraDesc, PrimitiveDesc);
+    }
+}
+
+void KMetalRenderer::EncodePrimitive(
+    MTL::RenderCommandEncoder* Encoder, const FSceneProxy* Proxy
+) const
+{
+    assert(Encoder);
+    assert(Proxy);
+
+    Encoder->setCullMode(MTL::CullModeBack);
+    Encoder->setFrontFacingWinding(MTL::WindingCounterClockwise);
+
+    const auto StateObject =
+        std::static_pointer_cast<FMetalStateObject>(Proxy->PipelineStateObject);
+    Encoder->setRenderPipelineState(StateObject->Data);
+
+    const auto VertexBuffer =
+        std::static_pointer_cast<FMetalVertexBuffer>(Proxy->VertexBuffer);
+    Encoder->setVertexBuffer(VertexBuffer->Data, 0, 0);
+
+    const auto ColorBuffer =
+        std::static_pointer_cast<FMetalVertexBuffer>(Proxy->ColorBuffer);
+    Encoder->setVertexBuffer(ColorBuffer->Data, 0, 1);
+
+    const auto SceneBuffer =
+        std::static_pointer_cast<FMetalSceneResource>(Proxy->SceneBuffer);
+    Encoder->setVertexBuffer(SceneBuffer->Data, 0, 2);
+
+    Encoder->drawPrimitives(
+        MTL::PrimitiveTypeTriangle, NS::UInteger(0),
+        NS::UInteger(Proxy->VertexCount)
+    );
 }

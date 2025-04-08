@@ -6,13 +6,14 @@
 
 class FStateObject;
 class FRenderResource;
+class FSceneRenderResource;
 
 struct FSceneProxy
 {
     Math::FMatrix ComponentToWorld;
 
     std::shared_ptr<FStateObject> PipelineStateObject;
-    std::shared_ptr<FRenderResource> SceneBuffer;
+    std::shared_ptr<FSceneRenderResource> SceneBuffer;
 
     // The following members belongs to the primitive, we will need to
     // move them to elsewhere in the future

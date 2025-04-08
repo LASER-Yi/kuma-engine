@@ -70,16 +70,9 @@ const char* PrimitiveShaderSrc = R"(
     )
     {
         float4 vertexPos = float4(positions[vertexId], 1.0);
-        float4 worldPos = transformation.ModelToWorld * vertexPos;
-        float4 viewPos = transformation.WorldToCamera * worldPos;
-        float4 perspective = transformation.Perspective * viewPos;
 
         v2f o;
-        o.position = perspective;
-
-        // o.position = transformation.WorldToCamera * transformation.ModelToWorld * vertexPos;
-        // o.position = vertexPos * transformation.ModelToWorld * transformation.WorldToCamera * transformation.Perspective;
-
+        o.position = transformation.Perspective * transformation.WorldToCamera * transformation.ModelToWorld * vertexPos;
         o.color = half3(colors[vertexId]);
         return o;
     }

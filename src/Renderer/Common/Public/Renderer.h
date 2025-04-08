@@ -9,6 +9,7 @@
 struct FSceneProxy;
 struct FStateObject;
 struct FRenderResource;
+struct FSceneRenderResource;
 
 class KRenderer
 {
@@ -25,6 +26,8 @@ public:
 
 public:
     virtual const FShaderManager* GetShaderManager() const = 0;
+
+    virtual std::shared_ptr<FSceneRenderResource> CreateSceneResource() = 0;
 
     virtual std::shared_ptr<FStateObject> CreateStateObject(
         const FShaderResourceRef Shader

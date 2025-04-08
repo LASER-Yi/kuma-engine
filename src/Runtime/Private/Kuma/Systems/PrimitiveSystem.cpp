@@ -10,7 +10,6 @@
 #include "Rotator.h"
 #include "SceneProxy.h"
 #include "Shader.h"
-#include "Transform.h"
 
 void KPrimitiveSystem::Initialize()
 {
@@ -31,6 +30,24 @@ void KPrimitiveSystem::Execute(float DeltaTime)
             Primitive.SceneProxy = SceneProxy;
             Renderer->Enqueue(SceneProxy);
         }
+
+        Primitive.YRotation += (DeltaTime * 15.0);
+        Primitive.XRotation += (DeltaTime * 10.0);
+
+        const Math::FMatrix Location =
+            Math::FMatrix::MakePosition({0.0, 0.0, -10.0});
+
+        const Math::FMatrix YRot = Math::FMatrix::MakeRotation(
+            Math::EAxis::Y,
+            Math::FRadians::From(Math::FDegrees(Primitive.YRotation))
+        );
+
+        const Math::FMatrix XRot = Math::FMatrix::MakeRotation(
+            Math::EAxis::X,
+            Math::FRadians::From(Math::FDegrees(Primitive.XRotation))
+        );
+
+        Primitive.SceneProxy->ComponentToWorld = XRot * YRot * Location;
     }
 }
 
@@ -49,18 +66,11 @@ std::shared_ptr<FSceneProxy> KPrimitiveSystem::CreateSceneProxy(
 
     auto SceneProxy = std::make_shared<FSceneProxy>();
 
-    const Math::FMatrix YRot = Math::FMatrix::MakeRotation(
-        Math::EAxis::Y, Math::FRadians::From(Math::FDegrees(30.0))
-    );
-
-    const Math::FMatrix XRot = Math::FMatrix::MakeRotation(
-        Math::EAxis::X, Math::FRadians::From(Math::FDegrees(30.0))
-    );
-
-    SceneProxy->ComponentToWorld = XRot * YRot * Math::FMatrix::Identity;
+    SceneProxy->ComponentToWorld = Math::FMatrix::Identity;
 
     SceneProxy->VertexCount = Comp->Vertex.size();
     SceneProxy->PipelineStateObject = GlobalStateObject;
+    SceneProxy->SceneBuffer = Renderer->CreateSceneResource();
     SceneProxy->VertexBuffer = Renderer->CreateVertexBuffer(Comp->Vertex);
     SceneProxy->ColorBuffer = Renderer->CreateVertexBuffer(Comp->Color);
 
