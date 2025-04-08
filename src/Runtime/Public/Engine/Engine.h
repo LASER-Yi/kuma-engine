@@ -23,9 +23,13 @@ public:
 
     std::shared_ptr<KRenderer> GetRenderer() const;
 
+    double GetWorldTimeSeconds() const;
+
 private:
     bool bExitRequired = false;
 
     void* WindowHandle;
     std::shared_ptr<KRenderer> Renderer;
+
+    double LastTickWorldTimeSeconds = 0.0f;
 };

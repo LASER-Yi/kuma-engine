@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Swarm/Manager.h"
 
+#include <chrono>
 #include <memory>
 
 #if PLATFORM_APPLE
@@ -27,11 +28,18 @@ void KEngine::Initialize()
 #endif
 
     Renderer->Initialize(WindowHandle);
+
+    LastTickWorldTimeSeconds = GetWorldTimeSeconds();
 }
 
 void KEngine::Update()
 {
-    Swarm::Manager::Get()->Update(0.0f);
+    const double CurrentTimeSeconds = GetWorldTimeSeconds();
+    const float DeltaTime =
+        static_cast<float>(CurrentTimeSeconds - LastTickWorldTimeSeconds);
+    LastTickWorldTimeSeconds = CurrentTimeSeconds;
+
+    Swarm::Manager::Get()->Update(DeltaTime);
 
     Renderer->Update();
 }
@@ -47,3 +55,10 @@ void KEngine::RequireEngineExit() { bExitRequired = true; }
 bool KEngine::IsEngineExitRequired() const { return bExitRequired; }
 
 std::shared_ptr<KRenderer> KEngine::GetRenderer() const { return Renderer; }
+
+double KEngine::GetWorldTimeSeconds() const
+{
+    using namespace std::chrono;
+    const auto now = steady_clock::now().time_since_epoch();
+    return duration_cast<microseconds>(now).count() / 1000000.0;
+}
