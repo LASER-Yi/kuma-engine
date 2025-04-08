@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "StateObject.h"
 #include "Swarm/System.h"
-#include "VertexBuffer.h"
+
 #include <memory>
 
 struct FSceneProxy;
@@ -23,5 +23,5 @@ protected:
         const FPrimitiveComponent* Comp
     ) const;
 
-    FStateObjectRef GlobalStateObject;
+    std::shared_ptr<FStateObject> GlobalStateObject;
 };

@@ -1,17 +1,14 @@
 #include "MetalRenderer.h"
 
-#include "Matrix.h"
 #include "MetalCmdQueue.h"
 #include "MetalDevice.h"
 #include "MetalShader.h"
 #include "MetalStateObject.h"
-#include "MetalTransBuffer.h"
 #include "MetalVertexBuffer.h"
 #include "MetalViewport.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
-#include "Vector.h"
-#include "VertexBuffer.h"
+#include "StateObject.h"
 
 #include <Foundation/NSAutoreleasePool.hpp>
 #include <Foundation/NSTypes.hpp>
@@ -106,22 +103,22 @@ void KMetalRenderer::Update()
                 );
             Encoder->setVertexBuffer(ColorBuffer->Data, 0, 1);
 
-            if (SharedProxy->Transform == nullptr)
-            {
-                const float AspectRatio =
-                    static_cast<float>(Drawable->texture()->width()) /
-                    static_cast<float>(Drawable->texture()->height());
+            // if (SharedProxy->Transform == nullptr)
+            // {
+            //     const float AspectRatio =
+            //         static_cast<float>(Drawable->texture()->width()) /
+            //         static_cast<float>(Drawable->texture()->height());
 
-                SharedProxy->Transform = std::make_shared<FMetalTransBuffer>(
-                    Device, AspectRatio, SharedProxy->ComponentToWorld
-                );
-            }
+            //     SharedProxy->Transform = std::make_shared<FMetalTransBuffer>(
+            //         Device, AspectRatio, SharedProxy->ComponentToWorld
+            //     );
+            // }
 
-            const auto TransformBuffer =
-                std::static_pointer_cast<FMetalTransBuffer>(
-                    SharedProxy->Transform
-                );
-            Encoder->setVertexBuffer(TransformBuffer->Data, 0, 2);
+            // const auto TransformBuffer =
+            //     std::static_pointer_cast<FMetalTransBuffer>(
+            //         SharedProxy->Transform
+            //     );
+            // Encoder->setVertexBuffer(TransformBuffer->Data, 0, 2);
 
             Encoder->drawPrimitives(
                 MTL::PrimitiveTypeTriangle, NS::UInteger(0),
@@ -155,7 +152,7 @@ const FShaderManager* KMetalRenderer::GetShaderManager() const
     return Shader.get();
 }
 
-FStateObjectRef KMetalRenderer::CreateStateObject(
+std::shared_ptr<FStateObject> KMetalRenderer::CreateStateObject(
     const FShaderResourceRef Shader
 )
 {
@@ -165,7 +162,7 @@ FStateObjectRef KMetalRenderer::CreateStateObject(
     return std::make_shared<FMetalStateObject>(Device->Get(), MetalShader);
 }
 
-FVertexBufferRef KMetalRenderer::CreateVertexBuffer(
+std::shared_ptr<FRenderResource> KMetalRenderer::CreateVertexBuffer(
     const std::vector<Math::FVector>& InVertex
 )
 {

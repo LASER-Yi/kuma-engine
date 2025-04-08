@@ -1,16 +1,14 @@
-#include "MetalTransBuffer.h"
+#include "MetalSceneBuffer.h"
 #include "Matrix.h"
-#include "Metal/MTLDevice.hpp"
-#include "Metal/MTLResource.hpp"
 #include "MetalDevice.h"
 #include "Rotator.h"
-#include "TransformBuffer.h"
 
 #include <Metal/MTLBuffer.hpp>
-#include <cstring>
+#include <Metal/MTLDevice.hpp>
+#include <Metal/MTLResource.hpp>
 #include <simd/simd.h>
 
-FMetalTransBuffer::FMetalTransBuffer(
+FMetalSceneBuffer::FMetalSceneBuffer(
     std::shared_ptr<KMetalDevice> Device, const float AspectRatio,
     const Math::FMatrix& ComponentToWorld
 )

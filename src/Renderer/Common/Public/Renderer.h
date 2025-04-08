@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Shader.h"
-#include "StateObject.h"
 #include "Vector.h"
-#include "VertexBuffer.h"
 
 #include <memory>
 #include <vector>
 
 struct FSceneProxy;
+struct FStateObject;
+struct FRenderResource;
 
 class KRenderer
 {
@@ -26,10 +26,11 @@ public:
 public:
     virtual const FShaderManager* GetShaderManager() const = 0;
 
-    virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
+    virtual std::shared_ptr<FStateObject> CreateStateObject(
+        const FShaderResourceRef Shader
     ) = 0;
 
-    virtual FVertexBufferRef CreateVertexBuffer(
+    virtual std::shared_ptr<FRenderResource> CreateVertexBuffer(
         const std::vector<Math::FVector>& InVertex
     ) = 0;
 

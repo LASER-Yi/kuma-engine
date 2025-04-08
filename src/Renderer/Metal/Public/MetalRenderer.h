@@ -22,10 +22,11 @@ public:
 public:
     virtual const FShaderManager* GetShaderManager() const override;
 
-    virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
+    virtual std::shared_ptr<FStateObject> CreateStateObject(
+        const FShaderResourceRef Shader
     ) override;
 
-    virtual FVertexBufferRef CreateVertexBuffer(
+    virtual std::shared_ptr<FRenderResource> CreateVertexBuffer(
         const std::vector<Math::FVector>& InVertex
     ) override;
 

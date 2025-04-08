@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Matrix.h"
-#include "TransformBuffer.h"
+#include "RenderResource.h"
+
+#include <memory>
 
 namespace MTL
 {
@@ -10,9 +12,9 @@ class Buffer;
 
 class KMetalDevice;
 
-struct FMetalTransBuffer : public FTransformBuffer
+struct FMetalSceneBuffer : public FRenderResource
 {
-    FMetalTransBuffer(
+    FMetalSceneBuffer(
         std::shared_ptr<KMetalDevice> Device, const float AspectRatio,
         const Math::FMatrix& ComponentToWorld
     );
