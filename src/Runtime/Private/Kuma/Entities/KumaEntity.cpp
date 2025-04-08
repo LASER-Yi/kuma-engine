@@ -2,9 +2,11 @@
 
 #include "Kuma/Components/Transform.h"
 #include "Kuma/Components/World.h"
+#include "Swarm/EntityBase.h"
 
-FKumaEntity::FKumaEntity() : Swarm::FEntity()
+FKumaEntity::FKumaEntity(Swarm::FEntityInitializationContext& Context)
+    : Swarm::FEntity(Context)
 {
-    AddDefaultComponent<FWorldComponent>();
-    AddDefaultComponent<FMatrixComponent>();
+    Context.CreateDefaultComponent<FWorldComponent>();
+    Context.CreateDefaultComponent<FMatrixComponent>();
 }

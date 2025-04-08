@@ -3,9 +3,10 @@
 #include "Kuma/Components/WorldEntity.h"
 #include "Kuma/Entities/KumaEntity.h"
 
-FKumaWorld::FKumaWorld() : Swarm::FEntity()
+FKumaWorld::FKumaWorld(Swarm::FEntityInitializationContext& Context)
+    : Swarm::FEntity(Context)
 {
-    AddDefaultComponent<FWorldEntityComponent>();
+    Context.CreateDefaultComponent<FWorldEntityComponent>();
 }
 
 void FKumaWorld::AddToWorld(std::shared_ptr<FKumaEntity> InEntity)

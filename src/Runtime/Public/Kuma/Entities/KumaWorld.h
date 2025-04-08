@@ -2,11 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Kuma/Entities/KumaEntity.h"
-#include "Swarm/Entity.h"
 
 struct FKumaWorld : public Swarm::FEntity
 {
-    FKumaWorld();
+    FKumaWorld(Swarm::FEntityInitializationContext& Context);
 
     void AddToWorld(std::shared_ptr<FKumaEntity> InEntity);
 };

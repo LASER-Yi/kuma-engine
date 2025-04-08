@@ -16,20 +16,7 @@ namespace Swarm
  */
 struct FEntity : public FEntityBase
 {
-    FEntity();
-
-    template <typename T, typename... Args>
-    void AddDefaultComponent(Args&&... Arguments)
-    {
-        const auto [ComponentType, ComponentSign] =
-            Swarm::Manager::Get()->CreateComponent<T>(
-                std::forward<Args>(Arguments)...
-            );
-
-        assert(DefaultComponents.contains(ComponentType) == false);
-
-        DefaultComponents[ComponentType] = ComponentSign;
-    }
+    FEntity(FEntityInitializationContext& Context);
 
     template <typename T, typename... Args>
     bool AddComponent(Args&&... Arguments)

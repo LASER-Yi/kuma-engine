@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Swarm/Definition.h"
 #include "Swarm/Interfaces/Identifiable.h"
 
 #include <memory>
-#include <unordered_map>
+
 namespace Swarm
 {
 
@@ -25,10 +24,6 @@ struct FEntityBase : public IIdentifiable,
 
     FEntityBase(FEntityBase&&) = default;
     FEntityBase& operator=(FEntityBase&&) = default;
-
-    // TODO: Refactor and make sizeof(FEntityBase) == sizeof(int64)
-    std::unordered_map<Swarm::ClassHashType, Swarm::SignatureType>
-        DefaultComponents;
 };
 
 } // namespace Swarm

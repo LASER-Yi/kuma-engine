@@ -3,6 +3,8 @@
 namespace Swarm
 {
 
-FEntity::FEntity() : Swarm::FEntityBase() {}
+FEntity::FEntity(FEntityInitializationContext& Context) : Swarm::FEntityBase()
+{
+}
 
 } // namespace Swarm

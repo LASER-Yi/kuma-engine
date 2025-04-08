@@ -20,9 +20,12 @@ struct FExternalComponent : public Swarm::FComponent
 
 struct FTestEntity : public Swarm::FEntity
 {
-    FTestEntity(const std::string& Content) : Swarm::FEntity()
+    FTestEntity(
+        Swarm::FEntityInitializationContext& Context, const std::string& Content
+    )
+        : Swarm::FEntity(Context)
     {
-        AddDefaultComponent<FContentComponent>(Content);
+        Context.CreateDefaultComponent<FContentComponent>(Content);
     }
 };
 

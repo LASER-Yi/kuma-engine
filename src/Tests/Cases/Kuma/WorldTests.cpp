@@ -2,7 +2,7 @@
 #include "Kuma/Components/WorldEntity.h"
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
-#include "Swarm/Definition.h"
+#include "Swarm/Manager.h"
 #include <gtest/gtest.h>
 #include <memory>
 
@@ -15,9 +15,10 @@ struct FKumaContentComponent : public Swarm::FComponent
 
 struct FKumaTestEntity : public FKumaEntity
 {
-    FKumaTestEntity(int InContent) : FKumaEntity()
+    FKumaTestEntity(Swarm::FEntityInitializationContext& Context, int InContent)
+        : FKumaEntity(Context)
     {
-        AddDefaultComponent<FKumaContentComponent>(InContent);
+        Context.CreateDefaultComponent<FKumaContentComponent>(InContent);
     }
 };
 

@@ -19,6 +19,20 @@
 namespace Swarm
 {
 
+struct FEntityInitializationContext
+{
+    FEntityInitializationContext() = default;
+    FEntityInitializationContext(const FEntityInitializationContext&) = delete;
+    FEntityInitializationContext&
+    operator=(const FEntityInitializationContext&) = delete;
+
+    std::unordered_map<Swarm::ClassHashType, Swarm::SignatureType>
+        DefaultComponents;
+
+    template <typename T, typename... Args>
+    void CreateDefaultComponent(Args&&... Arguments);
+};
+
 class Manager final : public TSingleton<Swarm::Manager>
 {
 public:
@@ -51,14 +65,17 @@ public:
             "T must be the same size as FEntityBase"
         );
 
-        const Swarm::SignatureType NewSign = EntitySignature.Allocate();
+        const Swarm::SignatureType EntitySign = EntitySignature.Allocate();
 
-        auto NewEntity = std::make_shared<T>(std::forward<Args>(Arguments)...);
-        NewEntity->Signature = NewSign;
+        FEntityInitializationContext Context;
+
+        auto NewEntity =
+            std::make_shared<T>(Context, std::forward<Args>(Arguments)...);
+        NewEntity->Signature = EntitySign;
 
         // Now let's add those default components
-        auto& EntityComponents = EntityToComponents[NewSign];
-        EntityComponents.merge(NewEntity->DefaultComponents);
+        auto& EntityComponents = EntityToComponents[EntitySign];
+        EntityComponents.merge(Context.DefaultComponents);
 
         return NewEntity;
     }
@@ -316,5 +333,17 @@ private:
 public:
     THandleAllocator<Swarm::SignatureType> EntitySignature;
 };
+
+template <typename T, typename... Args>
+void FEntityInitializationContext::CreateDefaultComponent(Args&&... Arguments)
+{
+    const auto [ComponentType, ComponentSign] =
+        Swarm::Manager::Get()->CreateComponent<T>(std::forward<Args>(Arguments
+        )...);
+
+    assert(DefaultComponents.contains(ComponentType) == false);
+
+    DefaultComponents[ComponentType] = ComponentSign;
+}
 
 } // namespace Swarm
