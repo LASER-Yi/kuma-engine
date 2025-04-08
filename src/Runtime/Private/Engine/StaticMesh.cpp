@@ -39,7 +39,7 @@ const std::shared_ptr<FStaticMesh> FStaticMesh::Cube()
              {+Unit, -Unit, -Unit},
          }};
 
-    return std::shared_ptr<FStaticMesh>(&CubeMesh);
+    return std::make_shared<FStaticMesh>(CubeMesh);
 }
 
 FMeshResourceDescriptor FStaticMesh::Describe() const
