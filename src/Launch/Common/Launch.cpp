@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "Engine/Engine.h"
 #include "Kuma/KumaEngine.h"
 
 extern KEngine* GEngine;
@@ -40,14 +41,13 @@ void EngineInitialize(const char* CmdLine)
 
     GEngine = new KKumaEngine();
 
-    if (WindowHandle)
-    {
-        GEngine->SetWindow(WindowHandle);
-    }
+    FEngineInitializationContext InitializationContext{
+        .CmdLine = CmdLine, .WindowHandle = WindowHandle
+    };
 
     // Initialize the engine
     {
-        GEngine->Initialize();
+        GEngine->Initialize(InitializationContext);
     }
 }
 

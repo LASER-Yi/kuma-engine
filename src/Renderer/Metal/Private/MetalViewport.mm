@@ -10,7 +10,7 @@
 #include "MetalDevice.h"
 
 KMetalViewport::KMetalViewport(
-    void* InWindow, std::shared_ptr<KMetalDevice> InDevice
+    std::shared_ptr<KMetalDevice> InDevice, void* InWindow
 )
     : Window(InWindow)
 {

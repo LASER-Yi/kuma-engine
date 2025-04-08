@@ -20,7 +20,7 @@ class KMetalDevice;
 class KMetalViewport
 {
 public:
-    KMetalViewport(void* InWindow, std::shared_ptr<KMetalDevice> InDevice);
+    KMetalViewport(std::shared_ptr<KMetalDevice> InDevice, void* InWindow);
 
     ~KMetalViewport();
 

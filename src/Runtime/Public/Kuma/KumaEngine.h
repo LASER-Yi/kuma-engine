@@ -8,7 +8,8 @@
 
 class KKumaEngine : public KEngine
 {
-    virtual void Initialize() override;
+    virtual void Initialize(const FEngineInitializationContext& Context
+    ) override;
     virtual void Shutdown() override;
 
 private:

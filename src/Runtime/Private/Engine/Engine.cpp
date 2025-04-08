@@ -17,17 +17,17 @@ KEngine::KEngine() : bExitRequired(false) {}
 
 KEngine::~KEngine() {}
 
-void KEngine::SetWindow(void* Handle) { WindowHandle = Handle; }
-
-void KEngine::Initialize()
+void KEngine::Initialize(const FEngineInitializationContext& Context)
 {
+    bShutdown = false;
+
 #if PLATFORM_APPLE
     Renderer = std::make_shared<KMetalRenderer>();
 #elif PLATFORM_WINDOWS
     Renderer = std::make_shared<KD3D12Renderer>();
 #endif
 
-    Renderer->Initialize(WindowHandle);
+    Renderer->Initialize(Context.WindowHandle);
 
     LastTickWorldTimeSeconds = GetWorldTimeSeconds();
 }
@@ -48,11 +48,15 @@ void KEngine::Shutdown()
 {
     Swarm::Manager::Get()->Shutdown();
     Renderer->Shutdown();
+
+    bShutdown = true;
 }
 
 void KEngine::RequireEngineExit() { bExitRequired = true; }
 
 bool KEngine::IsEngineExitRequired() const { return bExitRequired; }
+
+bool KEngine::IsEngineShutdown() const { return bShutdown; }
 
 std::shared_ptr<KRenderer> KEngine::GetRenderer() const { return Renderer; }
 

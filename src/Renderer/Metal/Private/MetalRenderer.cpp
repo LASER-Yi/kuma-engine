@@ -34,7 +34,7 @@ void KMetalRenderer::Initialize(void* WindowPtr)
     assert(WindowPtr != nullptr);
 
     Device = std::make_shared<KMetalDevice>();
-    Viewport = std::make_shared<KMetalViewport>(WindowPtr, Device);
+    Viewport = std::make_shared<KMetalViewport>(Device, WindowPtr);
     CommandQueue = std::make_shared<KMetalCmdQueue>(Device);
     Shader = std::make_shared<FMetalShaderManager>(Device);
 }

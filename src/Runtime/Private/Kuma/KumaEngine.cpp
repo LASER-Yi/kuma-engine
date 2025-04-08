@@ -7,9 +7,9 @@
 #include "Kuma/Systems/PrimitiveSystem.h"
 #include "Swarm/Manager.h"
 
-void KKumaEngine::Initialize()
+void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 {
-    KEngine::Initialize();
+    KEngine::Initialize(Context);
     Swarm::Manager::Get()->AddSystem<KPrimitiveSystem>();
     CurrentWorld = Swarm::Manager::Get()->MakeEntity<FKumaWorld>();
 
