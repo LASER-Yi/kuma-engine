@@ -50,7 +50,7 @@ const char* PrimitiveShaderSrc = R"(
     #include <metal_stdlib>
     using namespace metal;
 
-    struct Transformation
+    struct SceneData
     {
         float4x4 Perspective;
         float4x4 WorldToCamera;
@@ -66,13 +66,13 @@ const char* PrimitiveShaderSrc = R"(
     v2f vertex vertexMain(uint vertexId [[vertex_id]],
                            device const float3* positions [[buffer(0)]],
                            device const float3* colors [[buffer(1)]],
-                           device const Transformation& transformation [[buffer(2)]]
+                           device const SceneData& scene [[buffer(2)]]
     )
     {
         float4 vertexPos = float4(positions[vertexId], 1.0);
 
         v2f o;
-        o.position = transformation.Perspective * transformation.WorldToCamera * transformation.ModelToWorld * vertexPos;
+        o.position = scene.Perspective * scene.WorldToCamera * scene.ModelToWorld * vertexPos;
         o.color = half3(colors[vertexId]);
         return o;
     }
