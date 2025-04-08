@@ -24,6 +24,8 @@ FMetalSceneResource::FMetalSceneResource(std::shared_ptr<KMetalDevice> Device)
     std::memset(Data->contents(), 0, TransformationSize);
 }
 
+FMetalSceneResource::~FMetalSceneResource() { Data->release(); }
+
 void FMetalSceneResource::Update(
     const FRendererCameraDescriptor& Camera,
     const FRendererPrimitiveDescriptor& Primitive

@@ -14,6 +14,7 @@ class KMetalDevice;
 struct FMetalSceneResource : public FSceneRenderResource
 {
     FMetalSceneResource(std::shared_ptr<KMetalDevice> Device);
+    ~FMetalSceneResource();
 
     virtual void Update(
         const FRendererCameraDescriptor& Camera,

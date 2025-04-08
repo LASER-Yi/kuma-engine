@@ -32,11 +32,4 @@ FMetalStateObject::FMetalStateObject(
     Pool->release();
 }
 
-FMetalStateObject::~FMetalStateObject()
-{
-    if (Data)
-    {
-        Data->release();
-        Data = nullptr;
-    }
-}
+FMetalStateObject::~FMetalStateObject() { Data->release(); }
