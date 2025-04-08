@@ -32,7 +32,13 @@ KMetalViewport::KMetalViewport(
     MetalLayer = Layer;
 }
 
-KMetalViewport::~KMetalViewport() {}
+KMetalViewport::~KMetalViewport()
+{
+    Window = nil;
+
+    MetalLayer->release();
+    MetalLayer = nil;
+}
 
 void KMetalViewport::RequestResize(size_t Width, size_t Height)
 {
