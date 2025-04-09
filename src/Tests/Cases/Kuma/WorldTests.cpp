@@ -1,8 +1,10 @@
 #include "CoreMinimal.h"
-#include "Kuma/Components/WorldEntity.h"
+
+#include "Kuma/Components/WorldEntityData.h"
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
 #include "Manager.h"
+
 #include <gtest/gtest.h>
 #include <memory>
 
@@ -30,11 +32,11 @@ TEST(KumaWorldTests, WorldCreation)
 
     ASSERT_NE(World, nullptr);
 
-    ASSERT_NE(World->GetComponent<FWorldEntityComponent>(), nullptr);
+    ASSERT_NE(World->GetComponent<FWorldEntityData>(), nullptr);
 
     World = nullptr;
 
-    ASSERT_EQ(Manager->GetComponentCount<FWorldEntityComponent>(), 0);
+    ASSERT_EQ(Manager->GetComponentCount<FWorldEntityData>(), 0);
 }
 
 TEST(KumaWorldTests, WorldEntityCreation)
@@ -59,6 +61,6 @@ TEST(KumaWorldTests, WorldEntityCreation)
     World = nullptr;
 
     // World and all of its entities should be destroyed
-    ASSERT_EQ(Manager->GetComponentCount<FWorldEntityComponent>(), 0);
+    ASSERT_EQ(Manager->GetComponentCount<FWorldEntityData>(), 0);
     ASSERT_EQ(Manager->GetComponentCount<FKumaContentComponent>(), 0);
 }
