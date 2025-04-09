@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Definition.h"
 
-struct FWorldComponent : public Swarm::FComponent
+struct FWorldData : public Swarm::FComponent
 {
     Swarm::SignatureType AssociatedWorld;
 };

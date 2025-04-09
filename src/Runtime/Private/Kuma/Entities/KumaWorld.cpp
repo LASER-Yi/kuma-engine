@@ -1,5 +1,5 @@
 #include "Kuma/Entities/KumaWorld.h"
-#include "Kuma/Components/World.h"
+#include "Kuma/Components/WorldData.h"
 #include "Kuma/Components/WorldEntity.h"
 #include "Kuma/Entities/KumaEntity.h"
 
@@ -27,10 +27,9 @@ void FKumaWorld::AddToWorld(std::shared_ptr<FKumaEntity> InEntity)
 
     // Update world component (InEntity)
     {
-        FWorldComponent* WorldComponent =
-            InEntity->GetComponent<FWorldComponent>();
-        assert(WorldComponent != nullptr);
+        FWorldData* WorldData = InEntity->GetComponent<FWorldData>();
+        assert(WorldData != nullptr);
 
-        WorldComponent->AssociatedWorld = Signature;
+        WorldData->AssociatedWorld = Signature;
     }
 }
