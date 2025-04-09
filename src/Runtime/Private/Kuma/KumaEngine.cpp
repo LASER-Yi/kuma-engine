@@ -1,22 +1,35 @@
 #include "Kuma/KumaEngine.h"
+
 #include "Engine/Engine.h"
 #include "Engine/StaticMesh.h"
+
 #include "Kuma/Components/Primitive.h"
+#include "Kuma/Components/Transform.h"
+
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
 #include "Kuma/Systems/PrimitiveSystem.h"
+#include "Kuma/Systems/RotationSystem.h"
 #include "Manager.h"
 
 void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 {
     KEngine::Initialize(Context);
     Swarm::Manager::Get()->AddSystem<KPrimitiveSystem>();
+    Swarm::Manager::Get()->AddSystem<KRotationSystem>();
+
     CurrentWorld = Swarm::Manager::Get()->MakeEntity<FKumaWorld>();
 
-    auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-    Entity->AddComponent<FPrimitiveComponent>(FStaticMesh::Cube());
+    {
+        auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
+        Entity->AddComponent<FPrimitiveComponent>(FStaticMesh::Cube());
+        FTransformComponent* Transform =
+            Entity->GetComponent<FTransformComponent>();
 
-    CurrentWorld->AddToWorld(Entity);
+        Transform->LocalTransform.Translation.Z = -10.0;
+
+        CurrentWorld->AddToWorld(Entity);
+    }
 
     // for (auto& AnotherVertex : Vertex)
     // {

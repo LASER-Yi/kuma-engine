@@ -35,13 +35,8 @@ void KPrimitiveSystem::Execute(const Swarm::FSystemUpdateContext& Context)
         Context,
         [&](const FEntityQueryResult& Result)
         {
-            const FTransformComponent* Transform =
-                Result.GetComponent<FTransformComponent>();
-
             FPrimitiveComponent* Primitive =
                 Result.GetComponentReadWrite<FPrimitiveComponent>();
-
-            const float DeltaTime = Context.DeltaTime;
 
             if (Primitive->SceneProxy == nullptr)
             {
@@ -50,21 +45,11 @@ void KPrimitiveSystem::Execute(const Swarm::FSystemUpdateContext& Context)
                 Renderer->Enqueue(SceneProxy);
             }
 
-            Primitive->YRotation += (DeltaTime * 15.0);
-            Primitive->XRotation += (DeltaTime * 10.0);
+            const FTransformComponent* Transform =
+                Result.GetComponent<FTransformComponent>();
 
-            const Math::FMatrix Location =
-                Math::FMatrix::MakePosition({0.0, 0.0, -10.0});
-
-            const Math::FMatrix YRot = Math::FMatrix::MakeRotation(
-                Math::EAxis::Y, Math::FDegrees(Primitive->YRotation)
-            );
-
-            const Math::FMatrix XRot = Math::FMatrix::MakeRotation(
-                Math::EAxis::X, Math::FDegrees(Primitive->XRotation)
-            );
-
-            Primitive->SceneProxy->ComponentToWorld = XRot * YRot * Location;
+            Primitive->SceneProxy->ComponentToWorld =
+                Transform->LocalTransform.ToMatrix();
         }
     );
 }

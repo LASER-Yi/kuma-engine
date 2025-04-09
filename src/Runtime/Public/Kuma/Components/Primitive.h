@@ -18,8 +18,5 @@ struct FPrimitiveComponent : public Swarm::FComponent
 
     const std::shared_ptr<FStaticMesh> Mesh;
 
-    float YRotation = 0.0;
-    float XRotation = 0.0;
-
     std::shared_ptr<FSceneProxy> SceneProxy;
 };

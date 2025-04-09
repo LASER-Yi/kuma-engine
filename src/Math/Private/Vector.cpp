@@ -73,6 +73,6 @@ TVector<T> TVector<T>::Normalize() const
     return {X / Length, Y / Length, Z / Length};
 }
 
-template struct Math::TVector<float>;
-
 } // namespace Math
+
+template struct Math::TVector<float>;
