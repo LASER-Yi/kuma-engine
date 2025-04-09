@@ -8,7 +8,7 @@
 
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
-#include "Kuma/Systems/CameraSystem.h"
+#include "Kuma/Systems/CameraRenderSystem.h"
 #include "Kuma/Systems/MeshRenderSystem.h"
 #include "Kuma/Systems/RotationSystem.h"
 #include "Manager.h"
@@ -18,7 +18,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
     KEngine::Initialize(Context);
     Swarm::Manager::Get()->AddSystem<KMeshRenderSystem>();
     Swarm::Manager::Get()->AddSystem<KRotationSystem>();
-    Swarm::Manager::Get()->AddSystem<KCameraSystem>();
+    Swarm::Manager::Get()->AddSystem<KCameraRenderSystem>();
 
     CurrentWorld = Swarm::Manager::Get()->MakeEntity<FKumaWorld>();
 

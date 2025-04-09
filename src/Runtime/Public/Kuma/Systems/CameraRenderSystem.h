@@ -5,7 +5,7 @@
 /**
  * The system for providing camera data to the renderer
  */
-class KCameraSystem : public KKumaSystemBase
+class KCameraRenderSystem : public KKumaSystemBase
 {
 public:
     virtual void Initialize() override;

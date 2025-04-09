@@ -1,11 +1,11 @@
-#include "Kuma/Systems/CameraSystem.h"
+#include "Kuma/Systems/CameraRenderSystem.h"
 
 #include "EntityQuery.h"
 
 #include "Kuma/Components/CameraData.h"
 #include "Kuma/Components/TransformData.h"
 
-void KCameraSystem::Initialize()
+void KCameraRenderSystem::Initialize()
 {
     using namespace Swarm;
 
@@ -13,7 +13,7 @@ void KCameraSystem::Initialize()
     Query.AddRequirement<FCameraData>(EComponentAccessMode::ReadWrite);
 }
 
-void KCameraSystem::Execute(const Swarm::FSystemUpdateContext& Context)
+void KCameraRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
 {
     auto Renderer = GetEngine()->GetRenderer();
 
@@ -32,4 +32,4 @@ void KCameraSystem::Execute(const Swarm::FSystemUpdateContext& Context)
     );
 }
 
-void KCameraSystem::Shutdown() {}
+void KCameraRenderSystem::Shutdown() {}
