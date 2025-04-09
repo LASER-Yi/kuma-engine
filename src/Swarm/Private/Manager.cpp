@@ -1,5 +1,6 @@
 #include "Manager.h"
 #include "Definition.h"
+#include "SystemUpdateContext.h"
 
 namespace Swarm
 {
@@ -8,9 +9,13 @@ void Manager::Update(float DeltaTime)
 {
     // TODO: Refactor system update via multithreading
 
+    const FSystemUpdateContext Context = {
+        .DeltaTime = DeltaTime, .Manager = this
+    };
+
     for (const auto& [SystemType, System] : Systems)
     {
-        System->Execute(DeltaTime);
+        System->Execute(Context);
     }
 }
 

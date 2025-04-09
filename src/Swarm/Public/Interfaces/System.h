@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SystemUpdateContext.h"
+
 namespace Swarm
 {
 
@@ -14,7 +16,7 @@ class ISystem
 public:
     virtual void Initialize() = 0;
 
-    virtual void Execute(float DeltaTime) = 0;
+    virtual void Execute(const FSystemUpdateContext& Context) = 0;
 
     virtual void Shutdown() = 0;
 

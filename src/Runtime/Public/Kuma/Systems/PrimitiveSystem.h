@@ -4,6 +4,7 @@
 
 #include "Kuma/Systems/KumaSystemBase.h"
 #include "StateObject.h"
+#include "SystemUpdateContext.h"
 
 #include <memory>
 
@@ -15,7 +16,7 @@ class KPrimitiveSystem : public KKumaSystemBase
 public:
     virtual void Initialize() override;
 
-    virtual void Execute(float DeltaTime) override;
+    virtual void Execute(const Swarm::FSystemUpdateContext& Context) override;
 
     virtual void Shutdown() override;
 

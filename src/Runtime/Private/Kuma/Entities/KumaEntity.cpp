@@ -8,5 +8,5 @@ FKumaEntity::FKumaEntity(Swarm::FEntityInitializationContext& Context)
     : Swarm::FEntity(Context)
 {
     Context.CreateDefaultComponent<FWorldComponent>();
-    Context.CreateDefaultComponent<FMatrixComponent>();
+    Context.CreateDefaultComponent<FTransformComponent>();
 }

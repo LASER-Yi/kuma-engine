@@ -3,7 +3,9 @@
 #include <memory>
 
 #include "Engine/StaticMesh.h"
+#include "EntityQuery.h"
 #include "Kuma/Components/Primitive.h"
+#include "Kuma/Components/Transform.h"
 #include "Kuma/KumaEngine.h"
 #include "Matrix.h"
 #include "Renderer.h"
@@ -13,42 +15,58 @@
 
 void KPrimitiveSystem::Initialize()
 {
+    using namespace Swarm;
+
+    Query.AddRequirement<FTransformComponent>(EComponentAccessMode::ReadOnly);
+    Query.AddRequirement<FPrimitiveComponent>(EComponentAccessMode::ReadWrite);
+
     const auto Renderer = GetEngine()->GetRenderer();
     const auto* Shader = Renderer->GetShaderManager();
     GlobalStateObject = Renderer->CreateStateObject(Shader->GetPrimitive());
 }
 
-void KPrimitiveSystem::Execute(float DeltaTime)
+void KPrimitiveSystem::Execute(const Swarm::FSystemUpdateContext& Context)
 {
+    using namespace Swarm;
+
     auto Renderer = GetEngine()->GetRenderer();
 
-    for (FPrimitiveComponent& Primitive : GetComponents<FPrimitiveComponent>())
-    {
-        if (Primitive.SceneProxy == nullptr)
+    Query.ForEach(
+        Context,
+        [&](const FEntityQueryResult& Result)
         {
-            const auto SceneProxy = CreateSceneProxy(&Primitive);
-            Primitive.SceneProxy = SceneProxy;
-            Renderer->Enqueue(SceneProxy);
+            const FTransformComponent* Transform =
+                Result.GetComponent<FTransformComponent>();
+
+            FPrimitiveComponent* Primitive =
+                Result.GetComponentReadWrite<FPrimitiveComponent>();
+
+            const float DeltaTime = Context.DeltaTime;
+
+            if (Primitive->SceneProxy == nullptr)
+            {
+                const auto SceneProxy = CreateSceneProxy(Primitive);
+                Primitive->SceneProxy = SceneProxy;
+                Renderer->Enqueue(SceneProxy);
+            }
+
+            Primitive->YRotation += (DeltaTime * 15.0);
+            Primitive->XRotation += (DeltaTime * 10.0);
+
+            const Math::FMatrix Location =
+                Math::FMatrix::MakePosition({0.0, 0.0, -10.0});
+
+            const Math::FMatrix YRot = Math::FMatrix::MakeRotation(
+                Math::EAxis::Y, Math::FDegrees(Primitive->YRotation)
+            );
+
+            const Math::FMatrix XRot = Math::FMatrix::MakeRotation(
+                Math::EAxis::X, Math::FDegrees(Primitive->XRotation)
+            );
+
+            Primitive->SceneProxy->ComponentToWorld = XRot * YRot * Location;
         }
-
-        Primitive.YRotation += (DeltaTime * 15.0);
-        Primitive.XRotation += (DeltaTime * 10.0);
-
-        const Math::FMatrix Location =
-            Math::FMatrix::MakePosition({0.0, 0.0, -10.0});
-
-        const Math::FMatrix YRot = Math::FMatrix::MakeRotation(
-            Math::EAxis::Y,
-            Math::FDegrees(Primitive.YRotation)
-        );
-
-        const Math::FMatrix XRot = Math::FMatrix::MakeRotation(
-            Math::EAxis::X,
-            Math::FDegrees(Primitive.XRotation)
-        );
-
-        Primitive.SceneProxy->ComponentToWorld = XRot * YRot * Location;
-    }
+    );
 }
 
 void KPrimitiveSystem::Shutdown() { GlobalStateObject = nullptr; }

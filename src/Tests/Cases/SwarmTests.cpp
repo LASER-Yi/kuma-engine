@@ -1,6 +1,8 @@
 #include "CoreMinimal.h"
 #include "Definition.h"
 #include "Entity.h"
+#include "EntityQuery.h"
+#include "SystemUpdateContext.h"
 #include <gtest/gtest.h>
 #include <memory>
 
@@ -113,17 +115,20 @@ TEST(SwarmTests, EntityComponentCreation)
 class KTestSystem : public Swarm::KSystem
 {
 public:
-    virtual void Initialize() override {}
-
-    virtual void Execute(float DeltaTime) override
+    virtual void Initialize() override
     {
-        UNUSED_VAR(DeltaTime);
+        using namespace Swarm;
 
-        for (FExternalComponent& Component :
-             GetComponents<FExternalComponent>())
-        {
-            Component.Value += 1;
-        }
+        Query.AddRequirement<FExternalComponent>(EComponentAccessMode::ReadWrite
+        );
+    }
+
+    virtual void Execute(const Swarm::FSystemUpdateContext& Context) override
+    {
+        Query.ForEach(
+            Context, [](const Swarm::FEntityQueryResult& Result)
+            { Result.GetComponentReadWrite<FExternalComponent>()->Value += 1; }
+        );
     }
 
     virtual void Shutdown() override {}
