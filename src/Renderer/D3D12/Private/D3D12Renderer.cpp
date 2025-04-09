@@ -32,20 +32,29 @@ void KD3D12Renderer::Update() {}
 
 void KD3D12Renderer::Shutdown() {}
 
+void KD3D12Renderer::Resize(size_t Width, size_t Height) {}
+
 const FShaderManager* KD3D12Renderer::GetShaderManager() const
 {
     assert(ShaderManager);
     return ShaderManager.get();
 }
 
-FStateObjectRef
-KD3D12Renderer::CreateStateObject(const FShaderResourceRef Shader)
+std::shared_ptr<FSceneRenderResource> KD3D12Renderer::CreateSceneResource()
 {
     return nullptr;
 }
 
-FVertexBufferRef
-KD3D12Renderer::CreateVertexBuffer(const std::vector<Math::FVector>& InVertex)
+std::shared_ptr<FStateObject> KD3D12Renderer::CreateStateObject(
+    const FShaderResourceRef Shader
+)
+{
+    return nullptr;
+}
+
+std::shared_ptr<FMeshRenderResource> KD3D12Renderer::CreateMesh(
+    const FMeshResourceDescriptor& InDescriptor
+)
 {
     return nullptr;
 }

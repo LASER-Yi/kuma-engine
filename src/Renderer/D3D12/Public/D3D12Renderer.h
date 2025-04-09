@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Renderer.h"
-#include "SceneProxy.h"
 
 struct FD3D12ShaderManager;
 struct FD3D12Device;
@@ -14,12 +13,19 @@ public:
     virtual void Update() override;
     virtual void Shutdown() override;
 
+    virtual void Resize(size_t Width, size_t Height) override;
+
     virtual const FShaderManager* GetShaderManager() const override;
 
-    virtual FStateObjectRef CreateStateObject(const FShaderResourceRef Shader
+    virtual std::shared_ptr<FSceneRenderResource> CreateSceneResource(
     ) override;
-    virtual FVertexBufferRef CreateVertexBuffer(
-        const std::vector<Math::FVector>& InVertex
+
+    virtual std::shared_ptr<FStateObject> CreateStateObject(
+        const FShaderResourceRef Shader
+    ) override;
+
+    virtual std::shared_ptr<FMeshRenderResource> CreateMesh(
+        const FMeshResourceDescriptor& InDescriptor
     ) override;
 
 private:
