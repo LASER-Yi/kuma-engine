@@ -5,11 +5,10 @@
 #include "Engine/StaticMesh.h"
 #include "EntityQuery.h"
 #include "Kuma/Components/Primitive.h"
-#include "Kuma/Components/Transform.h"
+#include "Kuma/Components/TransformData.h"
 #include "Kuma/KumaEngine.h"
 #include "Matrix.h"
 #include "Renderer.h"
-#include "Rotator.h"
 #include "SceneProxy.h"
 #include "Shader.h"
 
@@ -17,7 +16,7 @@ void KPrimitiveSystem::Initialize()
 {
     using namespace Swarm;
 
-    Query.AddRequirement<FTransformComponent>(EComponentAccessMode::ReadOnly);
+    Query.AddRequirement<FTransformData>(EComponentAccessMode::ReadOnly);
     Query.AddRequirement<FPrimitiveComponent>(EComponentAccessMode::ReadWrite);
 
     const auto Renderer = GetEngine()->GetRenderer();
@@ -45,8 +44,8 @@ void KPrimitiveSystem::Execute(const Swarm::FSystemUpdateContext& Context)
                 Renderer->Enqueue(SceneProxy);
             }
 
-            const FTransformComponent* Transform =
-                Result.GetComponent<FTransformComponent>();
+            const FTransformData* Transform =
+                Result.GetComponent<FTransformData>();
 
             Primitive->SceneProxy->ComponentToWorld =
                 Transform->LocalTransform.ToMatrix();
