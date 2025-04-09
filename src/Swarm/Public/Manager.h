@@ -129,7 +129,7 @@ public:
 
         auto& EntityComponents = EntityToComponents[ToEntity->Signature];
 
-        const size_t TypeId = FGenericTypeHasher::value<T>();
+        const ClassHashType TypeId = FGenericTypeHasher::value<T>();
 
         // Prevent adding duplicate components to the same entity
         // as each entity should have at most one instance of a specific
@@ -179,7 +179,7 @@ public:
         auto& EntityComponents = EntityToComponents.at(FromEntity->Signature);
 
         // Check if the entity has the component
-        const size_t TypeId = FGenericTypeHasher::value<T>();
+        const ClassHashType TypeId = FGenericTypeHasher::value<T>();
         if (EntityComponents.contains(TypeId) == false)
         {
             return nullptr;
@@ -212,7 +212,7 @@ public:
         assert(FromEntity->Signature != Swarm::InvalidSignature);
 
         auto& EntityComponents = EntityToComponents[FromEntity->Signature];
-        const size_t TypeId = FGenericTypeHasher::value<T>();
+        const ClassHashType TypeId = FGenericTypeHasher::value<T>();
 
         // Check if the entity has the component
         if (EntityComponents.contains(TypeId) == false)
@@ -274,7 +274,7 @@ public:
             std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
         );
 
-        const size_t TypeId = FGenericTypeHasher::value<T>();
+        const ClassHashType TypeId = FGenericTypeHasher::value<T>();
         if (Systems.contains(TypeId))
         {
             return;
@@ -293,7 +293,7 @@ public:
             std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
         );
 
-        const size_t TypeId = FGenericTypeHasher::value<T>();
+        const ClassHashType TypeId = FGenericTypeHasher::value<T>();
         if (Systems.contains(TypeId) == false)
         {
             return;
@@ -311,7 +311,7 @@ public:
             std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
         );
 
-        const size_t TypeId = FGenericTypeHasher::value<T>();
+        const ClassHashType TypeId = FGenericTypeHasher::value<T>();
         if (Systems.contains(TypeId) == false)
         {
             return nullptr;
