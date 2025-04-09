@@ -31,15 +31,17 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
         CurrentWorld->AddToWorld(Entity);
     }
 
-    // for (auto& AnotherVertex : Vertex)
-    // {
-    //     AnotherVertex.X -= 0.6;
-    // }
+    {
+        auto AnotherEntity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
+        AnotherEntity->AddComponent<FPrimitiveComponent>(FStaticMesh::Cube());
+        FTransformComponent* Transform =
+            AnotherEntity->GetComponent<FTransformComponent>();
 
-    // auto AnotherEntity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-    // AnotherEntity->AddComponent<FPrimitiveComponent>(Vertex);
+        Transform->LocalTransform.Translation.X = 2.0;
+        Transform->LocalTransform.Translation.Z = -5.0;
 
-    // CurrentWorld->AddToWorld(AnotherEntity);
+        CurrentWorld->AddToWorld(AnotherEntity);
+    }
 }
 
 void KKumaEngine::Shutdown()
