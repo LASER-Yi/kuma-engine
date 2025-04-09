@@ -13,6 +13,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
     {
+        EngineSetWindow(hWnd);
         EngineInitialize(nullptr);
         return 0;
     }
@@ -62,8 +63,6 @@ int WINAPI WinMain(
     );
 
     ShowWindow(hWnd, nCmdShow);
-
-    EngineSetWindow(hWnd);
 
     MSG Msg = {};
     while (Msg.message != WM_QUIT && IsEngineExitRequested() == false)

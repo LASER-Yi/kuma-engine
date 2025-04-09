@@ -1,16 +1,16 @@
 #include "D3D12Renderer.h"
 
+#include "D3D12Viewport.h"
+#include "D3D12CmdQueue.h"
 #include "D3D12Device.h"
 #include "D3D12Shader.h"
 
 #include <cassert>
 #include <d3d12.h>
-#include <dxgi.h>
 #include <wrl/client.h>
 
 void KD3D12Renderer::Initialize(void* WindowPtr)
 {
-
 #ifdef KUMA_BUILD_DEBUG
     {
         Microsoft::WRL::ComPtr<ID3D12Debug> DebugController;
@@ -21,10 +21,10 @@ void KD3D12Renderer::Initialize(void* WindowPtr)
     }
 #endif
 
-    Microsoft::WRL::ComPtr<IDXGIFactory1> Factory;
-    CreateDXGIFactory1(IID_PPV_ARGS(&Factory));
+    Device = std::make_shared<FD3D12Device>();
+    CommandQueue = std::make_shared<FD3D12CmdQueue>(Device);
+    Viewport = std::make_shared<FD3D12Viewport>(Device, WindowPtr);
 
-    Device = std::make_shared<FD3D12Device>(Factory.Get());
     ShaderManager = std::make_shared<FD3D12ShaderManager>();
 }
 

@@ -4,24 +4,27 @@
 #include <dxgi.h>
 #include <wrl/client.h>
 
-#include <memory>
-
+struct FD3D12Viewport;
 struct FD3D12CmdQueue;
 
 struct FD3D12Device
 {
-    FD3D12Device(IDXGIFactory* Factory);
+    FD3D12Device();
 
     D3D_FEATURE_LEVEL GetFeatureLevel() const;
+
+    IDXGIFactory* GetFactory() const;
+    IDXGIAdapter* GetAdapter() const;
     ID3D12Device* GetDevice() const;
 
+    FD3D12CmdQueue* CmdQueue;
+    FD3D12Viewport* Viewport;
 private:
-    bool TryCreateDevice(
-        IDXGIFactory* Factory, D3D_FEATURE_LEVEL InFeatureLevel
-    );
+    bool TryCreateDevice(D3D_FEATURE_LEVEL InFeatureLevel);
 
     D3D_FEATURE_LEVEL FeatureLevel;
-    Microsoft::WRL::ComPtr<ID3D12Device> Device;
 
-    std::shared_ptr<FD3D12CmdQueue> CommandQueue;
+    Microsoft::WRL::ComPtr<IDXGIFactory> Factory;
+    Microsoft::WRL::ComPtr<IDXGIAdapter> Adapter;
+    Microsoft::WRL::ComPtr<ID3D12Device> Device;
 };

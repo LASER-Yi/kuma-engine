@@ -2,6 +2,8 @@
 
 #include "Renderer.h"
 
+struct FD3D12Viewport;
+struct FD3D12CmdQueue;
 struct FD3D12ShaderManager;
 struct FD3D12Device;
 
@@ -32,4 +34,6 @@ private:
     std::shared_ptr<FD3D12ShaderManager> ShaderManager;
 
     std::shared_ptr<FD3D12Device> Device;
+    std::shared_ptr<FD3D12CmdQueue> CommandQueue;
+    std::shared_ptr<FD3D12Viewport> Viewport;
 };
