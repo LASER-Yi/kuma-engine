@@ -48,7 +48,7 @@ void KMeshRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
                 Result.GetComponent<FTransformData>();
 
             StaticMeshData->SceneProxy->ComponentToWorld =
-                Transform->LocalTransform.ToMatrix();
+                Transform->LocalToWorld;
         }
     );
 }

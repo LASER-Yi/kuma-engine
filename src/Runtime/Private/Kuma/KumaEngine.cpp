@@ -11,11 +11,13 @@
 #include "Kuma/Systems/CameraRenderSystem.h"
 #include "Kuma/Systems/MeshRenderSystem.h"
 #include "Kuma/Systems/RotationSystem.h"
+#include "Kuma/Systems/WorldHierarchicalSystem.h"
 #include "Manager.h"
 
 void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 {
     KEngine::Initialize(Context);
+    Swarm::Manager::Get()->AddSystem<KWorldHierarchicalSystem>();
     Swarm::Manager::Get()->AddSystem<KMeshRenderSystem>();
     Swarm::Manager::Get()->AddSystem<KRotationSystem>();
     Swarm::Manager::Get()->AddSystem<KCameraRenderSystem>();
