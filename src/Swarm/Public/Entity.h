@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Swarm/EntityBase.h"
-#include "Swarm/Manager.h"
+#include "EntityBase.h"
+#include "Manager.h"
+
 #include <memory>
 #include <utility>
 

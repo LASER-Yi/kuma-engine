@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Swarm/Definition.h"
+#include "Definition.h"
 
 namespace Swarm
 {

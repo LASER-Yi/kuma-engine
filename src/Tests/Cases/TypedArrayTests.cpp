@@ -1,6 +1,6 @@
+#include "Containers/TypedArray.h"
 #include "CoreMinimal.h"
-#include "Swarm/Containers/TypedArray.h"
-#include "Swarm/Interfaces/Identifiable.h"
+#include "Interfaces/Identifiable.h"
 
 #include <gtest/gtest.h>
 

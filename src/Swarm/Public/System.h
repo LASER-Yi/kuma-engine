@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Swarm/Interfaces/System.h"
-#include "Swarm/Manager.h"
+#include "Interfaces/System.h"
+#include "Manager.h"
 
 class KKumaEngine;
 
@@ -16,8 +16,6 @@ protected:
     {
         return Swarm::Manager::Get()->GetComponents<T>();
     }
-
-    KKumaEngine* GetEngine() const;
 };
 
 } // namespace Swarm

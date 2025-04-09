@@ -1,6 +1,6 @@
 #include "CoreMinimal.h"
-#include "Swarm/Definition.h"
-#include "Swarm/Entity.h"
+#include "Definition.h"
+#include "Entity.h"
 #include <gtest/gtest.h>
 #include <memory>
 

@@ -5,7 +5,7 @@
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
 #include "Kuma/Systems/PrimitiveSystem.h"
-#include "Swarm/Manager.h"
+#include "Manager.h"
 
 void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Swarm/EntityBase.h"
+#include "EntityBase.h"
 
 struct FKumaEntity : public Swarm::FEntity
 {

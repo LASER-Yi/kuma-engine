@@ -1,5 +1,5 @@
-#include "Swarm/EntityBase.h"
-#include "Swarm/Manager.h"
+#include "EntityBase.h"
+#include "Manager.h"
 
 namespace Swarm
 {

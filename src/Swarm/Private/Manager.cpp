@@ -1,5 +1,5 @@
-#include "Swarm/Manager.h"
-#include "Swarm/Definition.h"
+#include "Manager.h"
+#include "Definition.h"
 
 namespace Swarm
 {
@@ -10,8 +10,6 @@ void Manager::Update(float DeltaTime)
 
     for (const auto& [SystemType, System] : Systems)
     {
-        UNUSED_VAR(SystemType);
-
         System->Execute(DeltaTime);
     }
 }

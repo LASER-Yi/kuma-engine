@@ -2,7 +2,7 @@
 #include "Kuma/Components/WorldEntity.h"
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
-#include "Swarm/Manager.h"
+#include "Manager.h"
 #include <gtest/gtest.h>
 #include <memory>
 

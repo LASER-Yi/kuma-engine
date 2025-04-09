@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 
-#include "Swarm/Component.h"
+#include "Component.h"
 
 #include <memory>
 

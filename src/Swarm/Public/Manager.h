@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Core/Templates/Singleton.h"
-#include "Swarm/Component.h"
-#include "Swarm/Containers/HandleAllocator.h"
-#include "Swarm/Containers/TypedArray.h"
-#include "Swarm/Definition.h"
-#include "Swarm/EntityBase.h"
-#include "Swarm/Interfaces/System.h"
+#include "Component.h"
+#include "Containers/HandleAllocator.h"
+#include "Containers/TypedArray.h"
+#include "Definition.h"
+#include "EntityBase.h"
+#include "Interfaces/System.h"
+#include "Templates/Singleton.h"
 
 #include <cassert>
 #include <map>

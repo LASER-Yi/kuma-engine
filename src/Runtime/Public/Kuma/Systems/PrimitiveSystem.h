@@ -1,15 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Kuma/Systems/KumaSystemBase.h"
 #include "StateObject.h"
-#include "Swarm/System.h"
 
 #include <memory>
 
 struct FSceneProxy;
 struct FPrimitiveComponent;
 
-class KPrimitiveSystem : public Swarm::KSystem
+class KPrimitiveSystem : public KKumaSystemBase
 {
 public:
     virtual void Initialize() override;
