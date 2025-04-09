@@ -31,6 +31,6 @@ void FKumaWorld::AddToWorld(std::shared_ptr<FKumaEntity> InEntity)
             InEntity->GetComponent<FWorldComponent>();
         assert(WorldComponent != nullptr);
 
-        WorldComponent->World = GetShared<FKumaWorld>();
+        WorldComponent->AssociatedWorld = Signature;
     }
 }

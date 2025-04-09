@@ -37,13 +37,6 @@ struct FEntity : public FEntityBase
     {
         Swarm::Manager::Get()->RemoveComponent<T>(this);
     }
-
-    template <typename T>
-    std::shared_ptr<T> GetShared()
-    {
-        std::shared_ptr<FEntityBase> base = shared_from_this();
-        return std::static_pointer_cast<T>(base);
-    }
 };
 
 } // namespace Swarm
