@@ -70,4 +70,29 @@ void Manager::RemoveEntity(FEntityBase* Entity)
     EntitySignature.Release(Signature);
 }
 
+void Manager::FilterEntityByComponents(
+    std::vector<SignatureType>& OutEntities,
+    const std::span<SignatureType>& InComponents
+)
+{
+    // TODO: Optimize this
+    for (const auto& [Entity, Components] : EntityToComponents)
+    {
+        bool bResult = true;
+        for (const auto& Requirement : InComponents)
+        {
+            if (Components.contains(Requirement) == false)
+            {
+                bResult = false;
+                break;
+            }
+        }
+
+        if (bResult)
+        {
+            OutEntities.push_back(Entity);
+        }
+    }
+}
+
 } // namespace Swarm

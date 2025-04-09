@@ -87,6 +87,14 @@ public:
      */
     void RemoveEntity(FEntityBase* Entity);
 
+    /**
+     * @brief Get the entity via component types
+     */
+    void FilterEntityByComponents(
+        std::vector<SignatureType>& OutEntities,
+        const std::span<SignatureType>& InComponents
+    );
+
     template <typename T, typename... Args>
     std::tuple<Swarm::ClassHashType, Swarm::SignatureType> CreateComponent(
         Args&&... Arguments
@@ -171,12 +179,27 @@ public:
 
         assert(FromEntity->Signature != Swarm::InvalidSignature);
 
-        if (EntityToComponents.contains(FromEntity->Signature) == false)
+        return GetComponent<T>(FromEntity->Signature);
+    }
+
+    /**
+     * @brief Get a component of type T from the specified entity.
+     * @tparam T The type of the component to be retrieved.
+     * @param EntitySignature The entity which the component will be retrieved.
+     * @return A pointer to the component of type T, or nullptr if the component
+     * does not exist.
+     */
+    template <typename T>
+    T* GetComponent(SignatureType EntitySignature)
+    {
+        assert(EntitySignature != Swarm::InvalidSignature);
+
+        if (EntityToComponents.contains(EntitySignature) == false)
         {
             return nullptr;
         }
 
-        auto& EntityComponents = EntityToComponents.at(FromEntity->Signature);
+        auto& EntityComponents = EntityToComponents.at(EntitySignature);
 
         // Check if the entity has the component
         const ClassHashType TypeId = FGenericTypeHasher::value<T>();
