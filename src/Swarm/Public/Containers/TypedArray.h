@@ -1,19 +1,12 @@
 #pragma once
 
+#include "TypeHasher.h"
+
 #include <algorithm>
 #include <cassert>
 #include <span>
 #include <unordered_map>
 #include <utility>
-
-struct FGenericTypeHasher
-{
-    template <typename T>
-    constexpr static auto value()
-    {
-        return typeid(T).hash_code();
-    };
-};
 
 /**
  * @brief Group elements based on type, and allocate them into continuous memory
@@ -113,7 +106,10 @@ class TTypedArray
             }
 
             // Move the last element to the index of the removed element
-            std::memcpy(Element, Last, ElementSize);
+            std::memcpy(
+                static_cast<void*>(Element), static_cast<void*>(Last),
+                ElementSize
+            );
         }
 
         Base* Get(std::size_t InIndex) const
