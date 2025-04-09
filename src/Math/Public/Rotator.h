@@ -22,9 +22,8 @@ struct TRadians
 {
     static_assert(std::is_floating_point_v<T>, "T must be floating point");
 
-    static TRadians From(TDegrees<T> InDegrees);
-
     explicit TRadians(T InValue) : Value(InValue) {}
+    TRadians(TDegrees<T> InDegrees);
 
     T Value;
 };
@@ -37,9 +36,8 @@ struct TDegrees
 {
     static_assert(std::is_floating_point_v<T>, "T must be floating point");
 
-    static TDegrees From(TRadians<T> InRadians);
-
     explicit TDegrees(T InValue) : Value(InValue) {}
+    TDegrees(TRadians<T> InRadians);
 
     T Value;
 };

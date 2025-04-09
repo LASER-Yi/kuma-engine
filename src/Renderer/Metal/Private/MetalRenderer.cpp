@@ -154,11 +154,10 @@ std::shared_ptr<FMeshRenderResource> KMetalRenderer::CreateMesh(
 void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
 {
     const FRendererCameraDescriptor CameraDesc = {
-        .FieldOfView = Math::FRadians::From(Math::FDegrees(45.0)),
+        .FieldOfView = Math::FDegrees(45.0),
         .AspectRatio = static_cast<float>(Backbuffer->width()) /
                        static_cast<float>(Backbuffer->height()),
-        .WorldToCamera = Math::FMatrix::MakePosition({})
-    };
+        .WorldToCamera = Math::FMatrix::MakePosition({})};
 
     for (const auto& Proxy : Proxies)
     {
@@ -170,8 +169,7 @@ void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
         auto SceneProxy = Proxy.lock();
 
         const FRendererPrimitiveDescriptor PrimitiveDesc = {
-            .ModelToWorld = SceneProxy->ComponentToWorld
-        };
+            .ModelToWorld = SceneProxy->ComponentToWorld};
 
         SceneProxy->SceneBuffer->Update(CameraDesc, PrimitiveDesc);
     }

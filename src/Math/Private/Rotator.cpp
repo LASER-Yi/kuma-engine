@@ -6,21 +6,21 @@ namespace Math
 {
 
 template <typename T>
-TRadians<T> TRadians<T>::From(TDegrees<T> InDegrees)
+TRadians<T>::TRadians(TDegrees<T> InDegrees)
+    : Value(
+          InDegrees.Value * static_cast<T>(std::numbers::pi) /
+          static_cast<T>(180.0)
+      )
 {
-    return TRadians(
-        InDegrees.Value * static_cast<T>(std::numbers::pi) /
-        static_cast<T>(180.0)
-    );
 }
 
 template <typename T>
-TDegrees<T> TDegrees<T>::From(TRadians<T> InRadians)
+TDegrees<T>::TDegrees(TRadians<T> InRadians)
+    : Value(
+          InRadians.Value * static_cast<T>(180.0) /
+          static_cast<T>(std::numbers::pi)
+      )
 {
-    return TDegrees(
-        InRadians.Value * static_cast<T>(180.0) /
-        static_cast<T>(std::numbers::pi)
-    );
 }
 
 } // namespace Math

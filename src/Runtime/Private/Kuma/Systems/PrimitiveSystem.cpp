@@ -39,12 +39,12 @@ void KPrimitiveSystem::Execute(float DeltaTime)
 
         const Math::FMatrix YRot = Math::FMatrix::MakeRotation(
             Math::EAxis::Y,
-            Math::FRadians::From(Math::FDegrees(Primitive.YRotation))
+            Math::FDegrees(Primitive.YRotation)
         );
 
         const Math::FMatrix XRot = Math::FMatrix::MakeRotation(
             Math::EAxis::X,
-            Math::FRadians::From(Math::FDegrees(Primitive.XRotation))
+            Math::FDegrees(Primitive.XRotation)
         );
 
         Primitive.SceneProxy->ComponentToWorld = XRot * YRot * Location;
