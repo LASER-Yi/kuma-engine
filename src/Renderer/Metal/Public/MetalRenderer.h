@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Matrix.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
 #include "SceneResource.h"
@@ -44,6 +45,12 @@ public:
     ) override;
 
 private:
+    /**
+     * Get the matrix to transform from Kuma coordination system to metal
+     * coordination system
+     */
+    const Math::FMatrix& GetCoordinationMatrix() const;
+
     void UpdateSceneBuffers(MTL::Texture* Backbuffer);
 
     void EncodePrimitive(

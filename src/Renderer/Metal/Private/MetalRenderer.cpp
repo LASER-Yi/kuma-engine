@@ -12,6 +12,7 @@
 #include "MetalStateObject.h"
 #include "MetalViewport.h"
 #include "Renderer.h"
+#include "Rotator.h"
 #include "SceneProxy.h"
 #include "SceneResource.h"
 #include "StateObject.h"
@@ -151,13 +152,24 @@ std::shared_ptr<FMeshRenderResource> KMetalRenderer::CreateMesh(
     return std::make_shared<FMetalMeshResource>(Device, InDescriptor);
 }
 
+const Math::FMatrix& KMetalRenderer::GetCoordinationMatrix() const
+{
+    static const Math::FMatrix Matrix =
+        Math::FMatrix::MakeRotation(Math::EAxis::Y, Math::FDegrees(90));
+
+    return Matrix;
+}
+
 void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
 {
+    const Math::FMatrix& Coordination = GetCoordinationMatrix();
+
     const FRendererCameraDescriptor CameraDesc = {
         .FieldOfView = Math::FDegrees(45.0),
         .AspectRatio = static_cast<float>(Backbuffer->width()) /
                        static_cast<float>(Backbuffer->height()),
-        .WorldToCamera = Math::FMatrix::MakePosition({})};
+        .WorldToCamera = Coordination
+    };
 
     for (const auto& Proxy : Proxies)
     {
@@ -169,7 +181,8 @@ void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
         auto SceneProxy = Proxy.lock();
 
         const FRendererPrimitiveDescriptor PrimitiveDesc = {
-            .ModelToWorld = SceneProxy->ComponentToWorld};
+            .ModelToWorld = SceneProxy->ComponentToWorld
+        };
 
         SceneProxy->SceneBuffer->Update(CameraDesc, PrimitiveDesc);
     }
