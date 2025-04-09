@@ -9,9 +9,9 @@
 #include <memory>
 
 struct FSceneProxy;
-struct FPrimitiveComponent;
+struct FStaticMeshData;
 
-class KPrimitiveSystem : public KKumaSystemBase
+class KMeshRenderSystem : public KKumaSystemBase
 {
 public:
     virtual void Initialize() override;
@@ -21,8 +21,7 @@ public:
     virtual void Shutdown() override;
 
 protected:
-    std::shared_ptr<FSceneProxy> CreateSceneProxy(
-        const FPrimitiveComponent* Comp
+    std::shared_ptr<FSceneProxy> CreateSceneProxy(const FStaticMeshData* Comp
     ) const;
 
     std::shared_ptr<FStateObject> GlobalStateObject;

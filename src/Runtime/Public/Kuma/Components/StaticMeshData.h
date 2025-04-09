@@ -9,9 +9,9 @@
 class FSceneProxy;
 class FStaticMesh;
 
-struct FPrimitiveComponent : public Swarm::FComponent
+struct FStaticMeshData : public Swarm::FComponent
 {
-    FPrimitiveComponent(const std::shared_ptr<FStaticMesh> InMesh)
+    FStaticMeshData(const std::shared_ptr<FStaticMesh> InMesh)
         : Swarm::FComponent(), Mesh(InMesh)
     {
     }

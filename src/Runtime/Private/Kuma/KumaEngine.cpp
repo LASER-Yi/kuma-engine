@@ -3,20 +3,20 @@
 #include "Engine/Engine.h"
 #include "Engine/StaticMesh.h"
 
-#include "Kuma/Components/Primitive.h"
+#include "Kuma/Components/StaticMeshData.h"
 #include "Kuma/Components/TransformData.h"
 
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
 #include "Kuma/Systems/CameraSystem.h"
-#include "Kuma/Systems/PrimitiveSystem.h"
+#include "Kuma/Systems/MeshRenderSystem.h"
 #include "Kuma/Systems/RotationSystem.h"
 #include "Manager.h"
 
 void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 {
     KEngine::Initialize(Context);
-    Swarm::Manager::Get()->AddSystem<KPrimitiveSystem>();
+    Swarm::Manager::Get()->AddSystem<KMeshRenderSystem>();
     Swarm::Manager::Get()->AddSystem<KRotationSystem>();
     Swarm::Manager::Get()->AddSystem<KCameraSystem>();
 
@@ -24,7 +24,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 
     {
         auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-        Entity->AddComponent<FPrimitiveComponent>(FStaticMesh::Cube());
+        Entity->AddComponent<FStaticMeshData>(FStaticMesh::Cube());
         FTransformData* Transform = Entity->GetComponent<FTransformData>();
 
         Transform->LocalTransform.Translation.X = 10.0;
@@ -34,7 +34,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 
     {
         auto AnotherEntity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-        AnotherEntity->AddComponent<FPrimitiveComponent>(FStaticMesh::Cube());
+        AnotherEntity->AddComponent<FStaticMeshData>(FStaticMesh::Cube());
         FTransformData* Transform =
             AnotherEntity->GetComponent<FTransformData>();
 

@@ -1,10 +1,10 @@
-#include "Kuma/Systems/PrimitiveSystem.h"
+#include "Kuma/Systems/MeshRenderSystem.h"
 
 #include <memory>
 
 #include "Engine/StaticMesh.h"
 #include "EntityQuery.h"
-#include "Kuma/Components/Primitive.h"
+#include "Kuma/Components/StaticMeshData.h"
 #include "Kuma/Components/TransformData.h"
 #include "Kuma/KumaEngine.h"
 #include "Matrix.h"
@@ -12,19 +12,19 @@
 #include "SceneProxy.h"
 #include "Shader.h"
 
-void KPrimitiveSystem::Initialize()
+void KMeshRenderSystem::Initialize()
 {
     using namespace Swarm;
 
     Query.AddRequirement<FTransformData>(EComponentAccessMode::ReadOnly);
-    Query.AddRequirement<FPrimitiveComponent>(EComponentAccessMode::ReadWrite);
+    Query.AddRequirement<FStaticMeshData>(EComponentAccessMode::ReadWrite);
 
     const auto Renderer = GetEngine()->GetRenderer();
     const auto* Shader = Renderer->GetShaderManager();
     GlobalStateObject = Renderer->CreateStateObject(Shader->GetPrimitive());
 }
 
-void KPrimitiveSystem::Execute(const Swarm::FSystemUpdateContext& Context)
+void KMeshRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
 {
     using namespace Swarm;
 
@@ -34,29 +34,29 @@ void KPrimitiveSystem::Execute(const Swarm::FSystemUpdateContext& Context)
         Context,
         [&](const FEntityQueryResult& Result)
         {
-            FPrimitiveComponent* Primitive =
-                Result.GetComponentReadWrite<FPrimitiveComponent>();
+            FStaticMeshData* StaticMeshData =
+                Result.GetComponentReadWrite<FStaticMeshData>();
 
-            if (Primitive->SceneProxy == nullptr)
+            if (StaticMeshData->SceneProxy == nullptr)
             {
-                const auto SceneProxy = CreateSceneProxy(Primitive);
-                Primitive->SceneProxy = SceneProxy;
+                const auto SceneProxy = CreateSceneProxy(StaticMeshData);
+                StaticMeshData->SceneProxy = SceneProxy;
                 Renderer->Enqueue(SceneProxy);
             }
 
             const FTransformData* Transform =
                 Result.GetComponent<FTransformData>();
 
-            Primitive->SceneProxy->ComponentToWorld =
+            StaticMeshData->SceneProxy->ComponentToWorld =
                 Transform->LocalTransform.ToMatrix();
         }
     );
 }
 
-void KPrimitiveSystem::Shutdown() { GlobalStateObject = nullptr; }
+void KMeshRenderSystem::Shutdown() { GlobalStateObject = nullptr; }
 
-std::shared_ptr<FSceneProxy> KPrimitiveSystem::CreateSceneProxy(
-    const FPrimitiveComponent* Comp
+std::shared_ptr<FSceneProxy> KMeshRenderSystem::CreateSceneProxy(
+    const FStaticMeshData* Comp
 ) const
 {
     if (Comp == nullptr)
