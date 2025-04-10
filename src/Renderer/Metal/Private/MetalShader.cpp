@@ -96,7 +96,11 @@ const char* PrimitiveShaderSrc = R"(
 
     half4 fragment fragmentMain( v2f in [[stage_in]] )
     {
-        return half4( in.color, 1.0 );
+        float3 light = normalize(float3(1.0, 1.0, 0.8));
+        float3 normal = normalize(in.normal);
+
+        float ndotl = saturate(dot(normal, light));
+        return half4(in.color * 0.1 + in.color * ndotl, 1.0);
     }
 )";
 
