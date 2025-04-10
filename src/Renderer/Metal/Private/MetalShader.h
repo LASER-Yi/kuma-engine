@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Matrix.h"
+#include "MathFwd.h"
 #include "MetalDevice.h"
 #include "Shader.h"
 
@@ -16,8 +16,8 @@ class Function;
 #pragma mark - Metal Shader Type
 
 static_assert(
-    sizeof(Math::FMatrix) == sizeof(simd::float4x4),
-    "The size of Math::FMatrix should be the same as simd::float4x4"
+    sizeof(FMatrix) == sizeof(simd::float4x4),
+    "The size of FMatrix should be the same as simd::float4x4"
 );
 
 namespace Metal::ShaderType
@@ -25,9 +25,9 @@ namespace Metal::ShaderType
 
 struct FTransformation
 {
-    Math::FMatrix Perspective;
-    Math::FMatrix WorldToCamera;
-    Math::FMatrix ModelToWorld;
+    FMatrix Perspective;
+    FMatrix WorldToCamera;
+    FMatrix ModelToWorld;
 };
 
 } // namespace Metal::ShaderType

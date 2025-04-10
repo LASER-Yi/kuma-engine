@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Matrix.h"
+#include "MathFwd.h"
 #include "RenderResource.h"
-#include "Rotator.h"
 
 struct FRendererCameraDescriptor
 {
     float AspectRatio;
-    Math::FRadians FieldOfView;
-    Math::FMatrix WorldToCamera;
+    FRadians FieldOfView;
+    FMatrix WorldToCamera;
 
     float Near;
     float Far;
@@ -16,7 +15,7 @@ struct FRendererCameraDescriptor
 
 struct FRendererPrimitiveDescriptor
 {
-    Math::FMatrix ModelToWorld;
+    FMatrix ModelToWorld;
 };
 
 struct FSceneRenderResource : public FRenderResource

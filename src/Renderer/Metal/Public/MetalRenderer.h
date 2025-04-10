@@ -49,7 +49,7 @@ private:
      * Get the matrix to transform from Kuma coordination system to metal
      * coordination system
      */
-    const Math::FMatrix& GetCoordinationMatrix() const;
+    const FMatrix& GetCoordinationMatrix() const;
 
     void UpdateSceneBuffers(const FRendererCameraDescriptor& CameraDesc);
 

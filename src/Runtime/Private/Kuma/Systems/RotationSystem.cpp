@@ -30,7 +30,7 @@ void KRotationSystem::Execute(const Swarm::FSystemUpdateContext& Context)
                 Result.GetComponentReadWrite<FTransformData>();
 
             Transform->LocalTransform.Rotation +=
-                (RotationData->Rotation * Math::FDegrees(DeltaTime));
+                (RotationData->Rotation * FDegrees(DeltaTime));
         }
     );
 }

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Matrix.h"
-#include "Rotator.h"
+#include "MathFwd.h"
 
 #include <cstddef>
 #include <memory>
@@ -13,7 +12,7 @@ class FMeshRenderResource;
 
 struct FSceneProxy
 {
-    Math::FMatrix ComponentToWorld;
+    FMatrix ComponentToWorld;
 
     std::size_t Signature;
 };
@@ -30,7 +29,7 @@ struct FPrimitiveSceneProxy : public FSceneProxy
 
 struct FCameraSceneProxy : public FSceneProxy
 {
-    Math::FRadians FieldOfView;
+    FRadians FieldOfView;
 
     float NearClip;
     float FarClip;

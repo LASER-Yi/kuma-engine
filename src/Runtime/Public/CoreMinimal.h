@@ -7,7 +7,3 @@
 #include "Entity.h"
 #include "Manager.h"
 #include "System.h"
-
-#include "Matrix.h"
-#include "Transform.h"
-#include "Vector.h"

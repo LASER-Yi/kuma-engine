@@ -1,13 +1,13 @@
 #pragma once
 
+#include "MathFwd.h"
 #include "RenderResource.h"
-#include "Vector.h"
 
 #include <span>
 
 struct FMeshResourceDescriptor
 {
-    std::span<const Math::FVector> Vertices;
+    std::span<const FVector> Vertices;
     std::span<const std::uint16_t> Indices;
 };
 

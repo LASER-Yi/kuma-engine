@@ -19,6 +19,4 @@ struct TTransform
     TMatrix<T> ToMatrix() const;
 };
 
-using FTransform = TTransform<float>;
-
 } // namespace Math

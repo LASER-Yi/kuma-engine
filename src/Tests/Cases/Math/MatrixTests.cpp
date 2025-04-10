@@ -1,12 +1,14 @@
 #include "CoreMinimal.h"
+#include "MathFwd.h"
+
 #include <gtest/gtest.h>
 
 TEST(MatrixTests, MatrixMultiply)
 {
-    const Math::FMatrix One = Math::FMatrix::Identity;
-    const Math::FMatrix Another = Math::FMatrix::Identity;
+    const FMatrix One = FMatrix::Identity;
+    const FMatrix Another = FMatrix::Identity;
 
-    const Math::FMatrix Result = One * Another;
+    const FMatrix Result = One * Another;
 
-    ASSERT_EQ(Result, Math::FMatrix::Identity);
+    ASSERT_EQ(Result, FMatrix::Identity);
 }

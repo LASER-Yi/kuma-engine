@@ -40,6 +40,4 @@ struct alignas(16) TVector
     TVector Normalize() const;
 };
 
-using FVector = TVector<float>;
-
 } // namespace Math

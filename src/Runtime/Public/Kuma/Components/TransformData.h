@@ -1,15 +1,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Matrix.h"
+#include "MathFwd.h"
 
 struct FTransformData : public Swarm::FComponent
 {
-    Math::FTransform LocalTransform;
+    FTransform LocalTransform;
 
     /**
      * @brief The matrix from local space to the world space
      * Will be calculated by WorldHierarchicalSystem
      */
-    Math::FMatrix LocalToWorld = Math::FMatrix::Identity;
+    FMatrix LocalToWorld = FMatrix::Identity;
 };

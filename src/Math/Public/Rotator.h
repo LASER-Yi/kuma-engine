@@ -30,8 +30,6 @@ struct TRadians
     T Value;
 };
 
-using FRadians = TRadians<float>;
-
 template <typename T>
 struct TDegrees
 {
@@ -68,8 +66,6 @@ struct TDegrees
 
     T Value;
 };
-
-using FDegrees = TDegrees<float>;
 
 /**
  * Same as Unreal Engine, The angles are interpreted as intrinsic rotations
@@ -116,7 +112,5 @@ struct alignas(16) TQuat
     T Z;
     T W;
 };
-
-using FQuat = TQuat<float>;
 
 } // namespace Math

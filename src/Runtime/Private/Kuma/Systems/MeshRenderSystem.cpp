@@ -73,7 +73,7 @@ std::shared_ptr<FPrimitiveSceneProxy> KMeshRenderSystem::CreateSceneProxy(
 
     auto SceneProxy = std::make_shared<FPrimitiveSceneProxy>();
     SceneProxy->Signature = Comp->Signature;
-    SceneProxy->ComponentToWorld = Math::FMatrix::Identity;
+    SceneProxy->ComponentToWorld = FMatrix::Identity;
 
     SceneProxy->PipelineStateObject = GlobalStateObject;
     SceneProxy->SceneBuffer = Renderer->CreateSceneResource();

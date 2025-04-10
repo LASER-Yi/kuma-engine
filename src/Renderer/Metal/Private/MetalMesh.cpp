@@ -15,8 +15,8 @@ FMetalMeshResource::FMetalMeshResource(
 )
 {
     static_assert(
-        sizeof(Math::FVector) == sizeof(simd::float4),
-        "The size of Math::FVector should be the same as simd::float4"
+        sizeof(FVector) == sizeof(simd::float4),
+        "The size of FVector should be the same as simd::float4"
     );
 
     MTL::Device* MetalDevice = Device->Get();

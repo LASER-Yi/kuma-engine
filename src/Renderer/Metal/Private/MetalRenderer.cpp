@@ -59,7 +59,7 @@ void KMetalRenderer::Update()
 
     // Update camera data
     {
-        const Math::FMatrix& Coordination = GetCoordinationMatrix();
+        const FMatrix& Coordination = GetCoordinationMatrix();
 
         const MTL::Texture* SceneColor = Drawable->texture();
 
@@ -174,10 +174,10 @@ std::shared_ptr<FMeshRenderResource> KMetalRenderer::CreateMesh(
     return std::make_shared<FMetalMeshResource>(Device, InDescriptor);
 }
 
-const Math::FMatrix& KMetalRenderer::GetCoordinationMatrix() const
+const FMatrix& KMetalRenderer::GetCoordinationMatrix() const
 {
-    static const Math::FMatrix Matrix =
-        Math::FMatrix::MakeRotation(Math::EAxis::Y, Math::FDegrees(90));
+    static const FMatrix Matrix =
+        FMatrix::MakeRotation(Math::EAxis::Y, FDegrees(90));
 
     return Matrix;
 }

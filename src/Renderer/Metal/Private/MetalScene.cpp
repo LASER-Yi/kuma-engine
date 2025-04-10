@@ -38,7 +38,7 @@ void FMetalSceneResource::Update(
     Metal::ShaderType::FTransformation NewData;
 
     {
-        NewData.Perspective = Math::FMatrix::MakePerspective(
+        NewData.Perspective = FMatrix::MakePerspective(
             Camera.FieldOfView, Camera.AspectRatio, Camera.Near, Camera.Far
         );
         NewData.WorldToCamera = Camera.WorldToCamera;

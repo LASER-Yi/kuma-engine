@@ -18,6 +18,4 @@ struct alignas(16) TPlane : TVector<T>
     T W;
 };
 
-using FPlane = TPlane<float>;
-
 } // namespace Math

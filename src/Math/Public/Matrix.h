@@ -45,6 +45,4 @@ public:
     );
 };
 
-using FMatrix = TMatrix<float>;
-
 } // namespace Math

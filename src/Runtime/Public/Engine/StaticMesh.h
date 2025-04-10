@@ -7,7 +7,7 @@
 
 struct FStaticMesh
 {
-    std::vector<Math::FVector> Vertices;
+    std::vector<FVector> Vertices;
     std::vector<std::uint16_t> Indices;
 
     FMeshResourceDescriptor Describe() const;
