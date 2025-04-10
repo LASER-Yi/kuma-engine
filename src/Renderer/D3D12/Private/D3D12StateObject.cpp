@@ -83,6 +83,6 @@ FD3D12StateObject::FD3D12StateObject(
     Desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
     Desc.SampleDesc.Count = 1;
 
-    const bool Result = Device->GetDevice()->CreateGraphicsPipelineState(&Desc, IID_PPV_ARGS(&Data));
+    const bool Result = SUCCEEDED(Device->GetDevice()->CreateGraphicsPipelineState(&Desc, IID_PPV_ARGS(&Data)));
     assert(Result);
 }

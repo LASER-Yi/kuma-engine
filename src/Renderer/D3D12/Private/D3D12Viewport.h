@@ -19,9 +19,18 @@ struct FD3D12Viewport
 
     void WaitForPreviousFrame(std::shared_ptr<FD3D12CmdQueue> CommandQueue);
 
+    void Present();
+
+    D3D12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView() const;
+
+    D3D12_VIEWPORT GetViewport() const;
+
+    D3D12_RECT GetScissorRect() const;
+
 private:
     Microsoft::WRL::ComPtr<IDXGISwapChain4> SwapChain;
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> RenderTargetHeap;
+    std::size_t RenderTargetDescriptorSize;
 
     std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, MaxFrameCount>
         RenderTargets;

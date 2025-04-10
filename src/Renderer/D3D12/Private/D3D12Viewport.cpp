@@ -65,7 +65,7 @@ FD3D12Viewport::FD3D12Viewport(
         ));
         assert(Result);
 
-        std::size_t RenderTargetDescriptorSize =
+        RenderTargetDescriptorSize =
             DevicePtr->GetDescriptorHandleIncrementSize(
                 D3D12_DESCRIPTOR_HEAP_TYPE_RTV
             );
@@ -98,4 +98,38 @@ void FD3D12Viewport::WaitForPreviousFrame(
     FrameFence->Wait(CommandQueue);
 
     FrameIndex = SwapChain->GetCurrentBackBufferIndex();
+}
+
+void FD3D12Viewport::Present()
+{
+    SwapChain->Present(1, 0);
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE FD3D12Viewport::GetRenderTargetView() const
+{
+    D3D12_CPU_DESCRIPTOR_HANDLE Handle = RenderTargetHeap->GetCPUDescriptorHandleForHeapStart();
+    Handle.ptr += (FrameIndex * RenderTargetDescriptorSize);
+    return Handle;
+}
+
+D3D12_VIEWPORT FD3D12Viewport::GetViewport() const
+{
+    return {
+        .TopLeftX = 0,
+        .TopLeftY = 0,
+        .Width = static_cast<float>(Width),
+        .Height = static_cast<float>(Height),
+        .MinDepth = D3D12_MIN_DEPTH,
+        .MaxDepth = D3D12_MAX_DEPTH,
+    };
+}
+
+D3D12_RECT FD3D12Viewport::GetScissorRect() const
+{
+    return {
+        .left = 0,
+        .top = 0,
+        .right = static_cast<LONG>(Width),
+        .bottom = static_cast<LONG>(Height),
+    };
 }

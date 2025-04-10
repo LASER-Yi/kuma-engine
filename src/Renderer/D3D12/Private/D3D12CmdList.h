@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <wrl/client.h>
 
+struct FD3D12StateObject;
 struct FD3D12Device;
 
 struct FD3D12CmdList
@@ -13,8 +14,12 @@ struct FD3D12CmdList
 
     void Reset();
 
-private:
-    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CommandAllocator;
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList(std::shared_ptr<FD3D12StateObject> StateObject) const;
 
-    Microsoft::WRL::ComPtr<ID3D12CommandList> CommandList;
+    ID3D12CommandAllocator* GetCommandAllocator() const;
+
+private:
+    std::weak_ptr<FD3D12Device> Device;
+
+    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CommandAllocator;
 };
