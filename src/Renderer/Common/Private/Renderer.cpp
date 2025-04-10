@@ -2,7 +2,7 @@
 #include "SceneProxy.h"
 #include <memory>
 
-void KRenderer::Shutdown() { Proxies.clear(); }
+void KRenderer::Shutdown() { Primitives.clear(); }
 
 void KRenderer::SetCamera(std::shared_ptr<FCameraSceneProxy> InCameraData)
 {
@@ -12,10 +12,10 @@ void KRenderer::SetCamera(std::shared_ptr<FCameraSceneProxy> InCameraData)
     }
 }
 
-void KRenderer::Enqueue(std::shared_ptr<FPrimitiveSceneProxy> InProxy)
+void KRenderer::SetPrimitive(std::shared_ptr<FPrimitiveSceneProxy> InProxy)
 {
     if (InProxy)
     {
-        Proxies[InProxy->Signature] = InProxy;
+        Primitives[InProxy->Signature] = InProxy;
     }
 }

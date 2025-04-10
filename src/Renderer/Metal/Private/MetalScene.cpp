@@ -14,40 +14,28 @@ FMetalSceneResource::FMetalSceneResource(std::shared_ptr<KMetalDevice> Device)
 {
     MTL::Device* MetalDevice = Device->Get();
 
-    const size_t TransformationSize =
-        sizeof(Metal::ShaderType::FTransformation);
+    const size_t SceneDataSize = sizeof(Metal::ShaderType::FSceneData);
 
-    Data = MetalDevice->newBuffer(
-        TransformationSize, MTL::ResourceStorageModeManaged
-    );
+    Data =
+        MetalDevice->newBuffer(SceneDataSize, MTL::ResourceStorageModeManaged);
 
-    std::memset(Data->contents(), 0, TransformationSize);
+    std::memset(Data->contents(), 0, SceneDataSize);
+    Data->didModifyRange({0, SceneDataSize});
 }
 
 FMetalSceneResource::~FMetalSceneResource() { Data->release(); }
 
-void FMetalSceneResource::Update(
-    const FRendererCameraDescriptor& Camera,
-    const FRendererPrimitiveDescriptor& Primitive
-)
+void FMetalSceneResource::Update(const FRendererCameraDescriptor& Camera)
 {
-    const size_t TransformationSize =
-        sizeof(Metal::ShaderType::FTransformation);
-    NS::Range ModifiedRange = {0, TransformationSize};
+    const size_t SceneDataSize = sizeof(Metal::ShaderType::FSceneData);
 
-    Metal::ShaderType::FTransformation NewData;
+    Metal::ShaderType::FSceneData NewData;
 
-    {
-        NewData.Perspective = FMatrix::MakePerspective(
-            Camera.FieldOfView, Camera.AspectRatio, Camera.Near, Camera.Far
-        );
-        NewData.WorldToCamera = Camera.WorldToCamera;
-    }
+    NewData.Perspective = FMatrix::MakePerspective(
+        Camera.FieldOfView, Camera.AspectRatio, Camera.Near, Camera.Far
+    );
+    NewData.WorldToCamera = Camera.WorldToCamera;
 
-    {
-        NewData.ModelToWorld = Primitive.ModelToWorld;
-    }
-
-    std::memcpy(Data->contents(), &NewData, TransformationSize);
-    Data->didModifyRange(ModifiedRange);
+    std::memcpy(Data->contents(), &NewData, SceneDataSize);
+    Data->didModifyRange({0, SceneDataSize});
 }

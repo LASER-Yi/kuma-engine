@@ -13,7 +13,7 @@ struct alignas(16) TMatrix
     static_assert(std::is_floating_point_v<T>, "T must be floating point");
     T M[4][4];
 
-    TMatrix() = default;
+    TMatrix();
     TMatrix(const TMatrix&) = default;
     TMatrix& operator=(const TMatrix&) = default;
     TMatrix(TMatrix&&) = default;
@@ -39,8 +39,6 @@ public:
     TMatrix Inverse() const;
 
 public:
-    const static TMatrix Identity;
-
     static TMatrix MakePerspective(TRadians<T> FoV, T Aspect, T Near, T Far);
 
     static TMatrix MakePosition(const TVector<T>& InPosition);

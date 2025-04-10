@@ -67,7 +67,6 @@ std::shared_ptr<FCameraSceneProxy> KCameraRenderSystem::CreateSceneProxy(
 
     auto SceneProxy = std::make_shared<FCameraSceneProxy>();
     SceneProxy->Signature = InData->Signature;
-    SceneProxy->ComponentToWorld = FMatrix::Identity;
 
     return SceneProxy;
 }

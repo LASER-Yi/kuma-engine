@@ -23,10 +23,14 @@ static_assert(
 namespace Metal::ShaderType
 {
 
-struct FTransformation
+struct FSceneData
 {
     FMatrix Perspective;
     FMatrix WorldToCamera;
+};
+
+struct FInstanceData
+{
     FMatrix ModelToWorld;
 };
 

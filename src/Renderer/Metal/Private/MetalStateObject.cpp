@@ -8,6 +8,7 @@
 FMetalStateObject::FMetalStateObject(
     MTL::Device* Device, const std::shared_ptr<FMetalShaderResource> InShader
 )
+    : Shader(InShader)
 {
     assert(InShader);
     NS::AutoreleasePool* Pool = NS::AutoreleasePool::alloc()->init();
@@ -16,8 +17,8 @@ FMetalStateObject::FMetalStateObject(
 
     MTL::RenderPipelineDescriptor* Desc =
         MTL::RenderPipelineDescriptor::alloc()->init();
-    Desc->setVertexFunction(InShader->VertexFunction);
-    Desc->setFragmentFunction(InShader->FragmentFunction);
+    Desc->setVertexFunction(Shader->VertexFunction);
+    Desc->setFragmentFunction(Shader->FragmentFunction);
     Desc->colorAttachments()->object(0)->setPixelFormat(
         MTL::PixelFormatBGRA8Unorm
     );

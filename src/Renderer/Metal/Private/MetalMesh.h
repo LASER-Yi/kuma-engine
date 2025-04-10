@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MeshResource.h"
+#include "Metal/MTLDevice.hpp"
 
 #include <memory>
 
@@ -22,5 +23,9 @@ struct FMetalMeshResource : public FMeshRenderResource
 
     size_t VertexCount;
     MTL::Buffer* VertexBuffer;
+    MTL::Buffer* NormalBuffer;
     MTL::Buffer* IndexBuffer;
+
+private:
+    MTL::Buffer* Create(MTL::Device* Device, const void* Data, size_t Size);
 };

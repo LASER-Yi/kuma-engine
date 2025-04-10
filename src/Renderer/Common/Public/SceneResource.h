@@ -20,8 +20,5 @@ struct FRendererPrimitiveDescriptor
 
 struct FSceneRenderResource : public FRenderResource
 {
-    virtual void Update(
-        const FRendererCameraDescriptor& Camera,
-        const FRendererPrimitiveDescriptor& Primitive
-    ) = 0;
+    virtual void Update(const FRendererCameraDescriptor& Camera) = 0;
 };

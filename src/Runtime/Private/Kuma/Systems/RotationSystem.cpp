@@ -29,6 +29,8 @@ void KRotationSystem::Execute(const Swarm::FSystemUpdateContext& Context)
             FTransformData* Transform =
                 Result.GetComponentReadWrite<FTransformData>();
 
+            assert(Transform->MovementMode == EMovementMode::Dynamic);
+
             Transform->LocalTransform.Rotation +=
                 (RotationData->Rotation * FDegrees(DeltaTime));
         }

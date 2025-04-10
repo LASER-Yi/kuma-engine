@@ -8,6 +8,7 @@
 struct FMeshResourceDescriptor
 {
     std::span<const FVector> Vertices;
+    std::span<const FVector> Normals;
     std::span<const std::uint16_t> Indices;
 };
 

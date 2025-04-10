@@ -6,21 +6,6 @@ namespace Math
 {
 
 template <typename T>
-const TVector<T> TVector<T>::Zero = {0.0, 0.0, 0.0};
-
-template <typename T>
-const TVector<T> TVector<T>::One = {1.0, 1.0, 1.0};
-
-template <typename T>
-const TVector<T> TVector<T>::Forward = {1.0, 0.0, 0.0};
-
-template <typename T>
-const TVector<T> TVector<T>::Right = {0.0, 1.0, 0.0};
-
-template <typename T>
-const TVector<T> TVector<T>::Up = {0.0, 0.0, 1.0};
-
-template <typename T>
 TVector<T> TVector<T>::operator+(const TVector<T>& Rhs) const
 {
     return {
@@ -60,7 +45,7 @@ bool TVector<T>::Equal(const TVector<T>& Rhs, T Tolerance) const
 }
 
 template <typename T>
-constexpr T TVector<T>::GetLengthSqrt() const
+T TVector<T>::GetLengthSqrt() const
 {
     return X * X + Y * Y + Z * Z;
 }

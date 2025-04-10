@@ -1,16 +1,15 @@
 #include "Kuma/Systems/MeshRenderSystem.h"
 
-#include <memory>
-
 #include "Engine/StaticMesh.h"
 #include "EntityQuery.h"
 #include "Kuma/Components/StaticMeshData.h"
 #include "Kuma/Components/TransformData.h"
 #include "Kuma/KumaEngine.h"
-#include "Matrix.h"
 #include "Renderer.h"
 #include "SceneProxy.h"
 #include "Shader.h"
+
+#include <memory>
 
 void KMeshRenderSystem::Initialize()
 {
@@ -37,18 +36,19 @@ void KMeshRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
             FStaticMeshData* StaticMeshData =
                 Result.GetComponentReadWrite<FStaticMeshData>();
 
-            if (StaticMeshData->SceneProxy == nullptr)
-            {
-                const auto SceneProxy = CreateSceneProxy(StaticMeshData);
-                StaticMeshData->SceneProxy = SceneProxy;
-                Renderer->Enqueue(SceneProxy);
-            }
-
-            const FTransformData* Transform =
+            const FTransformData* TransformData =
                 Result.GetComponent<FTransformData>();
 
+            if (StaticMeshData->SceneProxy == nullptr)
+            {
+                const auto Proxy =
+                    CreateSceneProxy(Renderer, TransformData, StaticMeshData);
+                StaticMeshData->SceneProxy = Proxy;
+                Renderer->SetPrimitive(Proxy);
+            }
+
             StaticMeshData->SceneProxy->ComponentToWorld =
-                Transform->LocalToWorld;
+                TransformData->LocalToWorld;
         }
     );
 }
@@ -56,28 +56,25 @@ void KMeshRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
 void KMeshRenderSystem::Shutdown() { GlobalStateObject = nullptr; }
 
 std::shared_ptr<FPrimitiveSceneProxy> KMeshRenderSystem::CreateSceneProxy(
-    const FStaticMeshData* Comp
+    std::shared_ptr<KRenderer> Renderer, const FTransformData* TransformData,
+    const FStaticMeshData* MeshData
 ) const
 {
-    if (Comp == nullptr)
+    const auto Mesh = MeshData->Mesh;
+    if (Mesh == nullptr)
     {
         return nullptr;
     }
-
-    if (Comp->Mesh == nullptr)
-    {
-        return nullptr;
-    }
-
-    auto Renderer = GetEngine()->GetRenderer();
 
     auto SceneProxy = std::make_shared<FPrimitiveSceneProxy>();
-    SceneProxy->Signature = Comp->Signature;
-    SceneProxy->ComponentToWorld = FMatrix::Identity;
+    SceneProxy->ComponentToWorld = TransformData->LocalToWorld;
+    SceneProxy->bStatic = TransformData->MovementMode == EMovementMode::Static;
+    SceneProxy->Signature = MeshData->Signature;
 
+    // TODO: Move those initialization to rendering thread
     SceneProxy->PipelineStateObject = GlobalStateObject;
-    SceneProxy->SceneBuffer = Renderer->CreateSceneResource();
-    SceneProxy->MeshResource = Renderer->CreateMesh(Comp->Mesh->Describe());
+    SceneProxy->SceneResource = Renderer->CreateSceneResource();
+    SceneProxy->MeshResource = Renderer->CreateMesh(Mesh->Describe());
 
     return SceneProxy;
 }

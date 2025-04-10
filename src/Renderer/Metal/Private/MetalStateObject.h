@@ -18,5 +18,6 @@ struct FMetalStateObject : public FStateObject
     );
     ~FMetalStateObject();
 
+    const std::shared_ptr<FMetalShaderResource> Shader;
     MTL::RenderPipelineState* Data;
 };

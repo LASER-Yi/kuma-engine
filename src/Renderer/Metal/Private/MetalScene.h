@@ -16,10 +16,7 @@ struct FMetalSceneResource : public FSceneRenderResource
     FMetalSceneResource(std::shared_ptr<KMetalDevice> Device);
     ~FMetalSceneResource();
 
-    virtual void Update(
-        const FRendererCameraDescriptor& Camera,
-        const FRendererPrimitiveDescriptor& Primitive
-    ) override;
+    virtual void Update(const FRendererCameraDescriptor& Camera) override;
 
     MTL::Buffer* Data;
 };

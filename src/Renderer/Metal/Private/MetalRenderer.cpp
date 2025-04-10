@@ -3,10 +3,11 @@
 #include "MathFwd.h"
 #include "Matrix.h"
 #include "MeshResource.h"
-#include "Metal/MTLStageInputOutputDescriptor.hpp"
-#include "Metal/MTLTexture.hpp"
+#include "Metal/MTLArgumentEncoder.hpp"
+#include "Metal/MTLResource.hpp"
 #include "MetalCmdQueue.h"
 #include "MetalDevice.h"
+#include "MetalInstance.h"
 #include "MetalMesh.h"
 #include "MetalScene.h"
 #include "MetalShader.h"
@@ -22,6 +23,7 @@
 #include <Foundation/NSTypes.hpp>
 #include <Metal/MTLCommandBuffer.hpp>
 #include <Metal/MTLDevice.hpp>
+#include <Metal/MTLLibrary.hpp>
 #include <Metal/MTLRenderCommandEncoder.hpp>
 #include <Metal/MTLRenderPass.hpp>
 #include <QuartzCore/CAMetalDrawable.hpp>
@@ -56,6 +58,9 @@ void KMetalRenderer::Update()
 
     NS::AutoreleasePool* Pool = NS::AutoreleasePool::alloc()->init();
 
+    // Refresh primitive data
+    UpdatePrimitiveProxies();
+
     CA::MetalDrawable* Drawable = Viewport->GetDrawable();
 
     // Update camera data
@@ -74,7 +79,7 @@ void KMetalRenderer::Update()
             .Far = Camera->FarClip
         };
 
-        UpdateSceneBuffers(CameraDesc);
+        UpdateCamera(CameraDesc);
     }
 
     MTL::CommandBuffer* Cmd = CommandQueue->GetCmdBuffer();
@@ -105,7 +110,7 @@ void KMetalRenderer::Update()
         ColorAttachment->setLoadAction(MTL::LoadActionLoad);
         ColorAttachment->setStoreAction(MTL::StoreActionStore);
 
-        for (const auto& [Component, Proxy] : Proxies)
+        for (const auto& [Component, Proxy] : Primitives)
         {
             if (Proxy.expired())
             {
@@ -187,24 +192,54 @@ const FMatrix& KMetalRenderer::GetCoordinationMatrix() const
     return Matrix;
 }
 
-void KMetalRenderer::UpdateSceneBuffers(
-    const FRendererCameraDescriptor& CameraDesc
-)
+void KMetalRenderer::UpdateCamera(const FRendererCameraDescriptor& CameraDesc)
 {
-    for (const auto& [Component, Proxy] : Proxies)
+    for (const auto& [Component, InProxy] : Primitives)
     {
-        if (Proxy.expired())
+        if (InProxy.expired())
         {
             continue;
         }
 
-        auto SceneProxy = Proxy.lock();
+        auto Proxy = InProxy.lock();
 
-        const FRendererPrimitiveDescriptor PrimitiveDesc = {
-            .ModelToWorld = SceneProxy->ComponentToWorld
-        };
+        Proxy->SceneResource->Update(CameraDesc);
+    }
+}
 
-        SceneProxy->SceneBuffer->Update(CameraDesc, PrimitiveDesc);
+void KMetalRenderer::UpdatePrimitiveProxies()
+{
+    MTL::Device* MetalDevice = Device->Get();
+    if (MetalDevice == nullptr)
+    {
+        return;
+    }
+
+    for (const auto& [Component, InProxy] : Primitives)
+    {
+        if (InProxy.expired())
+        {
+            continue;
+        }
+
+        auto Proxy = InProxy.lock();
+
+        bool bInstanceUpdated = false;
+        if (Proxy->InstanceResource == nullptr)
+        {
+            Proxy->InstanceResource =
+                std::make_shared<FMetalInstanceResource>(Device, Proxy);
+            bInstanceUpdated = true;
+        }
+
+        if (Proxy->bStatic == false && bInstanceUpdated == false)
+        {
+            auto InstanceResource =
+                std::static_pointer_cast<FMetalInstanceResource>(
+                    Proxy->InstanceResource
+                );
+            InstanceResource->Update(Proxy);
+        }
     }
 }
 
@@ -225,10 +260,16 @@ void KMetalRenderer::EncodePrimitive(
     const auto MeshResource =
         std::static_pointer_cast<FMetalMeshResource>(Proxy->MeshResource);
     Encoder->setVertexBuffer(MeshResource->VertexBuffer, 0, 0);
+    Encoder->setVertexBuffer(MeshResource->NormalBuffer, 0, 1);
+
+    const auto InstanceResource =
+        std::static_pointer_cast<FMetalInstanceResource>(Proxy->InstanceResource
+        );
+    Encoder->setVertexBuffer(InstanceResource->Data, 0, 2);
 
     const auto SceneBuffer =
-        std::static_pointer_cast<FMetalSceneResource>(Proxy->SceneBuffer);
-    Encoder->setVertexBuffer(SceneBuffer->Data, 0, 1);
+        std::static_pointer_cast<FMetalSceneResource>(Proxy->SceneResource);
+    Encoder->setVertexBuffer(SceneBuffer->Data, 0, 3);
 
     Encoder->drawIndexedPrimitives(
         MTL::PrimitiveTypeTriangle, NS::UInteger(MeshResource->VertexCount),

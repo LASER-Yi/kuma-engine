@@ -1,7 +1,6 @@
 #include "MetalMesh.h"
 #include "Metal/MTLResource.hpp"
 #include "MetalDevice.h"
-#include "Vector.h"
 
 #include <Metal/MTLBuffer.hpp>
 #include <Metal/MTLDevice.hpp>
@@ -22,37 +21,40 @@ FMetalMeshResource::FMetalMeshResource(
     MTL::Device* MetalDevice = Device->Get();
     assert(MetalDevice);
 
+    assert(Descriptor.Vertices.size() == Descriptor.Normals.size());
+
     VertexCount = Descriptor.Indices.size();
 
-    // Vertex buffer
-    {
-        const size_t VertexDataSize = Descriptor.Vertices.size_bytes();
-        VertexBuffer = MetalDevice->newBuffer(
-            VertexDataSize, MTL::ResourceStorageModeManaged
-        );
+    VertexBuffer = Create(
+        MetalDevice, Descriptor.Vertices.data(),
+        Descriptor.Vertices.size_bytes()
+    );
 
-        std::memcpy(
-            VertexBuffer->contents(), Descriptor.Vertices.data(), VertexDataSize
-        );
-        VertexBuffer->didModifyRange({0, VertexDataSize});
-    }
+    NormalBuffer = Create(
+        MetalDevice, Descriptor.Normals.data(), Descriptor.Normals.size_bytes()
+    );
 
-    // Index buffer
-    {
-        const size_t IndexDataSize = Descriptor.Indices.size_bytes();
-        IndexBuffer = MetalDevice->newBuffer(
-            IndexDataSize, MTL::ResourceStorageModeManaged
-        );
-
-        std::memcpy(
-            IndexBuffer->contents(), Descriptor.Indices.data(), IndexDataSize
-        );
-        IndexBuffer->didModifyRange({0, IndexDataSize});
-    }
+    IndexBuffer = Create(
+        MetalDevice, Descriptor.Indices.data(), Descriptor.Indices.size_bytes()
+    );
 }
 
 FMetalMeshResource::~FMetalMeshResource()
 {
     VertexBuffer->release();
+    NormalBuffer->release();
     IndexBuffer->release();
+}
+
+MTL::Buffer* FMetalMeshResource::Create(
+    MTL::Device* Device, const void* Data, size_t Size
+)
+{
+    MTL::Buffer* Result =
+        Device->newBuffer(Size, MTL::ResourceStorageModeManaged);
+
+    std::memcpy(Result->contents(), Data, Size);
+    Result->didModifyRange({0, Size});
+
+    return Result;
 }

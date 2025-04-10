@@ -6,6 +6,7 @@
 #include <Metal/MTLDevice.hpp>
 #include <Metal/MTLLibrary.hpp>
 #include <cassert>
+#include <iostream>
 #include <memory>
 
 FMetalShaderResource::FMetalShaderResource(
@@ -21,7 +22,12 @@ FMetalShaderResource::FMetalShaderResource(
         NS::String::string(ShaderSrc, NS::UTF8StringEncoding), nullptr, &Error
     );
 
-    assert(Library);
+    if (Library == nullptr)
+    {
+        NS::String* LocalizedError = Error->localizedDescription();
+        std::cout << LocalizedError->utf8String() << std::endl;
+        assert(false);
+    }
 
     VertexFunction = Library->newFunction(
         NS::String::string(VertexEntry, NS::UTF8StringEncoding)
@@ -54,26 +60,37 @@ const char* PrimitiveShaderSrc = R"(
     {
         float4x4 Perspective;
         float4x4 WorldToCamera;
+    };
+
+    struct InstanceData
+    {
         float4x4 ModelToWorld;
     };
 
     struct v2f
     {
         float4 position [[position]];
+        float3 normal;
         half3 color;
     };
 
-    v2f vertex vertexMain(uint vertexId [[vertex_id]],
-                           device const float3* positions [[buffer(0)]],
-                           device const SceneData& scene [[buffer(1)]]
+    v2f vertex vertexMain(  uint vertexId [[vertex_id]],
+                            uint instanceId [[instance_id]],
+                            device const float3* positions [[buffer(0)]],
+                            device const float3* normals [[buffer(1)]],
+                            device const InstanceData* instanceData [[buffer(2)]],
+                            device const SceneData& scene [[buffer(3)]]
     )
     {
-        float4 vertexPos = float4(positions[vertexId], 1.0);
-        float4 worldPos = scene.ModelToWorld * vertexPos;
+        const float4 vertexPos = float4(positions[vertexId], 1.0);
+        const float4 normalDir = float4(normals[vertexId], 0.0);
+
+        const float4 worldNormal = instanceData[instanceId].ModelToWorld * normalDir;
 
         v2f o;
-        o.position = scene.Perspective * scene.WorldToCamera * worldPos;
-        o.color = half3(worldPos.x, worldPos.y, worldPos.z);
+        o.position = scene.Perspective * scene.WorldToCamera * instanceData[instanceId].ModelToWorld * vertexPos;
+        o.normal = float3(worldNormal.x, worldNormal.y, worldNormal.z);
+        o.color = half3(0.5);
         return o;
     }
 

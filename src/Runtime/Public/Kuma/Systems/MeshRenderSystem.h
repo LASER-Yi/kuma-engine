@@ -2,7 +2,9 @@
 
 #include "CoreMinimal.h"
 
+#include "Kuma/Components/TransformData.h"
 #include "Kuma/Systems/KumaSystemBase.h"
+#include "Renderer.h"
 #include "StateObject.h"
 #include "SystemUpdateContext.h"
 
@@ -22,7 +24,8 @@ public:
 
 protected:
     std::shared_ptr<FPrimitiveSceneProxy> CreateSceneProxy(
-        const FStaticMeshData* Comp
+        std::shared_ptr<KRenderer> Renderer,
+        const FTransformData* TransformData, const FStaticMeshData* MeshData
     ) const;
 
     std::shared_ptr<FStateObject> GlobalStateObject;

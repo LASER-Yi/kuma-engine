@@ -1,6 +1,7 @@
 #include "Matrix.h"
 
 #include <cmath>
+#include <cstring>
 
 #include "Rotator.h"
 #include "Vector.h"
@@ -9,12 +10,14 @@ namespace Math
 {
 
 template <typename T>
-const TMatrix<T> TMatrix<T>::Identity = {
-    {1.0, 0.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0, 0.0},
-    {0.0, 0.0, 1.0, 0.0},
-    {0.0, 0.0, 0.0, 1.0},
-};
+TMatrix<T>::TMatrix()
+{
+    std::memset(M, 0, sizeof(M));
+    M[0][0] = 1.0;
+    M[1][1] = 1.0;
+    M[2][2] = 1.0;
+    M[3][3] = 1.0;
+}
 
 template <typename T>
 TMatrix<T>::TMatrix(
@@ -167,7 +170,7 @@ TMatrix<T> TMatrix<T>::Inverse() const
 
     if (Determinant == 0.0 || std::isinf(Determinant))
     {
-        return TMatrix<T>::Identity;
+        return TMatrix<T>();
     }
 
     const T RDet = 1.0 / Determinant;
@@ -289,7 +292,7 @@ TMatrix<T> TMatrix<T>::MakeRotation(
     }
     else
     {
-        return Identity;
+        return {};
     }
 }
 

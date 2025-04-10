@@ -5,10 +5,10 @@
 
 TEST(MatrixTests, MatrixMultiply)
 {
-    const FMatrix One = FMatrix::Identity;
-    const FMatrix Another = FMatrix::Identity;
+    const FMatrix One;
+    const FMatrix Another;
 
     const FMatrix Result = One * Another;
 
-    ASSERT_EQ(Result, FMatrix::Identity);
+    ASSERT_EQ(Result, FMatrix());
 }

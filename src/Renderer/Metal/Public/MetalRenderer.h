@@ -51,7 +51,9 @@ private:
      */
     const FMatrix& GetCoordinationMatrix() const;
 
-    void UpdateSceneBuffers(const FRendererCameraDescriptor& CameraDesc);
+    void UpdateCamera(const FRendererCameraDescriptor& CameraDesc);
+
+    void UpdatePrimitiveProxies();
 
     void EncodePrimitive(
         MTL::RenderCommandEncoder* Encoder, const FPrimitiveSceneProxy* Proxy

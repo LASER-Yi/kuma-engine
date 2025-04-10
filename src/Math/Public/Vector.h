@@ -21,13 +21,6 @@ struct alignas(16) TVector
     T Y;
     T Z;
 
-    const static TVector Zero;
-    const static TVector One;
-
-    const static TVector Forward;
-    const static TVector Right;
-    const static TVector<T> Up;
-
     TVector operator+(const TVector& Rhs) const;
     TVector operator-(const TVector& Rhs) const;
     bool operator==(const TVector& Rhs) const;
@@ -36,7 +29,7 @@ struct alignas(16) TVector
 
     bool Equal(const TVector& Rhs, T Tolerance) const;
 
-    constexpr T GetLengthSqrt() const;
+    T GetLengthSqrt() const;
     T GetLength() const;
 
     TVector Normalize() const;

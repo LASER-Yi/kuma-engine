@@ -26,8 +26,7 @@ public:
 
     virtual void Shutdown();
 
-    virtual void Enqueue(std::shared_ptr<FPrimitiveSceneProxy> InProxy);
-
+    virtual void SetPrimitive(std::shared_ptr<FPrimitiveSceneProxy> InProxy);
     virtual void SetCamera(std::shared_ptr<FCameraSceneProxy> InCameraData);
 
 public:
@@ -50,5 +49,5 @@ protected:
     std::weak_ptr<FCameraSceneProxy> CameraData;
 
     std::unordered_map<std::size_t, std::weak_ptr<FPrimitiveSceneProxy>>
-        Proxies;
+        Primitives;
 };
