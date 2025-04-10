@@ -38,10 +38,8 @@ void FMetalSceneResource::Update(
     Metal::ShaderType::FTransformation NewData;
 
     {
-        const float Near = 0.03;
-        const float Far = 100.0;
         NewData.Perspective = Math::FMatrix::MakePerspective(
-            Camera.FieldOfView, Camera.AspectRatio, Near, Far
+            Camera.FieldOfView, Camera.AspectRatio, Camera.Near, Camera.Far
         );
         NewData.WorldToCamera = Camera.WorldToCamera;
     }

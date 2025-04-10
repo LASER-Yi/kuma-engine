@@ -55,7 +55,7 @@ void KMeshRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
 
 void KMeshRenderSystem::Shutdown() { GlobalStateObject = nullptr; }
 
-std::shared_ptr<FSceneProxy> KMeshRenderSystem::CreateSceneProxy(
+std::shared_ptr<FPrimitiveSceneProxy> KMeshRenderSystem::CreateSceneProxy(
     const FStaticMeshData* Comp
 ) const
 {
@@ -71,8 +71,8 @@ std::shared_ptr<FSceneProxy> KMeshRenderSystem::CreateSceneProxy(
 
     auto Renderer = GetEngine()->GetRenderer();
 
-    auto SceneProxy = std::make_shared<FSceneProxy>();
-
+    auto SceneProxy = std::make_shared<FPrimitiveSceneProxy>();
+    SceneProxy->Signature = Comp->Signature;
     SceneProxy->ComponentToWorld = Math::FMatrix::Identity;
 
     SceneProxy->PipelineStateObject = GlobalStateObject;

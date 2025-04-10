@@ -51,10 +51,10 @@ private:
      */
     const Math::FMatrix& GetCoordinationMatrix() const;
 
-    void UpdateSceneBuffers(MTL::Texture* Backbuffer);
+    void UpdateSceneBuffers(const FRendererCameraDescriptor& CameraDesc);
 
     void EncodePrimitive(
-        MTL::RenderCommandEncoder* Encoder, const FSceneProxy* Proxy
+        MTL::RenderCommandEncoder* Encoder, const FPrimitiveSceneProxy* Proxy
     ) const;
 
 private:

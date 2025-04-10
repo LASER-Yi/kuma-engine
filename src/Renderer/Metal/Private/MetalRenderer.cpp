@@ -47,11 +47,33 @@ void KMetalRenderer::Update()
         return;
     }
 
+    std::shared_ptr<FCameraSceneProxy> Camera = CameraData.lock();
+    if (Camera == nullptr)
+    {
+        return;
+    }
+
     NS::AutoreleasePool* Pool = NS::AutoreleasePool::alloc()->init();
 
     CA::MetalDrawable* Drawable = Viewport->GetDrawable();
 
-    UpdateSceneBuffers(Drawable->texture());
+    // Update camera data
+    {
+        const Math::FMatrix& Coordination = GetCoordinationMatrix();
+
+        const MTL::Texture* SceneColor = Drawable->texture();
+
+        const FRendererCameraDescriptor CameraDesc = {
+            .FieldOfView = Camera->FieldOfView,
+            .AspectRatio = static_cast<float>(SceneColor->width()) /
+                           static_cast<float>(SceneColor->height()),
+            .WorldToCamera = Camera->ComponentToWorld * Coordination,
+            .Near = Camera->NearClip,
+            .Far = Camera->FarClip
+        };
+
+        UpdateSceneBuffers(CameraDesc);
+    }
 
     MTL::CommandBuffer* Cmd = CommandQueue->GetCmdBuffer();
 
@@ -81,7 +103,7 @@ void KMetalRenderer::Update()
         ColorAttachment->setLoadAction(MTL::LoadActionLoad);
         ColorAttachment->setStoreAction(MTL::StoreActionStore);
 
-        for (const auto Proxy : Proxies)
+        for (const auto& [Component, Proxy] : Proxies)
         {
             if (Proxy.expired())
             {
@@ -160,18 +182,11 @@ const Math::FMatrix& KMetalRenderer::GetCoordinationMatrix() const
     return Matrix;
 }
 
-void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
+void KMetalRenderer::UpdateSceneBuffers(
+    const FRendererCameraDescriptor& CameraDesc
+)
 {
-    const Math::FMatrix& Coordination = GetCoordinationMatrix();
-
-    const FRendererCameraDescriptor CameraDesc = {
-        .FieldOfView = Math::FDegrees(45.0),
-        .AspectRatio = static_cast<float>(Backbuffer->width()) /
-                       static_cast<float>(Backbuffer->height()),
-        .WorldToCamera = Coordination
-    };
-
-    for (const auto& Proxy : Proxies)
+    for (const auto& [Component, Proxy] : Proxies)
     {
         if (Proxy.expired())
         {
@@ -189,7 +204,7 @@ void KMetalRenderer::UpdateSceneBuffers(MTL::Texture* Backbuffer)
 }
 
 void KMetalRenderer::EncodePrimitive(
-    MTL::RenderCommandEncoder* Encoder, const FSceneProxy* Proxy
+    MTL::RenderCommandEncoder* Encoder, const FPrimitiveSceneProxy* Proxy
 ) const
 {
     assert(Encoder);

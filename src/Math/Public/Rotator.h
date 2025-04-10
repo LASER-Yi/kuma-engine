@@ -42,17 +42,29 @@ struct TDegrees
 
     explicit TDegrees(T InValue) : Value(InValue) {}
 
-    TDegrees<T> operator+(const TDegrees<T>& InDegrees)
+    TDegrees<T> operator+(const TDegrees<T>& InDegrees) const
     {
         return TDegrees<T>(Value + InDegrees.Value);
     }
     void operator+=(const TDegrees<T>& InDegrees) { Value += InDegrees.Value; }
 
-    TDegrees<T> operator-(const TDegrees<T>& InDegrees)
+    TDegrees<T> operator-(const TDegrees<T>& InDegrees) const
     {
         return TDegrees<T>(Value - InDegrees.Value);
     }
     void operator-=(const TDegrees<T>& InDegrees) { Value -= InDegrees.Value; }
+
+    TDegrees<T> operator*(const TDegrees<T>& InDegrees) const
+    {
+        return TDegrees<T>(Value * InDegrees.Value);
+    }
+    void operator*=(const TDegrees<T>& InDegrees) { Value *= InDegrees.Value; }
+
+    TDegrees<T> operator/(const TDegrees<T>& InDegrees) const
+    {
+        return TDegrees<T>(Value / InDegrees.Value);
+    }
+    void operator/=(const TDegrees<T>& InDegrees) { Value /= InDegrees.Value; }
 
     T Value;
 };
@@ -68,6 +80,10 @@ struct alignas(16) TRotator
 {
     static_assert(std::is_floating_point_v<T>, "T must be floating point");
 
+    TRotator() = default;
+    TRotator(T Pitch, T Yaw, T Roll);
+    TRotator(TDegrees<T> Pitch, TDegrees<T> Yaw, TDegrees<T> Roll);
+
     /** Rotation around the right axis (around Y axis), Looking up and down
      * (0=Straight Ahead, +Up, -Down) */
     TDegrees<T> Pitch;
@@ -79,6 +95,15 @@ struct alignas(16) TRotator
     /** Rotation around the forward axis (around X axis), Tilting your head,
      * (0=Straight, +Clockwise, -CCW) */
     TDegrees<T> Roll;
+
+    TRotator operator+(const TRotator& Other) const;
+    void operator+=(const TRotator& Other);
+
+    TRotator operator-(const TRotator& Other) const;
+    void operator-=(const TRotator& Other);
+
+    TRotator operator*(TDegrees<T> Other) const;
+    void operator*=(TDegrees<T> Other);
 };
 
 template <typename T>

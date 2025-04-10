@@ -3,9 +3,12 @@
 #include "Engine/Engine.h"
 #include "Engine/StaticMesh.h"
 
+#include "Kuma/Components/CameraData.h"
+#include "Kuma/Components/RotationData.h"
 #include "Kuma/Components/StaticMeshData.h"
 #include "Kuma/Components/TransformData.h"
 
+#include "Kuma/Entities/CameraEntity.h"
 #include "Kuma/Entities/KumaEntity.h"
 #include "Kuma/Entities/KumaWorld.h"
 #include "Kuma/Systems/CameraRenderSystem.h"
@@ -25,11 +28,22 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
     CurrentWorld = Swarm::Manager::Get()->MakeEntity<FKumaWorld>();
 
     {
+        auto Camera = Swarm::Manager::Get()->MakeEntity<FCameraEntity>();
+        FCameraData* CameraData = Camera->GetComponent<FCameraData>();
+        CameraData->bActive = true;
+
+        FTransformData* Transform = Camera->GetComponent<FTransformData>();
+
+        CurrentWorld->AddToWorld(Camera);
+    }
+
+    {
         auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
         Entity->AddComponent<FStaticMeshData>(FStaticMesh::Cube());
         FTransformData* Transform = Entity->GetComponent<FTransformData>();
-
         Transform->LocalTransform.Translation.X = 10.0;
+
+        Entity->AddComponent<FRotationData>(FRotator(0.0, 15.0, 10.0));
 
         CurrentWorld->AddToWorld(Entity);
     }

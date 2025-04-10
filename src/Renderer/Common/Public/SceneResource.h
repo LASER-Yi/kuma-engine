@@ -9,6 +9,9 @@ struct FRendererCameraDescriptor
     float AspectRatio;
     Math::FRadians FieldOfView;
     Math::FMatrix WorldToCamera;
+
+    float Near;
+    float Far;
 };
 
 struct FRendererPrimitiveDescriptor

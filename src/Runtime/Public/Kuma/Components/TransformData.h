@@ -11,5 +11,5 @@ struct FTransformData : public Swarm::FComponent
      * @brief The matrix from local space to the world space
      * Will be calculated by WorldHierarchicalSystem
      */
-    Math::FMatrix LocalToWorld;
+    Math::FMatrix LocalToWorld = Math::FMatrix::Identity;
 };

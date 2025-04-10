@@ -1,10 +1,11 @@
 #pragma once
 
+#include "SceneProxy.h"
 #include "Shader.h"
-#include "Vector.h"
 
+#include <cstddef>
 #include <memory>
-#include <vector>
+#include <unordered_map>
 
 struct FStaticMesh;
 struct FSceneProxy;
@@ -25,7 +26,9 @@ public:
 
     virtual void Shutdown();
 
-    virtual void Enqueue(std::shared_ptr<FSceneProxy> InProxy);
+    virtual void Enqueue(std::shared_ptr<FPrimitiveSceneProxy> InProxy);
+
+    virtual void SetCamera(std::shared_ptr<FCameraSceneProxy> InCameraData);
 
 public:
     virtual void Resize(size_t Width, size_t Height) = 0;
@@ -44,5 +47,8 @@ public:
     ) = 0;
 
 protected:
-    std::vector<std::weak_ptr<FSceneProxy>> Proxies;
+    std::weak_ptr<FCameraSceneProxy> CameraData;
+
+    std::unordered_map<std::size_t, std::weak_ptr<FPrimitiveSceneProxy>>
+        Proxies;
 };
