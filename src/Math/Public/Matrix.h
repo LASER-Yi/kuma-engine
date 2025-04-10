@@ -33,6 +33,11 @@ public:
     TMatrix operator*(const TMatrix& Other) const;
     bool operator==(const TMatrix& Other) const;
 
+    /**
+     * Calculate the inverse of a TMatrix
+     */
+    TMatrix Inverse() const;
+
 public:
     const static TMatrix Identity;
 

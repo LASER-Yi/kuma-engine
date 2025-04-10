@@ -60,6 +60,7 @@ void KMetalRenderer::Update()
     // Update camera data
     {
         const FMatrix& Coordination = GetCoordinationMatrix();
+        const FMatrix WorldToCamera = Camera->ComponentToWorld.Inverse();
 
         const MTL::Texture* SceneColor = Drawable->texture();
 
@@ -67,7 +68,7 @@ void KMetalRenderer::Update()
             .FieldOfView = Camera->FieldOfView,
             .AspectRatio = static_cast<float>(SceneColor->width()) /
                            static_cast<float>(SceneColor->height()),
-            .WorldToCamera = Camera->ComponentToWorld * Coordination,
+            .WorldToCamera = WorldToCamera * Coordination,
             .Near = Camera->NearClip,
             .Far = Camera->FarClip
         };

@@ -33,6 +33,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
         CameraData->bActive = true;
 
         FTransformData* Transform = Camera->GetComponent<FTransformData>();
+        Transform->LocalTransform.Translation.X = -10.0;
 
         CurrentWorld->AddToWorld(Camera);
     }
@@ -41,7 +42,6 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
         auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
         Entity->AddComponent<FStaticMeshData>(FStaticMesh::Cube());
         FTransformData* Transform = Entity->GetComponent<FTransformData>();
-        Transform->LocalTransform.Translation.X = 10.0;
 
         Entity->AddComponent<FRotationData>(FRotator(0.0, 15.0, 10.0));
 
@@ -54,7 +54,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
         FTransformData* Transform =
             AnotherEntity->GetComponent<FTransformData>();
 
-        Transform->LocalTransform.Translation = {12.0, 2.0, 2.0};
+        Transform->LocalTransform.Translation = {2.0, 2.0, 2.0};
 
         CurrentWorld->AddToWorld(AnotherEntity);
     }
