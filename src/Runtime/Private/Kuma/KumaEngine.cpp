@@ -40,7 +40,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 
     {
         auto Entity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-        Entity->AddComponent<FStaticMeshData>(FStaticMesh::Cube());
+        Entity->AddComponent<FStaticMeshData>(FStaticMesh::Cube);
         FTransformData* Transform = Entity->GetComponent<FTransformData>();
 
         Entity->AddComponent<FRotationData>(FRotator(0.0, 15.0, 10.0));
@@ -50,7 +50,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
 
     {
         auto AnotherEntity = Swarm::Manager::Get()->MakeEntity<FKumaEntity>();
-        AnotherEntity->AddComponent<FStaticMeshData>(FStaticMesh::Cube());
+        AnotherEntity->AddComponent<FStaticMeshData>(FStaticMesh::Cube);
         FTransformData* Transform =
             AnotherEntity->GetComponent<FTransformData>();
 

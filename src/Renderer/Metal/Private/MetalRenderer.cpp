@@ -216,9 +216,7 @@ void KMetalRenderer::EncodePrimitive(
     assert(Proxy);
 
     Encoder->setCullMode(MTL::CullModeBack);
-    Encoder->setFrontFacingWinding(MTL::WindingClockwise
-    ); // Flip the facing winding from CCW to CW since the coord is changed
-       // from right-hand to left-hand
+    Encoder->setFrontFacingWinding(MTL::WindingCounterClockwise);
 
     const auto StateObject =
         std::static_pointer_cast<FMetalStateObject>(Proxy->PipelineStateObject);

@@ -47,6 +47,12 @@ bool TVector<T>::operator==(const TVector<T>& Rhs) const
 }
 
 template <typename T>
+TVector<T> TVector<T>::operator-() const
+{
+    return {-X, -Y, -Z};
+}
+
+template <typename T>
 bool TVector<T>::Equal(const TVector<T>& Rhs, T Tolerance) const
 {
     // TODO: Implement Tolerance
