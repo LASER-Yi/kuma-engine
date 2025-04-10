@@ -2,6 +2,7 @@
 
 #include "D3D12CmdQueue.h"
 #include "D3D12Device.h"
+#include "D3D12Fence.h"
 
 #include <cassert>
 
@@ -69,16 +70,32 @@ FD3D12Viewport::FD3D12Viewport(
                 D3D12_DESCRIPTOR_HEAP_TYPE_RTV
             );
 
-        D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetHandle = RenderTargetHeap->GetCPUDescriptorHandleForHeapStart();
+        D3D12_CPU_DESCRIPTOR_HANDLE RenderTargetHandle =
+            RenderTargetHeap->GetCPUDescriptorHandleForHeapStart();
 
         for (std::uint32_t i = 0; i < FrameCount; ++i)
         {
             SwapChain->GetBuffer(i, IID_PPV_ARGS(&RenderTargets[i]));
-            DevicePtr->CreateRenderTargetView(RenderTargets[i].Get(), nullptr, RenderTargetHandle);
+            DevicePtr->CreateRenderTargetView(
+                RenderTargets[i].Get(), nullptr, RenderTargetHandle
+            );
 
             RenderTargetHandle.ptr += RenderTargetDescriptorSize;
         }
     }
 
+    {
+        FrameFence = std::make_shared<FD3D12Fence>(Device);
+    }
+
     Device->Viewport = this;
+}
+
+void FD3D12Viewport::WaitForPreviousFrame(
+    std::shared_ptr<FD3D12CmdQueue> CommandQueue
+)
+{
+    FrameFence->Wait(CommandQueue);
+
+    FrameIndex = SwapChain->GetCurrentBackBufferIndex();
 }

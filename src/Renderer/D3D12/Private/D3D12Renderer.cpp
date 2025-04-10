@@ -1,9 +1,9 @@
 #include "D3D12Renderer.h"
 
-#include "D3D12Viewport.h"
 #include "D3D12CmdQueue.h"
 #include "D3D12Device.h"
 #include "D3D12Shader.h"
+#include "D3D12Viewport.h"
 
 #include <cassert>
 #include <d3d12.h>
@@ -30,7 +30,15 @@ void KD3D12Renderer::Initialize(void* WindowPtr)
 
 void KD3D12Renderer::Update() {}
 
-void KD3D12Renderer::Shutdown() {}
+void KD3D12Renderer::Shutdown()
+{
+    Viewport->WaitForPreviousFrame(CommandQueue);
+
+    Viewport.reset();
+    CommandQueue.reset();
+    ShaderManager.reset();
+    Device.reset();
+}
 
 void KD3D12Renderer::Resize(size_t Width, size_t Height) {}
 
