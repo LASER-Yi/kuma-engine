@@ -25,10 +25,13 @@ void KD3D12Renderer::Initialize(void* WindowPtr)
     CommandQueue = std::make_shared<FD3D12CmdQueue>(Device);
     Viewport = std::make_shared<FD3D12Viewport>(Device, WindowPtr);
 
-    ShaderManager = std::make_shared<FD3D12ShaderManager>();
+    ShaderManager = std::make_shared<FD3D12ShaderManager>(Device);
 }
 
-void KD3D12Renderer::Update() {}
+void KD3D12Renderer::Update()
+{
+    Viewport->WaitForPreviousFrame(CommandQueue);
+}
 
 void KD3D12Renderer::Shutdown()
 {
