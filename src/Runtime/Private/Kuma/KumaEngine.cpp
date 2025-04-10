@@ -54,7 +54,7 @@ void KKumaEngine::Initialize(const FEngineInitializationContext& Context)
         FTransformData* Transform =
             AnotherEntity->GetComponent<FTransformData>();
 
-        Transform->LocalTransform.Translation = {2.0, 2.0, 2.0};
+        Transform->LocalTransform.Translation = {.0, 2.0, 2.0};
 
         CurrentWorld->AddToWorld(AnotherEntity);
     }

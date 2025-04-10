@@ -1,5 +1,6 @@
 #include "MetalRenderer.h"
 
+#include "MathFwd.h"
 #include "Matrix.h"
 #include "MeshResource.h"
 #include "Metal/MTLStageInputOutputDescriptor.hpp"
@@ -178,7 +179,10 @@ std::shared_ptr<FMeshRenderResource> KMetalRenderer::CreateMesh(
 const FMatrix& KMetalRenderer::GetCoordinationMatrix() const
 {
     static const FMatrix Matrix =
-        FMatrix::MakeRotation(Math::EAxis::Y, FDegrees(90));
+        FMatrix::MakeScale({1.0, 1.0, -1.0}
+        ) * // Flip Y axis (Change from right-hand to left-hand)
+        FMatrix::MakeRotation(Math::EAxis::Y, FDegrees(90)) *
+        FMatrix::MakeRotation(Math::EAxis::Z, FDegrees(90));
 
     return Matrix;
 }
@@ -212,7 +216,9 @@ void KMetalRenderer::EncodePrimitive(
     assert(Proxy);
 
     Encoder->setCullMode(MTL::CullModeBack);
-    Encoder->setFrontFacingWinding(MTL::WindingCounterClockwise);
+    Encoder->setFrontFacingWinding(MTL::WindingClockwise
+    ); // Flip the facing winding from CCW to CW since the coord is changed
+       // from right-hand to left-hand
 
     const auto StateObject =
         std::static_pointer_cast<FMetalStateObject>(Proxy->PipelineStateObject);
