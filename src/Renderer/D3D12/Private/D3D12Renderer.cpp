@@ -37,7 +37,7 @@ void KD3D12Renderer::Update()
 
     CommandList->Reset();
 
-    for (const auto& [Component, Proxy] : Proxies)
+    for (const auto& [Component, Proxy] : Primitives)
     {
         const auto SharedProxy = Proxy.lock();
         if (SharedProxy == nullptr)
