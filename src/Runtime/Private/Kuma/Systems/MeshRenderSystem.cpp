@@ -23,7 +23,7 @@ void KMeshRenderSystem::Initialize()
     GlobalStateObject = Renderer->CreateStateObject(Shader->GetPrimitive());
 }
 
-void KMeshRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
+void KMeshRenderSystem::Execute(const Swarm::FExecutionContext& Context)
 {
     using namespace Swarm;
 

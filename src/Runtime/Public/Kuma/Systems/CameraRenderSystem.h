@@ -15,9 +15,7 @@ class KCameraRenderSystem : public KKumaSystemBase
 public:
     virtual void Initialize() override;
 
-    virtual void Execute(const Swarm::FSystemUpdateContext& Context) override;
-
-    virtual void Shutdown() override;
+    virtual void Execute(const Swarm::FExecutionContext& Context) override;
 
 protected:
     std::shared_ptr<FCameraSceneProxy> CreateSceneProxy(

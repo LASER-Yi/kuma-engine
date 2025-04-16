@@ -16,7 +16,7 @@ void KCameraRenderSystem::Initialize()
     Query.AddRequirement<FCameraData>(EComponentAccessMode::ReadWrite);
 }
 
-void KCameraRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
+void KCameraRenderSystem::Execute(const Swarm::FExecutionContext& Context)
 {
     auto Renderer = GetEngine()->GetRenderer();
 
@@ -51,8 +51,6 @@ void KCameraRenderSystem::Execute(const Swarm::FSystemUpdateContext& Context)
         }
     );
 }
-
-void KCameraRenderSystem::Shutdown() {}
 
 std::shared_ptr<FCameraSceneProxy> KCameraRenderSystem::CreateSceneProxy(
     const FCameraData* InData

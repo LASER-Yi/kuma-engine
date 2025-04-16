@@ -7,7 +7,5 @@ class KRotationSystem : public KKumaSystemBase
 public:
     virtual void Initialize() override;
 
-    virtual void Execute(const Swarm::FSystemUpdateContext& Context) override;
-
-    virtual void Shutdown() override;
+    virtual void Execute(const Swarm::FExecutionContext& Context) override;
 };

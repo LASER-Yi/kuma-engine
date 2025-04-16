@@ -2,11 +2,12 @@
 
 #include "CoreMinimal.h"
 
+#include "ExecutionContext.h"
 #include "Kuma/Components/TransformData.h"
 #include "Kuma/Systems/KumaSystemBase.h"
 #include "Renderer.h"
 #include "StateObject.h"
-#include "SystemUpdateContext.h"
+
 
 #include <memory>
 
@@ -18,7 +19,7 @@ class KMeshRenderSystem : public KKumaSystemBase
 public:
     virtual void Initialize() override;
 
-    virtual void Execute(const Swarm::FSystemUpdateContext& Context) override;
+    virtual void Execute(const Swarm::FExecutionContext& Context) override;
 
     virtual void Shutdown() override;
 

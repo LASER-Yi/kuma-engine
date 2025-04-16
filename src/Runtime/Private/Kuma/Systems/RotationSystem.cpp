@@ -13,7 +13,7 @@ void KRotationSystem::Initialize()
     Query.AddRequirement<FTransformData>(EComponentAccessMode::ReadWrite);
 }
 
-void KRotationSystem::Execute(const Swarm::FSystemUpdateContext& Context)
+void KRotationSystem::Execute(const Swarm::FExecutionContext& Context)
 {
     using namespace Swarm;
 
@@ -36,5 +36,3 @@ void KRotationSystem::Execute(const Swarm::FSystemUpdateContext& Context)
         }
     );
 }
-
-void KRotationSystem::Shutdown() {}

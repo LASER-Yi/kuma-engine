@@ -7,14 +7,14 @@ namespace Swarm
 
 FEntityQueryResult::FEntityQueryResult(
     SignatureType InEntity, const FEntityQuery* InInstigator,
-    const FSystemUpdateContext* InContext
+    const FExecutionContext* InContext
 )
     : Entity(InEntity), Instigator(InInstigator), Context(InContext)
 {
 }
 
 void FEntityQuery::ForEach(
-    const FSystemUpdateContext& Context, FEntityQuery::Function&& Func
+    const FExecutionContext& Context, FEntityQuery::Function&& Func
 ) const
 {
     Manager* SwarmMgr = Context.Manager;

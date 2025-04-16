@@ -2,7 +2,7 @@
 #include "Definition.h"
 #include "Entity.h"
 #include "EntityQuery.h"
-#include "SystemUpdateContext.h"
+#include "ExecutionContext.h"
 #include <gtest/gtest.h>
 #include <memory>
 
@@ -123,7 +123,7 @@ public:
         );
     }
 
-    virtual void Execute(const Swarm::FSystemUpdateContext& Context) override
+    virtual void Execute(const Swarm::FExecutionContext& Context) override
     {
         Query.ForEach(
             Context, [](const Swarm::FEntityQueryResult& Result)
@@ -131,7 +131,8 @@ public:
         );
     }
 
-    virtual void Shutdown() override {}
+private:
+    Swarm::FEntityQuery Query;
 };
 
 TEST(SwarmTests, SystemExecution)

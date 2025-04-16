@@ -1,18 +1,37 @@
 #pragma once
-
-#include "EntityQuery.h"
-
-#include "Interfaces/System.h"
+#include "ExecutionContext.h"
 
 class KKumaEngine;
 
 namespace Swarm
 {
 
-class KSystem : public Swarm::ISystem
+/**
+ * @brief Base class for all systems in the swarm.
+ * @details This class defines the basic structure for all systems in the
+ * swarm. Each system should implement the Initialize, Update, and Shutdown
+ * methods.
+ */
+class KSystem
 {
 public:
-    FEntityQuery Query;
+    virtual void Initialize();
+
+    virtual void Execute(const FExecutionContext& Context) = 0;
+
+    virtual void Shutdown();
+
+public:
+    KSystem() = default;
+    virtual ~KSystem() {}
+
+    KSystem(const KSystem&) = delete;
+    KSystem& operator=(const KSystem&) = delete;
+    KSystem(KSystem&&) = delete;
+    KSystem& operator=(KSystem&&) = delete;
+
+private:
+    bool bIsInitialized = false;
 };
 
 } // namespace Swarm

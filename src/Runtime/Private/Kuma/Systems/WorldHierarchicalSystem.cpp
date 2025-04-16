@@ -10,9 +10,7 @@ void KWorldHierarchicalSystem::Initialize()
     Query.AddRequirement<FTransformData>(EComponentAccessMode::ReadWrite);
 }
 
-void KWorldHierarchicalSystem::Execute(
-    const Swarm::FSystemUpdateContext& Context
-)
+void KWorldHierarchicalSystem::Execute(const Swarm::FExecutionContext& Context)
 {
     Query.ForEach(
         Context,
@@ -27,5 +25,3 @@ void KWorldHierarchicalSystem::Execute(
         }
     );
 }
-
-void KWorldHierarchicalSystem::Shutdown() {}

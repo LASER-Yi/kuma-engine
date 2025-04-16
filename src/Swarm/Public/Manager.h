@@ -5,7 +5,7 @@
 #include "Containers/TypedArray.h"
 #include "Definition.h"
 #include "EntityBase.h"
-#include "Interfaces/System.h"
+#include "System.h"
 #include "Templates/Singleton.h"
 
 #include <cassert>
@@ -294,7 +294,7 @@ public:
     void AddSystem(Args&&... Arguments)
     {
         static_assert(
-            std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
+            std::is_base_of<KSystem, T>::value, "T must be derived from KSystem"
         );
 
         const ClassHashType TypeId = FGenericTypeHasher::value<T>();
@@ -313,7 +313,7 @@ public:
     void RemoveSystem()
     {
         static_assert(
-            std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
+            std::is_base_of<KSystem, T>::value, "T must be derived from KSystem"
         );
 
         const ClassHashType TypeId = FGenericTypeHasher::value<T>();
@@ -331,7 +331,7 @@ public:
     std::weak_ptr<T> GetSystem()
     {
         static_assert(
-            std::is_base_of<ISystem, T>::value, "T must be derived from ISystem"
+            std::is_base_of<KSystem, T>::value, "T must be derived from KSystem"
         );
 
         const ClassHashType TypeId = FGenericTypeHasher::value<T>();
@@ -351,7 +351,7 @@ private:
 
     TTypedArray<FComponent, Swarm::SignatureType, Swarm::ClassHashType>
         Components;
-    std::unordered_map<Swarm::ClassHashType, std::shared_ptr<ISystem>> Systems;
+    std::unordered_map<Swarm::ClassHashType, std::shared_ptr<KSystem>> Systems;
 
 public:
     THandleAllocator<Swarm::SignatureType> EntitySignature;

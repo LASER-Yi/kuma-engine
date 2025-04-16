@@ -2,9 +2,10 @@
 
 #include "Component.h"
 #include "Definition.h"
+#include "ExecutionContext.h"
 #include "Manager.h"
-#include "SystemUpdateContext.h"
 #include "TypeHasher.h"
+
 
 #include <functional>
 #include <type_traits>
@@ -18,9 +19,9 @@ namespace Swarm
  */
 enum class EComponentAccessMode
 {
+    Unspecific, ///< Component access mode is not specified
     ReadOnly,   ///< Component can only be read
     ReadWrite,  ///< Component can be read and written
-    Unspecific, ///< Component access mode is not specified
 };
 
 struct FEntityQueryResult;
@@ -40,7 +41,7 @@ struct FEntityQuery
      * @param Context The system update context
      * @param Func Function to execute for each matching entity
      */
-    void ForEach(const FSystemUpdateContext& Context, Function&& Func) const;
+    void ForEach(const FExecutionContext& Context, Function&& Func) const;
 
     /**
      * @brief Adds a component requirement to the query
@@ -95,7 +96,7 @@ private:
  */
 struct FEntityQueryResult
 {
-    friend class FEntityQuery;
+    friend struct FEntityQuery;
 
     FEntityQueryResult(const FEntityQueryResult&) = delete;
     FEntityQueryResult& operator=(const FEntityQueryResult&) = delete;
@@ -163,12 +164,12 @@ struct FEntityQueryResult
 private:
     FEntityQueryResult(
         SignatureType InEntity, const FEntityQuery* InInstigator,
-        const FSystemUpdateContext* InContext
+        const FExecutionContext* InContext
     );
 
     SignatureType Entity;
 
-    const FSystemUpdateContext* Context;
+    const FExecutionContext* Context;
     const FEntityQuery* Instigator;
 };
 

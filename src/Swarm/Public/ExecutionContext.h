@@ -5,7 +5,7 @@ namespace Swarm
 
 class Manager;
 
-struct FSystemUpdateContext
+struct FExecutionContext
 {
     float DeltaTime;
     Manager* Manager;
