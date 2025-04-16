@@ -39,7 +39,7 @@ TEST(VectorTests, VectorEqual)
 TEST(VectorTests, VectorSqrtLength)
 {
     ASSERT_FLOAT_EQ(FVector().GetLengthSqrt(), 0.0);
-    ASSERT_FLOAT_EQ(FVector(1.0, 1.0, 1.0).GetLengthSqrt(), 1.0);
+    ASSERT_FLOAT_EQ(FVector(1.0, 0.0, 0.0).GetLengthSqrt(), 1.0);
     ASSERT_FLOAT_EQ(FVector(1.0, 1.0, 1.0).GetLengthSqrt(), 3.0);
 
     const FVector Case = {1.0, 2.0, 3.0};
